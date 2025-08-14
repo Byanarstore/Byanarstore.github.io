@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birlikdəki Anlarımız</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#FFD166">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #fff9fb;
+            color: #5a3d5c;
+        }
+        .love-font {
+            font-family: 'Great Vibes', cursive;
+        }
+        .heart-beat {
+            animation: heartbeat 1.5s infinite;
+        }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .audio-progress {
+            -webkit-appearance: none;
+            height: 6px;
+            background: #e2c2e1;
+            border-radius: 3px;
+        }
+        .audio-progress::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #b76e8b;
+            cursor: pointer;
+        }
+        .gallery-item img {
+            transition: all 0.3s ease;
+            filter: brightness(0.9);
+        }
+        .gallery-item:hover img {
+            transform: scale(1.05);
+            filter: brightness(1);
+        }
+        /* Slideshow styles */
+        .slideshow-container {
+            position: relative;
+            overflow: hidden;
+            height: 300px;
+        }
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .slide.active {
+            opacity: 1;
+        }
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .letter {
+            background-color: #fff9fb;
+            box-shadow: 0 10px 30px rgba(183, 110, 139, 0.2);
+        }
+        
+        /* Time counter animation */
+        .time-block {
+            transition: all 0.3s ease;
+            min-width: 60px;
+            border-radius: 12px;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            box-shadow: 5px 5px 10px #d9d9d9, 
+                       -5px -5px 10px #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1rem;
+        }
+        @media (max-width: 640px) {
+            .time-block {
+                min-width: 50px;
+                padding: 0.75rem;
+            }
+        }
+        .time-block:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(183, 110, 139, 0.3);
+        }
+        .time-block div:first-child {
+            font-size: 2.5rem;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            background: linear-gradient(to right, #ff6b6b, #9c27b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 4px;
+        }
+        .time-block div:last-child {
+            color: #6d6875;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: -8px;
+        }
+    /* Countdown Timer */
+        .countdown-container {
+            background: linear-gradient(135deg, #f5e6fa, #e2c2e1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px rgba(183, 110, 139, 0.2);
+        }
+        .countdown-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #8e44ad;
+        }
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+        .countdown-box {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+        .countdown-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #9b59b6;
+        }
+        .countdown-label {
+            font-size: 0.875rem;
+            color: #8e44ad;
+            text-transform: uppercase;
+            margin-top: 0.5rem;
+        }
+        @media (max-width: 640px) {
+            .countdown-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .giristext{
+            text-align: center;
+            font-size: 30px;
+             font-family: 'Great Vibes', cursive;
+             color: #CDB4DB;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+<!-- Giriş Ekranı -->
+<div id="login-screen" class="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-pink-50 to-purple-50 z-50 transition-all duration-500">
+    <div class="bg-white p-8 rounded-xl shadow-xl max-w-md w-full mx-4 text-center">
+        <div class="heart-beat mb-6">
+            <p class="giristext">Elçin ❤️ Nigar</p>
+        </div>
+        <h1 class="love-font text-4xl text-pink-600 mb-4">Xoş Gəlmisiniz</h1>
+        <p class="mb-6 italic text-gray-600">"Birlikdə keçirdiyimiz hər an, ömrümüzün ən gözəl xatirəsidir..."</p>
+        
+        <div class="mb-4">
+            <input type="password" id="password" placeholder="Sevgilimizin parolu..." 
+                   class="w-full px-4 py-2 border border-pink-300 rounded-lg focus:ring-2 focus:ring-pink-200 focus:border-pink-500">
+        </div>
+        <button onclick="checkPassword()" class="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-2 rounded-lg hover:opacity-90 transition-all">
+            Giriş
+        </button>
+        <p id="error-message" class="text-red-500 mt-2 hidden">Zəhmət olmasa düzgün xatırlayın parolu</p>
+    </div>
+</div>
+
+<!-- Ana İçerik -->
+<div id="main-content" class="hidden container mx-auto px-4 py-12 max-w-6xl">
+
+    <!-- Başlık -->
+    <header class="text-center mb-12">
+        <h1 class="love-font text-5xl md:text-6xl text-pink-600 mb-2">Elçin ❤️ Nigar</h1>
+        <div class="w-24 h-1 bg-pink-300 mx-auto mb-4"></div>
+        <p class="italic text-lg text-gray-600">"Gözəllik yalnız səndə, sənsiz hər şey xarab..."</p>
+    </header>
+
+    <!-- Slideshow -->
+    <div class="slideshow-container mb-8 max-w-4xl mx-auto">
+        <div class="slide active">
+            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/7c237d77-498e-4d75-bec9-75aac59a28cc.png" class="w-full rounded-xl" alt="Romantic moment">
+        </div>
+        <div class="slide">
+            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/fecc973f-6740-419a-8cfc-ff598b1e1d9e.png" class="w-full rounded-xl" alt="Together forever">
+        </div>
+        <div class="slide">
+            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/19d4583d-3b09-4a35-bc94-4afe7abed986.png" class="w-full rounded-xl" alt="Special moments">
+        </div>
+    </div>
+
+    <!-- Zaman Dilimi -->
+    <section class="bg-white/80 backdrop-blur-sm p-4 sm:p-8 rounded-2xl shadow-lg mb-12 text-center border border-pink-100">
+        <h2 class="love-font text-4xl text-pink-700 mb-10">Birlikdəki Zamanımız</h2>
+        <div class="time-counter grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4 max-w-3xl mx-auto">
+            <div class="time-block p-6 text-center">
+                <div id="years">0</div>
+                <div>İL</div>
+            </div>
+            <div class="time-block p-6 text-center">
+                <div id="months">0</div>
+                <div>AY</div>
+            </div>
+            <div class="time-block p-6 text-center">
+                <div id="days">0</div>
+                <div>GÜN</div>
+            </div>
+            <div class="time-block p-6 text-center">
+                <div id="hours">0</div>
+                <div>SAAT</div>
+            </div>
+            <!-- 
+            <div class="time-block p-6 text-center">
+                <div id="minutes">0</div>
+                <div>DƏQ</div>
+            </div>
+        </div>
+         -->
+    </section>
+
+    <!-- Müzik Çalıcı -->
+    <section class="mb-12 px-4 sm:px-6">
+        <h2 class="love-font text-3xl text-center text-pink-600 mb-6">Bizim Musiqi</h2>
+        <div class="bg-white rounded-xl shadow-md overflow-hidden max-w-xl mx-auto">
+            <div class="p-4 bg-gradient-to-r from-pink-100 to-purple-100">
+                <div class="flex items-center mb-4">
+                    <div class="relative flex-1">
+                        <select id="music-selector" class="appearance-none bg-white bg-no-repeat bg-gradient-to-r from-pink-200 to-purple-200 rounded-lg px-4 py-2 text-gray-700 font-medium w-full pr-10 focus:ring-2 focus:ring-pink-300 focus:border-transparent">
+                            <option value="https://pub-9b1ca65794244b0f928e47248a603e9e.r2.dev/Ayaz%20Babayev%20%E2%80%94%20Ay%20T%C9%99nli%20Qad%C4%B1n%20(R%C9%99smi%20Musiqi%20Videosu)%20-%20Ayaz%20Babayev.mp3">❤️ Sevgilim</option>
+                            <option value="https://pub-9b1ca65794244b0f928e47248a603e9e.r2.dev/muzik3.mp3">🌸 Bahar</option>
+                            <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3">🌹 Xatirələr</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-pink-600">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <button id="play-btn" class="ml-4 bg-pink-500 hover:bg-pink-600 text-white p-3 rounded-full transition-all transform hover:scale-105 shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex items-center">
+                    <span id="current-time" class="text-xs text-gray-500 mr-2">0:00</span>
+                    <input type="range" id="progress" class="audio-progress flex-1" value="0" min="0" max="100">
+                    <span id="duration" class="text-xs text-gray-500 ml-2">3:45</span>
+                </div>
+            </div>
+            <audio id="audio" src="https://pub-9b1ca65794244b0f928e47248a603e9e.r2.dev/Ayaz%20Babayev%20%E2%80%94%20Ay%20T%C9%99nli%20Qad%C4%B1n%20(R%C9%99smi%20Musiqi%20Videosu)%20-%20Ayaz%20Babayev.mp3"></audio>
+        </div>
+    </section>
+
+    <!-- Video Section -->
+    <section class="mb-12">
+        <h2 class="love-font text-3xl text-center text-pink-600 mb-6">Videolarımız</h2>
+        <div class="relative flex-1 max-w-md mx-auto mb-4">
+            <select id="video-selector" class="appearance-none bg-white bg-no-repeat bg-gradient-to-r from-pink-200 to-purple-200 rounded-lg px-4 py-2 text-gray-700 font-medium w-full pr-10 focus:ring-2 focus:ring-pink-300 focus:border-transparent">
+                <option value="video1.mp4">🎬 Birinci xoşbəxtlik</option>
+                <option value="video2.mp4">💞 Xatirə anları</option>
+                <option value="video3.mp4">✨ Xüsusi gün</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-pink-600">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+        </div>
+        <div class="video-container relative rounded-xl overflow-hidden shadow-xl max-w-2xl mx-auto group">
+            <video id="main-video" controls class="w-full rounded-lg transform group-hover:scale-[1.02] transition-transform duration-300" poster="video-poster.jpg">
+                <div class="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-all duration-300"></div>
+                <source id="video-source" src="video1.mp4" type="video/mp4">
+            </video>
+        </div>
+    </section>
+
+    <!-- Galeri -->
+    <section class="mb-12">
+        <h2 class="love-font text-3xl text-center text-pink-600 mb-8">Xatirələrimiz</h2>
+        <div class="flex flex-wrap justify-center mb-6 gap-2">
+            <button class="gallery-filter px-4 py-2 rounded-full bg-pink-500 text-white" data-filter="all">Hamısı</button>
+            <button class="gallery-filter px-4 py-2 rounded-full bg-pink-100 text-pink-700" data-filter="special">Özəl Günlər</button>
+            <button class="gallery-filter px-4 py-2 rounded-full bg-pink-100 text-pink-700" data-filter="daily">Gündəlik</button>
+            <button class="gallery-filter px-4 py-2 rounded-full bg-pink-100 text-pink-700" data-filter="travel">Səyahətlər</button>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gallery-container" id="gallery-grid">
+            <div class="gallery-item relative overflow-hidden rounded-lg group" data-category="special">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/c7c6c33b-00b5-438a-8ce2-8b4d4eaf80ac.png" alt="Çiftin ilk tanıştığı gün restoranda masada otururken çekilmiş fotoğraf" class="w-full h-40 sm:h-48 md:h-52 object-cover">
+                <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <p class="text-white text-center px-2">İlk görüşümüz ❤️</p>
+                </div>
+            </div>
+            <div class="gallery-item relative overflow-hidden rounded-lg group" data-category="special">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/a2c036c1-7d0d-4f5f-81d4-9ff61355a3cc.png" alt="İlk yıldönümünde pastanın önünde birlikte poz verirken" class="w-full h-48 object-cover">
+                <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <p class="text-white text-center px-2">1. Yıldönümümüz</p>
+                </div>
+            </div>
+            <div class="gallery-item relative overflow-hidden rounded-lg group" data-category="daily">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/eb464963-8bbb-4bd4-88a0-5d8446adb805.png" alt="Birlikte market alışverişi yaparken gülüşen çift" class="w-full h-48 object-cover">
+                <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <p class="text-white text-center px-2">Günlük mutluluğumuz</p>
+                </div>
+            </div>
+            <div class="gallery-item relative overflow-hidden rounded-lg group" data-category="travel">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/a054dced-81df-4ac4-862a-e61470fbb324.png" alt="Plajda el ele yürürken gün batımında silüetleri" class="w-full h-48 object-cover">
+                <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <p class="text-white text-center px-2">Unutulmaz tatilimiz</p>
+                </div>
+            </div>
+            <div class="gallery-item relative overflow-hidden rounded-lg group" data-category="daily">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/1.png" alt="Günlük anlarımız" class="w-full h-48 object-cover">
+                <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <p class="text-white text-center px-2">Ən xoş günlər</p>
+                </div>
+            </div>
+            <div class="gallery-item relative overflow-hidden rounded-lg group" data-category="daily">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/2.png" alt="Kafe məclisi" class="w-full h-48 object-cover">
+                <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <p class="text-white text-center px-2">Səmimi anlar</p>
+                </div>
+            </div>
+            <div class="gallery-item relative overflow-hidden rounded-lg group" data-category="special">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3.png" alt="Xüsusi gün" class="w-full h-48 object-cover">
+                <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <p class="text-white text-center px-2">Xoşbəxt anlar</p>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-6">
+            <button id="load-more-btn" class="hidden px-6 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition">
+                Daha çox yüklə
+            </button>
+        </div>
+    </section>
+
+    <!-- Mektup -->
+    <section class="mb-12">
+        <div class="letter px-8 py-10 md:px-12 md:py-14 max-w-3xl mx-auto rounded-lg">
+            <h2 class="love-font text-3xl text-pink-600 mb-6">Sevgilimə...</h2>
+            <div class="prose text-gray-700">
+                <p>Səninlə keçirdiyim hər an, həyatıma qattığın hər rəng mənim üçün çox qiymətlidir.</p>
+                <p class="my-4">Səni sevmək, səni düşünmək, səninlə olmaq... Bunlar mənim üçün həyatın özü deməkdir. Gülüşün ürəyimə işıq, səsin könlümə səfa gətirir.</p>
+                <p>Səninlə olmağım hər gün mənə yeni bir yaşamaq səbəbi verir. Birlikdə yaratdığımız bu gözəl sevgi hekayəsinin daim davam etməsini arzulayıram.</p>
+                <p class="love-font text-right text-xl text-pink-600 mt-6">Sevgi ilə, <br>Elçin</p>
+            </div>
+        </div>
+    </section>
+    <!-- Geri sayım -->
+    <section class="countdown-container mb-12 max-w-2xl mx-auto">
+        <h2 class="countdown-title">Xüsusi Tarix Üçün Geri Sayım</h2>
+        <div class="countdown-grid">
+            <div class="countdown-box">
+                <div id="countdown-days" class="countdown-number">00</div>
+                <div class="countdown-label">Gün</div>
+            </div>
+            <div class="countdown-box">
+                <div id="countdown-hours" class="countdown-number">00</div>
+                <div class="countdown-label">Saat</div>
+            </div>
+            <div class="countdown-box">
+                <div id="countdown-minutes" class="countdown-number">00</div>
+                <div class="countdown-label">Dəqiqə</div>
+            </div>
+            <div class="countdown-box">
+                <div id="countdown-seconds" class="countdown-number">00</div>
+                <div class="countdown-label">Saniyə</div>
+            </div>
+        </div>
+    </section>
+    
+    <img src="https://pub-9b1ca65794244b0f928e47248a603e9e.r2.dev/Anar Bayramov foto 1.png" alt="">
+
+    <!-- Footer -->
+    <footer class="text-center py-6 border-t border-pink-100">
+        <div class="flex items-center justify-center space-x-2">
+            <span class="love-font text-xl text-pink-600">Elçin</span>
+            <span class="text-gray-400">∞</span>
+            <span class="love-font text-xl text-pink-600">Nigar</span>
+        </div>
+        <p class="mt-2 text-gray-500">©2025 Bütün hüquqlar qorunur</p>
+    </footer>
+</div>
+
+<script>
+    // Şifre kontrolü
+    const correctPassword = ""; // Gerçek projede bu değer daha güvenli bir şekilde saklanmalıdır
+    
+    function checkPassword() {
+        const enteredPassword = document.getElementById('password').value;
+        const errorMessage = document.getElementById('error-message');
+        
+        if (enteredPassword === correctPassword) {
+            document.getElementById('login-screen').classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('main-content').classList.remove('hidden');
+            document.getElementById('main-content').classList.add('animate-fadeIn');
+        } else {
+            errorMessage.classList.remove('hidden');
+            setTimeout(() => errorMessage.classList.add('hidden'), 2000);
+        }
+    }
+
+    // Zaman hesaplama fonksiyonu
+    function updateTimeTogether() {
+        const startDate = new Date('2020-04-25T21:14:00'); // 25 Nisan 2020, 21:14
+        const now = new Date();
+        
+        let diff = now - startDate;
+        
+        // Calculate years difference
+        const years = now.getFullYear() - startDate.getFullYear();
+        
+        // Calculate months difference considering the year difference
+        let months = now.getMonth() - startDate.getMonth();
+        if (months < 0) {
+            months += 12;
+        }
+        
+        // Calculate days difference
+        let days = now.getDate() - startDate.getDate();
+        if (days < 0) {
+            // Adjust for month rollover
+            const daysInLastMonth = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                0
+            ).getDate();
+            days += daysInLastMonth;
+        }
+        
+        // Calculate hours difference
+        let hours = now.getHours() - startDate.getHours();
+        if (hours < 0) {
+            hours += 24;
+            days--; // Adjust day count if we rolled over a day
+        }
+        
+        // Animasyonlu güncelleme
+        animateValue('years', 0, years);
+        animateValue('months', 0, months); 
+        animateValue('days', 0, days);
+        animateValue('hours', 0, hours);
+        animateValue('minutes', 0, now.getMinutes() - startDate.getMinutes());
+    }
+    
+    // Animasyonlu sayı artış fonksiyonu
+    function animateValue(id, start, end) {
+        const obj = document.getElementById(id);
+        let startTimestamp = null;
+        const duration = 1000;
+        
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const value = Math.floor(progress * (end - start) + start);
+            obj.textContent = value;
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+    
+    // Slideshow functionality
+    const slides = document.querySelectorAll('.slide');
+    let currentSlide = 0;
+
+    function showSlide() {
+        slides.forEach(slide => slide.classList.remove('active'));
+        slides[currentSlide].classList.add('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+    }
+
+    // Start slideshow and change every 1.5 seconds
+    showSlide();
+    setInterval(showSlide, 1500);
+
+    // Sayacı her saat yenile
+    updateTimeTogether();
+    setInterval(updateTimeTogether, 1000 * 60 * 60);
+
+    // Video selector functionality
+    const videoSelector = document.getElementById('video-selector');
+    const mainVideo = document.getElementById('main-video');
+    const videoSource = document.getElementById('video-source');
+    
+    videoSelector.addEventListener('change', (e) => {
+        const selectedVideo = e.target.value;
+        mainVideo.classList.add('opacity-0');
+        setTimeout(() => {
+            videoSource.src = selectedVideo;
+            mainVideo.load();
+            mainVideo.play().then(() => {
+                mainVideo.classList.remove('opacity-0');
+            });
+        }, 300);
+    });
+
+    // Müzik çalar
+    // Müzik çalar
+const audio = document.getElementById('audio');
+const playBtn = document.getElementById('play-btn');
+const musicSelector = document.getElementById('music-selector');
+const progress = document.getElementById('progress');
+const currentTimeEl = document.getElementById('current-time');
+const durationEl = document.getElementById('duration');
+
+// Musiqi seçimi dəyişdikdə
+musicSelector.addEventListener('change', (e) => {
+    audio.src = e.target.value; // Yeni musiqini yüklə
+    audio.pause(); // Musiqini dayandır
+    audio.currentTime = 0; // Musiqini başa sıfırla
+    progress.value = 0; // Dolan xətti sıfırla
+    currentTimeEl.textContent = '0:00'; // Cari vaxtı sıfırla
+    durationEl.textContent = '0:00'; // Müddəti sıfırla
+    playBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>'; // Play düyməsini "dayandır" vəziyyətinə gətir
+});
+
+// Oynat/Dayandır düyməsi
+playBtn.addEventListener('click', () => {
+    if (audio.paused) {
+        audio.play();
+        playBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>'; // Oynat düyməsi
+    } else {
+        audio.pause();
+        playBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>'; // Dayandır düyməsi
+    }
+});
+
+// Musiqi vaxtı yeniləndikdə
+audio.addEventListener('timeupdate', () => {
+    const currentTime = audio.currentTime;
+    const duration = audio.duration;
+
+    progress.value = (currentTime / duration) * 100;
+
+    let currentMinutes = Math.floor(currentTime / 60);
+    let currentSeconds = Math.floor(currentTime % 60);
+    if (currentSeconds < 10) currentSeconds = `0${currentSeconds}`;
+
+    currentTimeEl.textContent = `${currentMinutes}:${currentSeconds}`;
+});
+
+// Dolan xətt sürüşdürüldükdə
+progress.addEventListener('input', () => {
+    const duration = audio.duration;
+    audio.currentTime = (progress.value / 100) * duration;
+});
+
+// Musiqi metadatası yükləndikdə (müddəti almaq üçün)
+audio.addEventListener('loadedmetadata', () => {
+    let durationMinutes = Math.floor(audio.duration / 60);
+    let durationSeconds = Math.floor(audio.duration % 60);
+    if (durationSeconds < 10) durationSeconds = `0${durationSeconds}`;
+
+    durationEl.textContent = `${durationMinutes}:${durationSeconds}`;
+});
+
+
+    // Galeri filtreleme
+    document.querySelectorAll('.gallery-filter').forEach(button => {
+        button.addEventListener('click', () => {
+            // Aktif butonu güncelle
+            document.querySelectorAll('.gallery-filter').forEach(btn => {
+                btn.classList.remove('bg-pink-500', 'text-white');
+                btn.classList.add('bg-pink-100', 'text-pink-700');
+            });
+            
+            button.classList.remove('bg-pink-100', 'text-pink-700');
+            button.classList.add('bg-pink-500', 'text-white');
+            
+            // Galeriyi filtrele
+            const filter = button.dataset.filter;
+            const items = document.querySelectorAll('.gallery-item');
+            
+            items.forEach(item => {
+                if (filter === 'all' || item.dataset.category === filter) {
+                    item.classList.remove('hidden');
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        });
+    });
+
+    // Özgal günler galerisini başlangıçta aktif yap
+    document.querySelector('.gallery-filter[data-filter="special"]').click();
+
+    // Load More Functionality
+    const galleryContainer = document.querySelector('.gallery-container');
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    let visibleCount = 5;
+    let showingAll = false;
+    
+    function updateGalleryVisibility() {
+        const currentFilter = document.querySelector('.gallery-filter.bg-pink-500').dataset.filter;
+        const allItems = currentFilter === 'all' 
+            ? document.querySelectorAll('.gallery-item')
+            : document.querySelectorAll(`.gallery-item[data-category="${currentFilter}"]`);
+        
+        // Hide all items first
+        document.querySelectorAll('.gallery-item').forEach(item => item.classList.add('hidden'));
+        
+        if (showingAll) {
+            // Show all items
+            allItems.forEach(item => item.classList.remove('hidden'));
+            loadMoreBtn.textContent = 'Daha az';
+        } else {
+            // Show only first 5 items
+            allItems.forEach((item, index) => {
+                if (index < visibleCount) item.classList.remove('hidden');
+            });
+            loadMoreBtn.textContent = 'Daha çox yüklə';
+        }
+        
+        // Enable/disable button based on item count
+        const shouldHideButton = allItems.length <= visibleCount;
+        loadMoreBtn.classList.toggle('hidden', shouldHideButton);
+        
+        // Reset visibility when changing filters
+        showingAll = false;
+    }
+
+    loadMoreBtn.addEventListener('click', () => {
+        showingAll = !showingAll;
+        updateGalleryVisibility();
+    });
+
+    // Initial setup
+    updateGalleryVisibility();
+
+    loadMoreBtn.addEventListener('click', () => {
+        visibleCount += 5;
+        updateGalleryVisibility();
+    });
+
+    // Countdown Timer for October 3, 2025
+    const countdownDate = new Date('2025-10-03').getTime();
+    
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = countdownDate - now;
+        
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        document.getElementById('countdown-days').textContent = days.toString().padStart(2, '0');
+        document.getElementById('countdown-hours').textContent = hours.toString().padStart(2, '0');
+        document.getElementById('countdown-minutes').textContent = minutes.toString().padStart(2, '0');
+        document.getElementById('countdown-seconds').textContent = seconds.toString().padStart(2, '0');
+    }
+    
+    // Update countdown every second
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // Update gallery when filter changes
+    document.querySelectorAll('.gallery-filter').forEach(button => {
+        button.addEventListener('click', () => {
+            showingAll = false;
+            visibleCount = 5;
+            updateGalleryVisibility();
+        });
+    });
+</script>
+</body>
+</html>
