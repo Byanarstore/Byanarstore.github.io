@@ -51,6 +51,33 @@
             padding: 5px 15px;
             font-weight: bold;
         }
+        .recommendation-badge {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+            z-index: 10;
+        }
+        .vip-container {
+            position: relative;
+        }
+          @keyframes move {
+      0% { transform: translateX(0); }
+      50% { transform: translateX(10px); }
+      100% { transform: translateX(0); }
+  }
+
+  .animated-text {
+      animation: move 0.5s ease-in-out infinite;
+  }
+  
     </style>
 </head>
 <body class="py-8 px-4 sm:px-6 lg:px-8">
@@ -68,15 +95,16 @@
                 <!-- Simple Package -->
                 <div id="simple-package" class="package-card p-6 cursor-pointer" onclick="selectPackage('simple')">
                     <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-xl font-bold">Sadə Paket</h3>
+                        <h3 class="text-xl font-bold">Standart Paket</h3>
                         <span class="price-badge">20₼</span>
                     </div>
                     <ul class="space-y-2 mb-6">
-                        <li class="feature-item">15 pulsuz foto</li>
+                        <li class="feature-item">10 pulsuz foto</li>
                         <li class="feature-item">1 musiqi</li>
+                        <li class="feature-item">Başlıqda kiçik not</li>
                         <li class="feature-item">Özəl tarix zamanı</li>
                         <li class="feature-item">Xüsusi məktub</li>
-                        <li class="feature-item">Kiçik şeir (qeyd)</li>
+                        <li class="feature-item">İstəyə uygun şeir</li>
                     </ul>
                     <div class="text-center">
                         <div id="simple-check" class="hidden text-purple-600 text-2xl">
@@ -86,16 +114,20 @@
                 </div>
 
                 <!-- VIP Package -->
-                <div id="vip-package" class="package-card p-6 cursor-pointer" onclick="selectPackage('vip')">
+                <div class="vip-container">
+                    <div class="recommendation-badge">Tövsiyə olunur</div>
+                    <div id="vip-package" class="package-card p-6 cursor-pointer" onclick="selectPackage('vip')">
+=======
                     <div class="flex justify-between items-start mb-4">
                         <h3 class="text-xl font-bold">VIP Paket</h3>
                         <span class="price-badge">30₼</span>
                     </div>
                     <ul class="space-y-2 mb-6">
-                        <li class="feature-item">20 pulsuz foto</li>
+                        <li class="feature-item">15 pulsuz foto</li>
                         <li class="feature-item">2 musiqi</li>
-                        <li class="feature-item">Xüsusi məktub/şeir</li>
                         <li class="feature-item">1 video</li>
+                        <li class="feature-item">Başlıqda kiçik not</li>
+                        <li class="feature-item">Xüsusi məktub/şeir</li>
                         <li class="feature-item">Slideshow (5 şəkil)</li>
                         <li class="feature-item">Özəl tarix zamanı</li>
                         <li class="feature-item">Geri sayım tarix zamanı</li>
@@ -105,7 +137,9 @@
                             <i class="fas fa-check-circle"></i>
                         </div>
                     </div>
+                    </div>
                 </div>
+=======
             </div>
         </div>
 
@@ -329,6 +363,12 @@
             // Open WhatsApp with pre-filled message
             window.open(`https://wa.me/994552929502?text=${whatsappMessage}`, '_blank');
         });
+
+          const textElement = document.querySelector('.tovsiyekelime');
+  setInterval(() => {
+      textElement.classList.toggle('animated-text');
+  }, 1000);
+  
     </script>
 </body>
 </html>
