@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xüsusi Hədiyyə Paketləri</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Custom styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f4ff;
+            color: #333;
+        }
+        .package-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+        }
+        .package-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .selected-package {
+            border: 3px solid #8b5cf6;
+        }
+        .feature-item {
+            position: relative;
+            padding-left: 28px;
+        }
+        .feature-item::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #8b5cf6;
+            font-weight: bold;
+        }
+        .additional-option {
+            border-radius: 8px;
+            padding: 12px 16px;
+            background-color: #f3f4f6;
+            margin-bottom: 8px;
+        }
+        .price-badge {
+            background-color: #8b5cf6;
+            color: white;
+            border-radius: 50px;
+            padding: 5px 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-purple-800 mb-4">Xüsusi Hədiyyə Paketləri</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Sevdiyiniz üçün xüsusi an yaradın! Paket seçin, əlavələri əlavə edin və unudulmaz hədiyyəni təqdim edin.</p>
+        </div>
+
+        <!-- Package Selection -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-semibold mb-6 text-center">Paket Seçimi</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Simple Package -->
+                <div id="simple-package" class="package-card p-6 cursor-pointer" onclick="selectPackage('simple')">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-bold">Sadə Paket</h3>
+                        <span class="price-badge">20₼</span>
+                    </div>
+                    <ul class="space-y-2 mb-6">
+                        <li class="feature-item">15 pulsuz foto</li>
+                        <li class="feature-item">1 musiqi</li>
+                        <li class="feature-item">Özəl tarix zamanı</li>
+                        <li class="feature-item">Xüsusi məktub</li>
+                        <li class="feature-item">Kiçik şeir (qeyd)</li>
+                    </ul>
+                    <div class="text-center">
+                        <div id="simple-check" class="hidden text-purple-600 text-2xl">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIP Package -->
+                <div id="vip-package" class="package-card p-6 cursor-pointer" onclick="selectPackage('vip')">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-bold">VIP Paket</h3>
+                        <span class="price-badge">30₼</span>
+                    </div>
+                    <ul class="space-y-2 mb-6">
+                        <li class="feature-item">20 pulsuz foto</li>
+                        <li class="feature-item">2 musiqi</li>
+                        <li class="feature-item">Xüsusi məktub/şeir</li>
+                        <li class="feature-item">1 video</li>
+                        <li class="feature-item">Slideshow (5 şəkil)</li>
+                        <li class="feature-item">Özəl tarix zamanı</li>
+                        <li class="feature-item">Geri sayım tarix zamanı</li>
+                    </ul>
+                    <div class="text-center">
+                        <div id="vip-check" class="hidden text-purple-600 text-2xl">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Options -->
+        <div id="additional-options" class="hidden mb-8">
+            <h2 class="text-2xl font-semibold mb-6 text-center">Əlavə Seçimlər</h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="additional-option flex justify-between items-center">
+                    <div>
+                        <h3 class="font-medium">Özəl video (hərəsi 5₼)</h3>
+                        <p class="text-sm text-gray-500">Xüsusi mesajlı video hədiyyə</p>
+                    </div>
+                    <div class="flex items-center">
+                        <button class="quantity-btn bg-gray-200 px-2 rounded" onclick="adjustQuantity('video','decrease')">-</button>
+                        <input type="number" min="0" class="w-12 text-center mx-2 border rounded" id="video-quantity" value="0">
+                        <button class="quantity-btn bg-gray-200 px-2 rounded" onclick="adjustQuantity('video','increase')">+</button>
+                        <span class="text-purple-600 font-bold ml-4" id="video-total">0₼</span>
+                    </div>
+                </div>
+
+                <div class="additional-option flex justify-between items-center">
+                    <div>
+                        <h3 class="font-medium">Əlavə foto (5 şəkil bloku - 2₼)</h3>
+                        <p class="text-sm text-gray-500">Foto sayını artırın</p>
+                    </div>
+                    <div class="flex items-center">
+                        <button class="quantity-btn bg-gray-200 px-2 rounded" onclick="adjustQuantity('photos','decrease')">-</button>
+                        <input type="number" min="0" class="w-12 text-center mx-2 border rounded" id="photos-quantity" value="0">
+                        <button class="quantity-btn bg-gray-200 px-2 rounded" onclick="adjustQuantity('photos','increase')">+</button>
+                        <span class="text-purple-600 font-bold ml-4" id="photos-total">0₼</span>
+                    </div>
+                </div>
+
+                <div class="additional-option flex justify-between items-center">
+                    <div>
+                        <h3 class="font-medium">Əlavə musiqi (hərəsi 3₼)</h3>
+                        <p class="text-sm text-gray-500">Daha çox musiqi seçimi</p>
+                    </div>
+                    <div class="flex items-center">
+                        <button class="quantity-btn bg-gray-200 px-2 rounded" onclick="adjustQuantity('music','decrease')">-</button>
+                        <input type="number" min="0" class="w-12 text-center mx-2 border rounded" id="music-quantity" value="0">
+                        <button class="quantity-btn bg-gray-200 px-2 rounded" onclick="adjustQuantity('music','increase')">+</button>
+                        <span class="text-purple-600 font-bold ml-4" id="music-total">0₼</span>
+                    </div>
+                </div>
+
+                <div class="additional-option flex justify-between items-center">
+                    <div>
+                        <h3 class="font-medium">Qar dənələri/yağışı</h3>
+                        <p class="text-sm text-gray-500">Xüsusi effektlər</p>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-purple-600 font-bold mr-4">2₼</span>
+                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500" id="snow-effect" value="2">
+                    </div>
+                </div>
+
+                <div class="additional-option flex justify-between items-center">
+                    <div>
+                        <h3 class="font-medium">Giriş sistemində xüsusi məktub</h3>
+                        <p class="text-sm text-gray-500">Xüsusi qarşılama mesajı</p>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-purple-600 font-bold mr-4">2₼</span>
+                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500" id="entrance-letter" value="2">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total & Submit -->
+        <div class="bg-white rounded-xl shadow-md p-6 max-w-2xl mx-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold">Yekun</h3>
+                <div id="total-price" class="text-2xl font-bold text-purple-600">0₼</div>
+            </div>
+
+            <div class="mb-6">
+                <label for="customer-name" class="block text-sm font-medium text-gray-700 mb-1">Adınız</label>
+                <input type="text" id="customer-name" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500">
+            </div>
+
+            <div class="mb-6">
+                <label for="special-message" class="block text-sm font-medium text-gray-700 mb-1">Xüsusi qeydlər (istəyə bağlı)</label>
+                <textarea id="special-message" rows="3" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500"></textarea>
+            </div>
+
+            <button id="submit-btn" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 disabled:opacity-50" disabled>
+                WhatsApp ilə Sifariş ver
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let selectedPackage = null;
+        let totalPrice = 0;
+
+        function selectPackage(packageType) {
+            // Reset package selection
+            document.getElementById('simple-package').classList.remove('selected-package');
+            document.getElementById('vip-package').classList.remove('selected-package');
+            document.getElementById('simple-check').classList.add('hidden');
+            document.getElementById('vip-check').classList.add('hidden');
+            
+            // Select new package
+            if (packageType === 'simple') {
+                document.getElementById('simple-package').classList.add('selected-package');
+                document.getElementById('simple-check').classList.remove('hidden');
+                selectedPackage = 'Sadə Paket';
+                totalPrice = 20; // Updated price for Simple Package
+            } else {
+                document.getElementById('vip-package').classList.add('selected-package');
+                document.getElementById('vip-check').classList.remove('hidden');
+                selectedPackage = 'VIP Paket';
+                totalPrice = 30; // Updated price for VIP Package
+            }
+            
+            // Show additional options
+            document.getElementById('additional-options').classList.remove('hidden');
+            updateTotalPrice();
+            checkSubmitButton();
+        }
+
+        // Update total price when additional options are selected
+        document.querySelectorAll('#additional-options input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    totalPrice += parseInt(this.value);
+                } else {
+                    totalPrice -= parseInt(this.value);
+                }
+                updateTotalPrice();
+            });
+        });
+
+        let videoQuantity = 0;
+        let photosQuantity = 0;
+        let musicQuantity = 0;
+        const prices = { video:5, photos:2, music:3 };
+
+        function adjustQuantity(type, action) {
+            const input = document.getElementById(`${type}-quantity`);
+            let quantity = parseInt(input.value);
+            
+            if(action === 'increase') quantity++;
+            if(action === 'decrease' && quantity > 0) quantity--;
+            
+            input.value = quantity;
+            
+            // Update quantity variable and calculate subtotal
+            if(type === 'video') videoQuantity = quantity;
+            if(type === 'photos') photosQuantity = quantity;
+            if(type === 'music') musicQuantity = quantity;
+            
+            const subtotal = quantity * prices[type];
+            document.getElementById(`${type}-total`).textContent = subtotal + '₼';
+            
+            // Recalculate grand total
+            totalPrice = (selectedPackage === 'Sadə Paket' ? 20 : 30) + 
+                        (videoQuantity * 5) + 
+                        (photosQuantity * 2) + 
+                        (musicQuantity * 3);
+            
+            updateTotalPrice();
+        }
+
+        function updateTotalPrice() {
+            document.getElementById('total-price').textContent = totalPrice + '₼';
+        }
+
+        function checkSubmitButton() {
+            const name = document.getElementById('customer-name').value.trim();
+            const submitBtn = document.getElementById('submit-btn');
+            
+            if (selectedPackage && name) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        }
+
+        document.getElementById('customer-name').addEventListener('input', checkSubmitButton);
+
+        // WhatsApp submission
+        document.getElementById('submit-btn').addEventListener('click', function() {
+            const name = document.getElementById('customer-name').value.trim();
+            const specialMessage = document.getElementById('special-message').value.trim();
+            
+            // Collect selected additional options
+            const additionalOptions = [];
+            if (videoQuantity > 0) {
+                additionalOptions.push(`Özəl video: ${videoQuantity} ədəd (${videoQuantity * 5}₼)`);
+            }
+            if (photosQuantity > 0) {
+                additionalOptions.push(`Əlavə foto: ${photosQuantity*5} foto (${photosQuantity} blok - ${photosQuantity * 2}₼)`);
+            }
+            if (musicQuantity > 0) {
+                additionalOptions.push(`Əlavə musiqi: ${musicQuantity} ədəd (${musicQuantity * 3}₼)`);
+            }
+            if (document.getElementById('snow-effect').checked) {
+                additionalOptions.push('Qar dənələri/yağışı: 2₼');
+            }
+            if (document.getElementById('entrance-letter').checked) {
+                additionalOptions.push('Giriş sistemində xüsusi məktub: 2₼');
+            }
+            
+            // Prepare WhatsApp message
+            let whatsappMessage = `Salam, *${name}* sifariş verir:%0A%0A`;
+            whatsappMessage += `Seçilən Paket: *${selectedPackage}*%0A`;
+            whatsappMessage += `Ümumi Qiymət: ${totalPrice}₼%0A%0A`;
+            
+            if (additionalOptions.length > 0) {
+                whatsappMessage += `*Əlavə Seçimlər:* %0A`;
+                whatsappMessage += additionalOptions.join('%0A') + '%0A%0A';
+            }
+            
+            if (specialMessage) {
+                whatsappMessage += `*Xüsusi Qeyd:* %0A${encodeURIComponent(specialMessage)}%0A%0A`;
+            };
+            
+            // Open WhatsApp with pre-filled message
+            window.open(`https://wa.me/994552929502?text=${whatsappMessage}`, '_blank');
+        });
+    </script>
+</body>
+</html>
