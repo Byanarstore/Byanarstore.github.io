@@ -1,442 +1,472 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Xüsusi Hədiyyə Paketləri — Kampaniya sistemi ilə</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
-
-  <style>
-    body{
-      font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
-      background-color:#f8f4ff;color:#333;
-    }
-    .package-card{transition:all .3s ease;box-shadow:0 4px 6px rgba(0,0,0,.1);border-radius:12px;overflow:hidden;background:#fff}
-    .package-card:hover{transform:translateY(-5px);box-shadow:0 10px 20px rgba(0,0,0,.1)}
-    .selected-package{border:3px solid #8b5cf6}
-    .feature-item{position:relative;padding-left:28px}
-    .feature-item::before{content:'✓';position:absolute;left:0;color:#8b5cf6;font-weight:bold}
-    .additional-option{border-radius:8px;padding:12px 16px;background-color:#f3f4f6;margin-bottom:8px}
-    .price-badge{background-color:#8b5cf6;color:#fff;border-radius:50px;padding:5px 15px;font-weight:bold;display:inline-block}
-    /* Köhnə qiymət stili */
-    .price-old{ text-decoration: line-through; color:#9ca3af; font-weight:600 }
-    /* %-lik endirim badge-i */
-    .off-badge{ background:linear-gradient(90deg,#f97316,#f43f5e); color:#fff; border-radius:9999px; padding:2px 10px; font-size:12px; font-weight:700; display:inline-block }
-    /* “Tövsiyə olunur” istənmədiyi üçün heç bir badge yoxdur */
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xüsusi Hədiyyə Paketləri</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Custom styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f4ff;
+            color: #333;
+        }
+        .package-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+        }
+        .package-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .selected-package {
+            border: 3px solid #8b5cf6;
+        }
+        .feature-item {
+            position: relative;
+            padding-left: 28px;
+        }
+        .feature-item::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #8b5cf6;
+            font-weight: bold;
+        }
+        .additional-option {
+            border-radius: 8px;
+            padding: 12px 16px;
+            background-color: #f3f4f6;
+            margin-bottom: 8px;
+        }
+        .price-badge {
+            background-color: #8b5cf6;
+            color: white;
+            border-radius: 50px;
+            padding: 5px 15px;
+            font-weight: bold;
+        }
+        .old-price {
+            color: red;
+            text-decoration: line-through;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .discount-badge {
+            background-color: #ef4444;
+            color: white;
+            border-radius: 8px;
+            padding: 2px 6px;
+            font-size: 10px;
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .countdown {
+            font-size: 1.5rem;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body class="py-8 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-6xl mx-auto">
-    <!-- Header -->
-    <div class="text-center mb-12">
-      <h1 class="text-4xl font-bold text-purple-800 mb-4">Xüsusi Hədiyyə Paketləri</h1>
-      <p class="text-lg text-gray-600 max-w-2xl mx-auto">Sevdiyiniz üçün xüsusi an yaradın! Paket seçin, əlavələri əlavə edin və unudulmaz hədiyyəni təqdim edin.</p>
-    </div>
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-purple-800 mb-4">Xüsusi Hədiyyə Paketləri</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Sevdiyiniz üçün xüsusi an yaradın! Paket seçin, əlavələri əlavə edin və unudulmaz hədiyyəni təqdim edin.</p>
+        </div>
 
-    <!-- Package Selection -->
-    <div class="mb-8">
-      <h2 class="text-2xl font-semibold mb-6 text-center">Paket Seçimi</h2>
+        <!-- Countdown Timer -->
+        <div id="countdown" class="hidden text-center mb-8 bg-red-100 border border-red-300 rounded-lg p-4">
+            <h3 class="text-lg font-bold text-red-800 mb-2">⚡ ENDİRİM AKTİVDİR! ⚡</h3>
+            <div id="countdown-timer" class="countdown">00g 00s 00d 00s</div>
+            <p class="text-sm text-red-600 mt-2">Tez ol, endirimdən yararlan!</p>
+        </div>
 
-      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Package Selection -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-semibold mb-6 text-center">Paket Seçimi</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Simple Package -->
+                <div id="simple-package" class="package-card p-6 cursor-pointer" onclick="selectPackage('simple')">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-bold">Sadə Paket</h3>
+                        <div class="text-right">
+                            <span id="simple-old-price" class="old-price hidden">30₼</span>
+                            <span class="price-badge relative">
+                                <span id="simple-discount-percent" class="discount-badge hidden">33%</span>
+                                <span id="simple-current-price">20₼</span>
+                            </span>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 mb-6">
+                        <li class="feature-item">15 pulsuz foto</li>
+                        <li class="feature-item">1 musiqi</li>
+                        <li class="feature-item">Özəl tarix zamanı</li>
+                        <li class="feature-item">Xüsusi məktub</li>
+                        <li class="feature-item">Kiçik şeir (qeyd)</li>
+                    </ul>
+                    <div class="text-center">
+                        <div id="simple-check" class="hidden text-purple-600 text-2xl">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- Simple Package -->
-        <div id="simple-package" class="package-card p-6 cursor-pointer" onclick="selectPackage('simple')">
-          <div class="flex justify-between items-start mb-2">
-            <h3 class="text-xl font-bold">Standart Paket</h3>
-            <!-- Qiymət bloku -->
-            <div class="text-right">
-              <div id="simple-off" class="off-badge mb-1 hidden">-0%</div>
-              <div class="flex items-center justify-end gap-2">
-                <span id="simple-old" class="price-old hidden">27₼</span>
-                <span id="simple-new" class="price-badge">27₼</span>
-              </div>
+                <!-- VIP Package -->
+                <div id="vip-package" class="package-card p-6 cursor-pointer" onclick="selectPackage('vip')">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-bold">VIP Paket</h3>
+                        <div class="text-right">
+                            <span id="vip-old-price" class="old-price hidden">35₼</span>
+                            <span class="price-badge relative">
+                                <span id="vip-discount-percent" class="discount-badge hidden">29%</span>
+                                <span id="vip-current-price">30₼</span>
+                            </span>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 mb-6">
+                        <li class="feature-item">20 pulsuz foto</li>
+                        <li class="feature-item">2 musiqi</li>
+                        <li class="feature-item">Xüsusi məktub/şeir</li>
+                        <li class="feature-item">1 video</li>
+                        <li class="feature-item">Slideshow (5 şəkil)</li>
+                        <li class="feature-item">Özəl tarix zamanı</li>
+                        <li class="feature-item">Geri sayım tarix zamanı</li>
+                    </ul>
+                    <div class="text-center">
+                        <div id="vip-check" class="hidden text-purple-600 text-2xl">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-
-          <ul class="space-y-2 mb-6">
-            <li class="feature-item">10 pulsuz foto</li>
-            <li class="feature-item">1 musiqi</li>
-            <li class="feature-item">Başlıqda kiçik not</li>
-            <li class="feature-item">Özəl tarix zamanı</li>
-            <li class="feature-item">Xüsusi məktub</li>
-            <li class="feature-item">İstəyə uygun şeir</li>
-          </ul>
-          <div class="text-center">
-            <div id="simple-check" class="hidden text-purple-600 text-2xl"><i class="fas fa-check-circle"></i></div>
-          </div>
         </div>
 
-        <!-- VIP Package -->
-        <div id="vip-package" class="package-card p-6 cursor-pointer" onclick="selectPackage('vip')">
-          <div class="flex justify-between items-start mb-2">
-            <h3 class="text-xl font-bold">VIP Paket</h3>
-            <!-- Qiymət bloku -->
-            <div class="text-right">
-              <div id="vip-off" class="off-badge mb-1 hidden">-0%</div>
-              <div class="flex items-center justify-end gap-2">
-                <span id="vip-old" class="price-old hidden">35₼</span>
-                <span id="vip-new" class="price-badge">35₼</span>
-              </div>
+        <!-- Additional Options -->
+        <div id="additional-options" class="hidden mb-8">
+            <h2 class="text-2xl font-semibold mb-6 text-center">Əlavə Seçimlər</h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="additional-option flex justify-between items-center">
+                    <div>
+                        <h3 class="font-medium">Özəl video (hərəsi 5₼)</h3>
+                        <p class="text-sm text-gray-500">Xüsusi mesajlı video hədiyyə</p>
+                    </div>
+                    <div class="flex items-center">
+                        <button class="quantity-btn bg-gray-200 px-2 rounded hover:bg-gray-300" onclick="adjustQuantity('video','decrease')">-</button>
+                        <input type="number" min="0" class="w-12 text-center mx-2 border rounded" id="video-quantity" value="0" readonly>
+                        <button class="quantity-btn bg-gray-200 px-2 rounded hover:bg-gray-300" onclick="adjustQuantity('video','increase')">+</button>
+                        <span class="text-purple-600 font-bold ml-4" id="video-total">0₼</span>
+                    </div>
+                </div>
+
+                <div class="additional-option flex justify-between items-center">
+                    <div>
+                        <h3 class="font-medium">Əlavə foto (5 şəkil bloku - 2₼)</h3>
+                        <p class="text-sm text-gray-500">Foto sayını artırın</p>
+                    </div>
+                    <div class="flex items-center">
+                        <button class="quantity-btn bg-gray-200 px-2 rounded hover:bg-gray-300" onclick="adjustQuantity('photos','decrease')">-</button>
+                        <input type="number" min="0" class="w-12 text-center mx-2 border rounded" id="photos-quantity" value="0" readonly>
+                        <button class="quantity-btn bg-gray-200 px-2 rounded hover:bg-gray-300" onclick="adjustQuantity('photos','increase')">+</button>
+                        <span class="text-purple-600 font-bold ml-4" id="photos-total">0₼</span>
+                    </div>
+                </div>
+
+                <div class="additional-option flex justify-between items-center">
+                    <div>
+                        <h3 class="font-medium">Əlavə musiqi (hərəsi 3₼)</h3>
+                        <p class="text-sm text-gray-500">Daha çox musiqi seçimi</p>
+                    </div>
+                    <div class="flex items-center">
+                        <button class="quantity-btn bg-gray-200 px-2 rounded hover:bg-gray-300" onclick="adjustQuantity('music','decrease')">-</button>
+                        <input type="number" min="0" class="w-12 text-center mx-2 border rounded" id="music-quantity" value="0" readonly>
+                        <button class="quantity-btn bg-gray-200 px-2 rounded hover:bg-gray-300" onclick="adjustQuantity('music','increase')">+</button>
+                        <span class="text-purple-600 font-bold ml-4" id="music-total">0₼</span>
+                    </div>
+                </div>
+
+                <div class="additional-option flex justify-between items-center">
+                    <div>
+                        <h3 class="font-medium">Qar dənələri/yağışı</h3>
+                        <p class="text-sm text-gray-500">Xüsusi effektlər</p>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-purple-600 font-bold mr-4">2₼</span>
+                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500" id="snow-effect" value="2">
+                    </div>
+                </div>
+
+                <div class="additional-option flex justify-between items-center">
+                    <div>
+                        <h3 class="font-medium">Giriş sistemində xüsusi məktub</h3>
+                        <p class="text-sm text-gray-500">Xüsusi qarşılama mesajı</p>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-purple-600 font-bold mr-4">2₼</span>
+                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500" id="entrance-letter" value="2">
+                    </div>
+                </div>
             </div>
-          </div>
-
-          <ul class="space-y-2 mb-6">
-            <li class="feature-item">15 pulsuz foto</li>
-            <li class="feature-item">2 musiqi</li>
-            <li class="feature-item">1 video</li>
-            <li class="feature-item">Başlıqda kiçik not</li>
-            <li class="feature-item">Xüsusi məktub/şeir</li>
-            <li class="feature-item">Slideshow (5 şəkil)</li>
-            <li class="feature-item">Özəl tarix zamanı</li>
-            <li class="feature-item">Geri sayım tarix zamanı</li>
-          </ul>
-          <div class="text-center">
-            <div id="vip-check" class="hidden text-purple-600 text-2xl"><i class="fas fa-check-circle"></i></div>
-          </div>
         </div>
 
-      </div>
+        <!-- Total & Submit -->
+        <div class="bg-white rounded-xl shadow-md p-6 max-w-2xl mx-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold">Yekun</h3>
+                <div id="total-price" class="text-2xl font-bold text-purple-600">0₼</div>
+            </div>
+
+            <div class="mb-6">
+                <label for="customer-name" class="block text-sm font-medium text-gray-700 mb-1">Adınız</label>
+                <input type="text" id="customer-name" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500" placeholder="Adınızı daxil edin">
+            </div>
+
+            <div class="mb-6">
+                <label for="special-message" class="block text-sm font-medium text-gray-700 mb-1">Xüsusi qeydlər (istəyə bağlı)</label>
+                <textarea id="special-message" rows="3" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500" placeholder="İstədiyiniz xüsusi qeydləri yazın..."></textarea>
+            </div>
+
+            <button id="submit-btn" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 disabled:opacity-50" disabled>
+                WhatsApp ilə Sifariş ver
+            </button>
+        </div>
     </div>
 
-    <!-- Additional Options -->
-    <div id="additional-options" class="hidden mb-8">
-      <h2 class="text-2xl font-semibold mb-6 text-center">Əlavə Seçimlər</h2>
+    <script>
+        let selectedPackage = null;
+        let totalPrice = 0;
+        let basePackagePrice = 0;
 
-      <div class="grid md:grid-cols-2 gap-4">
+        // Discount settings
+        const discountStart = new Date('2025-08-15T12:25:00');
+        const discountEnd = new Date('2025-08-17T12:25:00');
+        let discountActive = false;
 
-        <div class="additional-option flex justify-between items-center">
-          <div>
-            <h3 class="font-medium">Özəl video (hərəsi 5₼)</h3>
-            <p class="text-sm text-gray-500">Xüsusi mesajlı video hədiyyə</p>
-          </div>
-          <div class="flex items-center">
-            <button class="quantity-btn bg-gray-200 px-2 rounded" onclick="adjustQuantity('video','decrease')">-</button>
-            <input type="number" min="0" class="w-12 text-center mx-2 border rounded" id="video-quantity" value="0">
-            <button class="quantity-btn bg-gray-200 px-2 rounded" onclick="adjustQuantity('video','increase')">+</button>
-            <span class="text-purple-600 font-bold ml-4" id="video-total">0₼</span>
-          </div>
-        </div>
-
-        <div class="additional-option flex justify-between items-center">
-          <div>
-            <h3 class="font-medium">Əlavə foto (5 şəkil bloku - 2₼)</h3>
-            <p class="text-sm text-gray-500">Foto sayını artırın</p>
-          </div>
-          <div class="flex items-center">
-            <button class="quantity-btn bg-gray-200 px-2 rounded" onclick="adjustQuantity('photos','decrease')">-</button>
-            <input type="number" min="0" class="w-12 text-center mx-2 border rounded" id="photos-quantity" value="0">
-            <button class="quantity-btn bg-gray-200 px-2 rounded" onclick="adjustQuantity('photos','increase')">+</button>
-            <span class="text-purple-600 font-bold ml-4" id="photos-total">0₼</span>
-          </div>
-        </div>
-
-        <div class="additional-option flex justify-between items-center">
-          <div>
-            <h3 class="font-medium">Əlavə musiqi (hərəsi 3₼)</h3>
-            <p class="text-sm text-gray-500">Daha çox musiqi seçimi</p>
-          </div>
-          <div class="flex items-center">
-            <button class="quantity-btn bg-gray-200 px-2 rounded" onclick="adjustQuantity('music','decrease')">-</button>
-            <input type="number" min="0" class="w-12 text-center mx-2 border rounded" id="music-quantity" value="0">
-            <button class="quantity-btn bg-gray-200 px-2 rounded" onclick="adjustQuantity('music','increase')">+</button>
-            <span class="text-purple-600 font-bold ml-4" id="music-total">0₼</span>
-          </div>
-        </div>
-
-        <div class="additional-option flex justify-between items-center">
-          <div>
-            <h3 class="font-medium">Qar dənələri/yağışı</h3>
-            <p class="text-sm text-gray-500">Xüsusi effektlər</p>
-          </div>
-          <div class="flex items-center">
-            <span class="text-purple-600 font-bold mr-4">2₼</span>
-            <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500" id="snow-effect" value="2">
-          </div>
-        </div>
-
-        <div class="additional-option flex justify-between items-center">
-          <div>
-            <h3 class="font-medium">Giriş sistemində xüsusi məktub</h3>
-            <p class="text-sm text-gray-500">Xüsusi qarşılama mesajı</p>
-          </div>
-          <div class="flex items-center">
-            <span class="text-purple-600 font-bold mr-4">2₼</span>
-            <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500" id="entrance-letter" value="2">
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Total & Submit -->
-    <div class="bg-white rounded-xl shadow-md p-6 max-w-2xl mx-auto">
-      <div class="flex justify-between items-center mb-6">
-        <h3 class="text-xl font-bold">Yekun</h3>
-        <div id="total-price" class="text-2xl font-bold text-purple-600">0₼</div>
-      </div>
-
-      <div class="mb-6">
-        <label for="customer-name" class="block text-sm font-medium text-gray-700 mb-1">Adınız</label>
-        <input type="text" id="customer-name" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500">
-      </div>
-
-      <div class="mb-6">
-        <label for="special-message" class="block text-sm font-medium text-gray-700 mb-1">Xüsusi qeydlər (istəyə bağlı)</label>
-        <textarea id="special-message" rows="3" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500"></textarea>
-      </div>
-
-      <button id="submit-btn" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 disabled:opacity-50" disabled>
-        WhatsApp ilə Sifariş ver
-      </button>
-    </div>
-  </div>
-
-  <script>
-    // =========================
-    //   KAMPANİYA KONFİQURASİYASI
-    // =========================
-    // Baza (normal) qiymətlər:
-    const basePrices = {
-      simple: 27,  // Standart paket normal qiymət
-      vip: 35      // VIP paket normal qiymət
-    };
-
-    // Kampaniyalar siyahısı (tarix aralığı + endirim növü)
-    // type: 'fixed' (sabit məbləğ) və ya 'percent' (faiz)
-    const campaigns = [
-      {
-        id: 'simple-august',
-        target: 'simple',
-        type: 'fixed',
-        value: 7, // 27 - 7 = 20
-        start: '2025-08-15T12:18',
-        end:   '2025-12-31' // istəyə görə dəyiş
-      },
-      {
-        id: 'vip-august',
-        target: 'vip',
-        type: 'fixed',
-        value: 5, // 35 - 5 = 30
-        start: '2025-08-01',
-        end:   '2025-12-31'
-      }
-      // Nümunə (faiz endirimi əlavə etmək istəsən):
-      // { id:'black-friday', target:'vip', type:'percent', value:20, start:'2025-11-25', end:'2025-11-29' }
-    ];
-
-    // Aktiv qiymətlər (kampaniyaya görə formalaşır)
-    const currentPrices = { simple: basePrices.simple, vip: basePrices.vip };
-
-    // Yardımçı: tarix aralığı yoxlaması
-    function isWithin(date, start, end){
-      const d = new Date(date);
-      const s = new Date(start + 'T00:00:00');
-      const e = new Date(end   + 'T23:59:59');
-      return d >= s && d <= e;
-    }
-
-    // Yardımçı: AZN formatı
-    function formatAZN(n){
-      // Tam ədəddirsə .00 göstərməyək
-      const isInt = Number.isInteger(n);
-      return (isInt ? n : n.toFixed(2)) + '₼';
-    }
-
-    // Endirim tətbiqi
-    function applyCampaigns(){
-      const today = new Date();
-
-      // Hazırkı qiymətləri baza qiymətləri ilə yenilə
-      currentPrices.simple = basePrices.simple;
-      currentPrices.vip    = basePrices.vip;
-
-      // Hədəfə görə maksimal endirim prinsipinə əsasən tətbiq et
-      ['simple','vip'].forEach(target=>{
-        const base = basePrices[target];
-
-        // Eyni paket üçün bu gün aktiv olan kampaniyaları seç
-        const active = campaigns.filter(c => c.target === target && isWithin(today, c.start, c.end));
-
-        if(active.length === 0){
-          // Heç bir endirim yoxdursa, UI-ni normal göstər
-          paintPrice(target, base, null);
-          return;
+        // Check if discount is active
+        function checkDiscountStatus() {
+            const now = new Date();
+            discountActive = now >= discountStart && now <= discountEnd;
+            updatePrices();
+            if (discountActive) {
+                document.getElementById('countdown').classList.remove('hidden');
+                startCountdown();
+            } else {
+                document.getElementById('countdown').classList.add('hidden');
+            }
         }
 
-        // Bir neçə kampaniya varsa, ən böyük endirimi seç
-        let bestNew = base;
-        let best = null;
+        // Update prices based on discount
+        function updatePrices() {
+            if (discountActive) {
+                // Simple package - 33% discount (from 30₼ to 20₼)
+                document.getElementById('simple-old-price').classList.remove('hidden');
+                document.getElementById('simple-discount-percent').classList.remove('hidden');
+                document.getElementById('simple-current-price').textContent = '20₼';
+                
+                // VIP package - 29% discount (from 35₼ to 25₼)
+                document.getElementById('vip-old-price').classList.remove('hidden');
+                document.getElementById('vip-discount-percent').classList.remove('hidden');
+                document.getElementById('vip-current-price').textContent = '25₼';
+            } else {
+                // Normal prices
+                document.getElementById('simple-old-price').classList.add('hidden');
+                document.getElementById('simple-discount-percent').classList.add('hidden');
+                document.getElementById('simple-current-price').textContent = '30₼';
+                
+                document.getElementById('vip-old-price').classList.add('hidden');
+                document.getElementById('vip-discount-percent').classList.add('hidden');
+                document.getElementById('vip-current-price').textContent = '35₼';
+            }
+        }
 
-        active.forEach(c=>{
-          let candidate = base;
-          if(c.type === 'fixed'){
-            candidate = Math.max(0, base - c.value);
-          }else if(c.type === 'percent'){
-            candidate = base * (1 - (c.value/100));
-          }
-          if(candidate < bestNew){
-            bestNew = candidate;
-            best = c;
-          }
+        // Countdown timer
+        function startCountdown() {
+            const countdownTimer = document.getElementById('countdown-timer');
+            
+            function updateCountdown() {
+                const now = new Date();
+                const distance = discountEnd - now;
+
+                if (distance < 0) {
+                    discountActive = false;
+                    updatePrices();
+                    document.getElementById('countdown').classList.add('hidden');
+                    // Recalculate total if package is selected
+                    if (selectedPackage) {
+                        calculateTotalPrice();
+                    }
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                countdownTimer.textContent = `${days}g ${hours}s ${minutes}d ${seconds}s`;
+            }
+            
+            updateCountdown();
+            const interval = setInterval(updateCountdown, 1000);
+        }
+
+        // Initialize discount system
+        checkDiscountStatus();
+
+        function selectPackage(packageType) {
+            // Reset package selection
+            document.getElementById('simple-package').classList.remove('selected-package');
+            document.getElementById('vip-package').classList.remove('selected-package');
+            document.getElementById('simple-check').classList.add('hidden');
+            document.getElementById('vip-check').classList.add('hidden');
+            
+            // Select new package
+            if (packageType === 'simple') {
+                document.getElementById('simple-package').classList.add('selected-package');
+                document.getElementById('simple-check').classList.remove('hidden');
+                selectedPackage = 'Sadə Paket';
+                basePackagePrice = discountActive ? 20 : 30;
+            } else {
+                document.getElementById('vip-package').classList.add('selected-package');
+                document.getElementById('vip-check').classList.remove('hidden');
+                selectedPackage = 'VIP Paket';
+                basePackagePrice = discountActive ? 25 : 35;
+            }
+            
+            // Show additional options
+            document.getElementById('additional-options').classList.remove('hidden');
+            calculateTotalPrice();
+            checkSubmitButton();
+        }
+
+        // Quantity variables
+        let videoQuantity = 0;
+        let photosQuantity = 0;
+        let musicQuantity = 0;
+        const prices = { video: 5, photos: 2, music: 3 };
+
+        function adjustQuantity(type, action) {
+            const input = document.getElementById(`${type}-quantity`);
+            let quantity = parseInt(input.value) || 0;
+            
+            if (action === 'increase') {
+                quantity++;
+            } else if (action === 'decrease' && quantity > 0) {
+                quantity--;
+            }
+            
+            input.value = quantity;
+            
+            // Update quantity variables
+            if (type === 'video') videoQuantity = quantity;
+            if (type === 'photos') photosQuantity = quantity;
+            if (type === 'music') musicQuantity = quantity;
+            
+            // Update subtotal display
+            const subtotal = quantity * prices[type];
+            document.getElementById(`${type}-total`).textContent = subtotal + '₼';
+            
+            // Recalculate grand total
+            calculateTotalPrice();
+        }
+
+        function calculateTotalPrice() {
+            if (!selectedPackage) return;
+            
+            // Start with base package price
+            totalPrice = basePackagePrice;
+            
+            // Add quantity-based options
+            totalPrice += (videoQuantity * 5);
+            totalPrice += (photosQuantity * 2);
+            totalPrice += (musicQuantity * 3);
+            
+            // Add checkbox options
+            if (document.getElementById('snow-effect').checked) {
+                totalPrice += 2;
+            }
+            if (document.getElementById('entrance-letter').checked) {
+                totalPrice += 2;
+            }
+            
+            updateTotalPrice();
+        }
+
+        function updateTotalPrice() {
+            document.getElementById('total-price').textContent = totalPrice + '₼';
+        }
+
+        function checkSubmitButton() {
+            const name = document.getElementById('customer-name').value.trim();
+            const submitBtn = document.getElementById('submit-btn');
+            
+            if (selectedPackage && name) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        }
+
+        // Event listeners
+        document.getElementById('customer-name').addEventListener('input', checkSubmitButton);
+
+        // Update total price when checkboxes are changed
+        document.getElementById('snow-effect').addEventListener('change', calculateTotalPrice);
+        document.getElementById('entrance-letter').addEventListener('change', calculateTotalPrice);
+
+        // WhatsApp submission
+        document.getElementById('submit-btn').addEventListener('click', function() {
+            const name = document.getElementById('customer-name').value.trim();
+            const specialMessage = document.getElementById('special-message').value.trim();
+            
+            // Collect selected additional options
+            const additionalOptions = [];
+            if (videoQuantity > 0) {
+                additionalOptions.push(`Özəl video: ${videoQuantity} ədəd (${videoQuantity * 5}₼)`);
+            }
+            if (photosQuantity > 0) {
+                additionalOptions.push(`Əlavə foto: ${photosQuantity * 5} foto (${photosQuantity} blok - ${photosQuantity * 2}₼)`);
+            }
+            if (musicQuantity > 0) {
+                additionalOptions.push(`Əlavə musiqi: ${musicQuantity} ədəd (${musicQuantity * 3}₼)`);
+            }
+            if (document.getElementById('snow-effect').checked) {
+                additionalOptions.push('Qar dənələri/yağışı: 2₼');
+            }
+            if (document.getElementById('entrance-letter').checked) {
+                additionalOptions.push('Giriş sistemində xüsusi məktub: 2₼');
+            }
+            
+            // Prepare WhatsApp message
+            let whatsappMessage = `Salam, ${name} sifariş verir:%0A%0A`;
+            whatsappMessage += `Seçilən Paket: ${selectedPackage}%0A`;
+            if (discountActive) {
+                whatsappMessage += `⚡ ENDİRİM AKTİVDİR! ⚡%0A`;
+            }
+            whatsappMessage += `Ümumi Qiymət: ${totalPrice}₼%0A%0A`;
+            
+            if (additionalOptions.length > 0) {
+                whatsappMessage += `Əlavə Seçimlər:%0A`;
+                whatsappMessage += additionalOptions.join('%0A') + '%0A%0A';
+            }
+            
+            if (specialMessage) {
+                whatsappMessage += `Xüsusi Qeyd:%0A${encodeURIComponent(specialMessage)}%0A%0A`;
+            }
+            
+            whatsappMessage += `Ətraflı müzakirə üçün əlaqə saxlayın.`;
+            
+            // Open WhatsApp with pre-filled message
+            window.open(`https://wa.me/994552929502?text=${whatsappMessage}`, '_blank');
         });
-
-        currentPrices[target] = bestNew;
-        paintPrice(target, base, bestNew);
-      });
-    }
-
-    // UI boyama (köhnə qiymət, yeni qiymət, %-lik endirim)
-    function paintPrice(target, base, discounted){
-      const oldEl = document.getElementById(target === 'simple' ? 'simple-old' : 'vip-old');
-      const newEl = document.getElementById(target === 'simple' ? 'simple-new' : 'vip-new');
-      const offEl = document.getElementById(target === 'simple' ? 'simple-off' : 'vip-off');
-
-      if(discounted === null || discounted >= base){
-        // Endirim yoxdur
-        oldEl.classList.add('hidden');
-        offEl.classList.add('hidden');
-        newEl.textContent = formatAZN(base);
-        return;
-      }
-
-      // Endirim var
-      oldEl.textContent = formatAZN(base);
-      oldEl.classList.remove('hidden');
-
-      // Yaxşı görünüş üçün qəpikləri yuvarlaqla (lazım olsa)
-      const pretty = Math.round(discounted * 100) / 100;
-      newEl.textContent = formatAZN(pretty);
-
-      // Faiz hesabla və badge göstər
-      const offPct = Math.round( ( (base - pretty) / base ) * 100 );
-      offEl.textContent = `-${offPct}%`;
-      offEl.classList.remove('hidden');
-    }
-
-    // =========================
-    //   SİFARİŞ MƏNTİQİ
-    // =========================
-    let selectedPackage = null;
-    let totalPrice = 0;
-
-    function selectPackage(packageType){
-      // Reset vizual seçim
-      document.getElementById('simple-package').classList.remove('selected-package');
-      document.getElementById('vip-package').classList.remove('selected-package');
-      document.getElementById('simple-check').classList.add('hidden');
-      document.getElementById('vip-check').classList.add('hidden');
-
-      // Yeni seçim
-      if(packageType === 'simple'){
-        document.getElementById('simple-package').classList.add('selected-package');
-        document.getElementById('simple-check').classList.remove('hidden');
-        selectedPackage = 'Sadə Paket';
-        totalPrice = currentPrices.simple; // KAMPANİYA QİYMƏTİ
-      }else{
-        document.getElementById('vip-package').classList.add('selected-package');
-        document.getElementById('vip-check').classList.remove('hidden');
-        selectedPackage = 'VIP Paket';
-        totalPrice = currentPrices.vip; // KAMPANİYA QİYMƏTİ
-      }
-
-      // Əlavə seçimləri aç
-      document.getElementById('additional-options').classList.remove('hidden');
-      updateTotalPrice();
-      checkSubmitButton();
-    }
-
-    // Checkbox-lar
-    document.querySelectorAll('#additional-options input[type="checkbox"]').forEach(checkbox=>{
-      checkbox.addEventListener('change', function(){
-        const v = parseInt(this.value);
-        if(this.checked){ totalPrice += v; } else { totalPrice -= v; }
-        updateTotalPrice();
-      });
-    });
-
-    // Əlavə sayları
-    let videoQuantity = 0, photosQuantity = 0, musicQuantity = 0;
-    const prices = { video:5, photos:2, music:3 };
-
-    function adjustQuantity(type, action){
-      const input = document.getElementById(`${type}-quantity`);
-      let quantity = parseInt(input.value);
-      if(action === 'increase') quantity++;
-      if(action === 'decrease' && quantity > 0) quantity--;
-      input.value = quantity;
-
-      if(type === 'video') videoQuantity = quantity;
-      if(type === 'photos') photosQuantity = quantity;
-      if(type === 'music') musicQuantity = quantity;
-
-      const subtotal = quantity * prices[type];
-      document.getElementById(`${type}-total`).textContent = formatAZN(subtotal);
-
-      // Toplamı yenidən hesabla (paket + əlavələr)
-      if(selectedPackage){
-        const base = (selectedPackage === 'Sadə Paket') ? currentPrices.simple : currentPrices.vip;
-        totalPrice = base + (videoQuantity*prices.video) + (photosQuantity*prices.photos) + (musicQuantity*prices.music);
-
-        // Checkbox seçilmiş əlavələr
-        if(document.getElementById('snow-effect').checked) totalPrice += parseInt(document.getElementById('snow-effect').value);
-        if(document.getElementById('entrance-letter').checked) totalPrice += parseInt(document.getElementById('entrance-letter').value);
-      }
-
-      updateTotalPrice();
-    }
-
-    function updateTotalPrice(){
-      document.getElementById('total-price').textContent = formatAZN(totalPrice || 0);
-    }
-
-    function checkSubmitButton(){
-      const name = document.getElementById('customer-name').value.trim();
-      const submitBtn = document.getElementById('submit-btn');
-      submitBtn.disabled = !(selectedPackage && name);
-    }
-
-    document.getElementById('customer-name').addEventListener('input', checkSubmitButton);
-
-    // WhatsApp submission
-    document.getElementById('submit-btn').addEventListener('click', function(){
-      const name = document.getElementById('customer-name').value.trim();
-      const specialMessage = document.getElementById('special-message').value.trim();
-
-      const additionalOptions = [];
-      if(videoQuantity > 0)  additionalOptions.push(`Özəl video: ${videoQuantity} ədəd (${formatAZN(videoQuantity*prices.video)})`);
-      if(photosQuantity > 0) additionalOptions.push(`Əlavə foto: ${photosQuantity*5} foto (${photosQuantity} blok - ${formatAZN(photosQuantity*prices.photos)})`);
-      if(musicQuantity > 0)  additionalOptions.push(`Əlavə musiqi: ${musicQuantity} ədəd (${formatAZN(musicQuantity*prices.music)})`);
-      if(document.getElementById('snow-effect').checked)     additionalOptions.push(`Qar dənələri/yağışı: ${formatAZN(2)}`);
-      if(document.getElementById('entrance-letter').checked) additionalOptions.push(`Giriş sistemində xüsusi məktub: ${formatAZN(2)}`);
-
-      // Seçilən paket üçün normal və endirimli qiyməti mesajda göstər
-      const packKey = (selectedPackage === 'Sadə Paket') ? 'simple' : 'vip';
-      const normal = basePrices[packKey];
-      const kamp = currentPrices[packKey];
-      const offPct = normal > kamp ? Math.round(((normal - kamp)/normal)*100) : 0;
-
-      let whatsappMessage = `Salam, *${name}* sifariş verir:%0A%0A`;
-      whatsappMessage += `Seçilən Paket: *${selectedPackage}*%0A`;
-      if(offPct>0){
-        whatsappMessage += `Qiymət: ${formatAZN(kamp)} (endirim: ${offPct}% | əvvəl: ${formatAZN(normal)})%0A`;
-      }else{
-        whatsappMessage += `Qiymət: ${formatAZN(normal)}%0A`;
-      }
-      whatsappMessage += `Ümumi: *${formatAZN(totalPrice)}*%0A%0A`;
-
-      if(additionalOptions.length>0){
-        whatsappMessage += `*Əlavə Seçimlər:* %0A` + additionalOptions.join('%0A') + '%0A%0A';
-      }
-      if(specialMessage){
-        whatsappMessage += `*Xüsusi Qeyd:* %0A${encodeURIComponent(specialMessage)}%0A%0A`;
-      }
-
-      window.open(`https://wa.me/994552929502?text=${whatsappMessage}`, '_blank');
-    });
-
-    // Səhifə açılarkən kampaniyaları tətbiq et və UI-ni boya
-    applyCampaigns();
-  </script>
+    </script>
 </body>
 </html>
