@@ -1133,14 +1133,14 @@
             const notes = document.getElementById('special-notes').value.trim();
 
             // Prepare WhatsApp message
-            let message = `Salam! ${name} hədiyyə paketi sifariş verir:%0A%0A`;
-            message += `📦 Paket: ${selectedPackageName}%0A`;
+            let message = `Salam! *${name}* hədiyyə paketi sifariş verir:%0A%0A`;
+            message += `📦 *Paket:* *${selectedPackageName}*%0A`;
             
             if (discountActive) {
-                message += `⚡ ENDİRİM AKTİVDİR! ⚡%0A`;
+                message += `⚡ *ENDİRİM AKTİVDİR!* ⚡%0A`;
             }
             
-            message += `💰 Ümumi Qiymət: ${totalPrice}₼%0A%0A`;
+            message += `💰 *Ümumi Qiymət:* ${totalPrice}₼%0A%0A`;
 
             // Add additional options
             const optionsList = [];
@@ -1151,13 +1151,13 @@
             if (additionalOptions.entranceLetter) optionsList.push(`• Giriş məktubu (2₼)`);
 
             if (optionsList.length > 0) {
-                message += `🎁 Əlavə seçimlər:%0A${optionsList.join('%0A')}%0A%0A`;
+                message += `🎁 *Əlavə seçimlər:*  %0A${optionsList.join('%0A')}%0A%0A`;
             }
 
             // Add notes if provided
-            if (notes) message += `📝 Qeydlər: ${encodeURIComponent(notes)}%0A`;
+            if (notes) message += `📝 *Qeydlər:* ${encodeURIComponent(notes)}%0A`;
 
-            message += `%0AƏtraflı məlumat üçün gözləyirəm! 🎉`;
+            message += `%0A*Ətraflı məlumat üçün gözləyirəm!* 🎉`;
 
             // Open WhatsApp
             window.open(`https://wa.me/994552929502?text=${message}`, '_blank');
@@ -1185,4 +1185,3 @@
     </script>
 </body>
 </html>
-
