@@ -17,8 +17,9 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             border-radius: 12px;
-            overflow: hidden;
+            overflow: visible;
             background: white;
+            position: relative;
         }
         .package-card:hover {
             transform: translateY(-5px);
@@ -64,14 +65,39 @@
             padding: 2px 6px;
             font-size: 10px;
             position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%);
+            top: -12px;
+            right: -8px;
+            transform: none;
+            z-index: 15;
+            border: 1px solid white;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
         }
         .countdown {
             font-size: 1.5rem;
             color: red;
             font-weight: bold;
+        }
+        .recommended-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-size: 11px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            z-index: 20;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+            border: 2px solid white;
+            animation: pulse-glow 2s infinite;
+            white-space: nowrap;
+        }
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6); }
+            100% { box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4); }
         }
     </style>
 </head>
@@ -93,16 +119,16 @@
         <!-- Package Selection -->
         <div class="mb-8">
             <h2 class="text-2xl font-semibold mb-6 text-center">Paket Seçimi</h2>
-            <div class="grid md:grid-cols-2 gap-6">
+            <div class="grid md:grid-cols-2 gap-6" style="padding-top: 15px;">
                 <!-- Simple Package -->
                 <div id="simple-package" class="package-card p-6 cursor-pointer" onclick="selectPackage('simple')">
                     <div class="flex justify-between items-start mb-4">
                         <h3 class="text-xl font-bold">Sadə Paket</h3>
-                        <div class="text-right">
+                        <div class="text-right relative">
                             <span id="simple-old-price" class="old-price hidden">30₼</span>
-                            <span class="price-badge relative">
+                            <span class="price-badge relative" style="margin-top: 8px;">
                                 <span id="simple-discount-percent" class="discount-badge hidden">33%</span>
-                                <span id="simple-current-price">20₼</span>
+                                <span id="simple-current-price">30₼</span>
                             </span>
                         </div>
                     </div>
@@ -121,14 +147,15 @@
                 </div>
 
                 <!-- VIP Package -->
-                <div id="vip-package" class="package-card p-6 cursor-pointer" onclick="selectPackage('vip')">
+                <div id="vip-package" class="package-card p-6 cursor-pointer relative" onclick="selectPackage('vip')">
+                    <div class="recommended-badge">⭐ Tövsiyə olunur</div>
                     <div class="flex justify-between items-start mb-4">
                         <h3 class="text-xl font-bold">VIP Paket</h3>
-                        <div class="text-right">
+                        <div class="text-right relative">
                             <span id="vip-old-price" class="old-price hidden">35₼</span>
-                            <span class="price-badge relative">
+                            <span class="price-badge relative" style="margin-top: 8px;">
                                 <span id="vip-discount-percent" class="discount-badge hidden">29%</span>
-                                <span id="vip-current-price">30₼</span>
+                                <span id="vip-current-price">35₼</span>
                             </span>
                         </div>
                     </div>
@@ -245,10 +272,27 @@
         let totalPrice = 0;
         let basePackagePrice = 0;
 
-        // Discount settings
-        const discountStart = new Date('2025-08-15T12:25:00');
-        const discountEnd = new Date('2025-08-17T12:25:00');
+        // Discount settings Endirim zamanı
+        const discountStart = new Date('2025-08-15T13:30:00');
+        const discountEnd = new Date('2025-08-16T12:25:00');
         let discountActive = false;
+
+        // Price configuration - tək yerdə qiymətləri idarə etmək üçün
+        const packagePrices = {
+            simple: {
+                normal: 25,
+                discount: 20
+            },
+            vip: {
+                normal: 35,
+                discount: 25
+            }
+        };
+
+        // Avtomatik faiz hesablama
+        function calculateDiscountPercent(normalPrice, discountPrice) {
+            return Math.round(((normalPrice - discountPrice) / normalPrice) * 100);
+        }
 
         // Check if discount is active
         function checkDiscountStatus() {
@@ -263,27 +307,33 @@
             }
         }
 
-        // Update prices based on discount
+        // Update prices based on discount - avtomatik sistem
         function updatePrices() {
             if (discountActive) {
-                // Simple package - 33% discount (from 30₼ to 20₼)
+                // Simple package
+                const simpleDiscount = calculateDiscountPercent(packagePrices.simple.normal, packagePrices.simple.discount);
+                document.getElementById('simple-old-price').textContent = packagePrices.simple.normal + '₼';
                 document.getElementById('simple-old-price').classList.remove('hidden');
+                document.getElementById('simple-discount-percent').textContent = simpleDiscount + '%';
                 document.getElementById('simple-discount-percent').classList.remove('hidden');
-                document.getElementById('simple-current-price').textContent = '20₼';
+                document.getElementById('simple-current-price').textContent = packagePrices.simple.discount + '₼';
                 
-                // VIP package - 29% discount (from 35₼ to 25₼)
+                // VIP package
+                const vipDiscount = calculateDiscountPercent(packagePrices.vip.normal, packagePrices.vip.discount);
+                document.getElementById('vip-old-price').textContent = packagePrices.vip.normal + '₼';
                 document.getElementById('vip-old-price').classList.remove('hidden');
+                document.getElementById('vip-discount-percent').textContent = vipDiscount + '%';
                 document.getElementById('vip-discount-percent').classList.remove('hidden');
-                document.getElementById('vip-current-price').textContent = '25₼';
+                document.getElementById('vip-current-price').textContent = packagePrices.vip.discount + '₼';
             } else {
                 // Normal prices
                 document.getElementById('simple-old-price').classList.add('hidden');
                 document.getElementById('simple-discount-percent').classList.add('hidden');
-                document.getElementById('simple-current-price').textContent = '30₼';
+                document.getElementById('simple-current-price').textContent = packagePrices.simple.normal + '₼';
                 
                 document.getElementById('vip-old-price').classList.add('hidden');
                 document.getElementById('vip-discount-percent').classList.add('hidden');
-                document.getElementById('vip-current-price').textContent = '35₼';
+                document.getElementById('vip-current-price').textContent = packagePrices.vip.normal + '₼';
             }
         }
 
@@ -328,17 +378,17 @@
             document.getElementById('simple-check').classList.add('hidden');
             document.getElementById('vip-check').classList.add('hidden');
             
-            // Select new package
+            // Select new package - avtomatik qiymət sistemi ilə
             if (packageType === 'simple') {
                 document.getElementById('simple-package').classList.add('selected-package');
                 document.getElementById('simple-check').classList.remove('hidden');
                 selectedPackage = 'Sadə Paket';
-                basePackagePrice = discountActive ? 20 : 30;
+                basePackagePrice = discountActive ? packagePrices.simple.discount : packagePrices.simple.normal;
             } else {
                 document.getElementById('vip-package').classList.add('selected-package');
                 document.getElementById('vip-check').classList.remove('hidden');
                 selectedPackage = 'VIP Paket';
-                basePackagePrice = discountActive ? 25 : 35;
+                basePackagePrice = discountActive ? packagePrices.vip.discount : packagePrices.vip.normal;
             }
             
             // Show additional options
