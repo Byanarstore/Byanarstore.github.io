@@ -2,344 +2,972 @@
 <html lang="az">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xüsusi Hədiyyə Paketləri</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Xüsusi Hədiyyə Paketləri - Premium Digital Experiences</title>
+    <meta name="description" content="Sevdiyiniz insanlar üçün unudulmaz digital hədiyyə təcrübələri yaradın. Professional dizayn, fərdi yanaşma və premium keyfiyyət.">
+    
+    <!-- Additional Mobile Optimization -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="format-detection" content="telephone=yes">
+    <meta name="HandheldFriendly" content="true">
+    <meta name="MobileOptimized" content="width">
+    
+    <!-- Modern Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- TailwindCSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'playfair': ['Playfair Display', 'serif']
+                    },
+                    colors: {
+                        primary: {
+                            50: '#f0f0ff',
+                            100: '#e5e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81'
+                        },
+                        gradient: {
+                            start: '#667eea',
+                            end: '#764ba2'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-soft': 'pulse-soft 2s ease-in-out infinite',
+                        'slide-up': 'slide-up 0.6s ease-out',
+                        'glow': 'glow 2s ease-in-out infinite alternate'
+                    }
+                }
+            }
+        }
+    </script>
+    
     <style>
-        /* Custom styles */
+        /* Custom CSS Variables */
+        :root {
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --shadow-glow: 0 0 30px rgba(102, 126, 234, 0.3);
+            --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f4ff;
-            color: #333;
-        }
-        .package-card {
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 12px;
-            overflow: visible;
-            background: white;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             position: relative;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
         }
-        .package-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        .selected-package {
-            border: 3px solid #8b5cf6;
-        }
-        .feature-item {
-            position: relative;
-            padding-left: 28px;
-        }
-        .feature-item::before {
-            content: '✓';
-            position: absolute;
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
             left: 0;
-            color: #8b5cf6;
-            font-weight: bold;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(240, 147, 251, 0.05) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
         }
-        .additional-option {
-            border-radius: 8px;
-            padding: 12px 16px;
-            background-color: #f3f4f6;
-            margin-bottom: 8px;
+
+        /* Glass Morphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-card);
         }
-        .price-badge {
-            background-color: #8b5cf6;
-            color: white;
-            border-radius: 50px;
-            padding: 5px 15px;
-            font-weight: bold;
+
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .old-price {
-            color: red;
-            text-decoration: line-through;
-            font-size: 14px;
-            margin-right: 10px;
+
+        /* Modern Card Styles */
+        .package-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: visible;
+            margin-top: 20px;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
-        .discount-badge {
-            background-color: #ef4444;
-            color: white;
-            border-radius: 8px;
-            padding: 2px 6px;
-            font-size: 10px;
+
+        .package-card::before {
+            content: '';
             position: absolute;
-            top: -12px;
-            right: -8px;
-            transform: none;
-            z-index: 15;
-            border: 1px solid white;
-            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
         }
-        .countdown {
-            font-size: 1.5rem;
-            color: red;
-            font-weight: bold;
+
+        .package-card:hover::before {
+            left: 100%;
         }
-        .recommended-badge {
-            background: linear-gradient(135deg, #10b981, #059669);
+
+        .package-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .package-card.selected {
+            background: var(--gradient-primary);
             color: white;
-            font-size: 11px;
-            padding: 6px 12px;
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .package-card.selected .feature-icon {
+            color: #fbbf24;
+        }
+
+        /* Modern Buttons */
+        .btn-modern {
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 12px;
+            padding: 16px 32px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-modern:hover::before {
+            left: 100%;
+        }
+
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-modern:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Quantity Controls */
+        .quantity-control {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .quantity-control:hover {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: transparent;
+            transform: scale(1.1);
+        }
+
+        /* Modern Form Inputs */
+        .form-input {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(229, 231, 235, 0.5);
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Toggle Switches */
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 32px;
+            background: #e5e7eb;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            min-width: 60px;
+            min-height: 32px;
+        }
+
+        .toggle-switch::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-switch.active {
+            background: var(--gradient-primary);
+        }
+
+        .toggle-switch.active::before {
+            transform: translateX(28px);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
+            to { box-shadow: 0 0 40px rgba(102, 126, 234, 0.6); }
+        }
+
+        /* Badge Styles */
+        .badge-recommended {
+            background: var(--gradient-success);
+            color: white;
+            padding: 8px 16px;
             border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
             position: absolute;
             top: -12px;
             left: 50%;
             transform: translateX(-50%);
-            font-weight: bold;
+            animation: glow 2s ease-in-out infinite alternate;
             z-index: 20;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-            border: 2px solid white;
-            animation: pulse-glow 2s infinite;
             white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
         }
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4); }
-            50% { box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6); }
-            100% { box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4); }
+
+        .badge-discount {
+            background: var(--gradient-secondary);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            z-index: 10;
+        }
+
+        /* Counter Animation */
+        .countdown-timer {
+            background: var(--gradient-secondary);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            animation: pulse-soft 2s ease-in-out infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .package-card {
+                margin-bottom: 20px;
+                padding: 1.5rem;
+            }
+            
+            .quantity-control {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .btn-modern {
+                padding: 14px 24px;
+                font-size: 14px;
+            }
+
+            .badge-recommended {
+                font-size: 10px;
+                padding: 6px 12px;
+                top: -10px;
+            }
+
+            h1 {
+                font-size: 3rem !important;
+            }
+
+            h2 {
+                font-size: 2rem !important;
+            }
+
+            .glass {
+                padding: 2rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .min-h-screen {
+                padding: 1rem;
+            }
+
+            .package-card {
+                padding: 1rem;
+                margin-top: 15px;
+            }
+
+            .quantity-control {
+                width: 36px;
+                height: 36px;
+                font-size: 12px;
+            }
+
+            .btn-modern {
+                padding: 12px 20px;
+                font-size: 13px;
+            }
+
+            .form-input {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+
+            .toggle-switch {
+                width: 50px;
+                height: 26px;
+            }
+
+            .toggle-switch::before {
+                width: 20px;
+                height: 20px;
+                top: 3px;
+                left: 3px;
+            }
+
+            .toggle-switch.active::before {
+                transform: translateX(24px);
+            }
+
+            h1 {
+                font-size: 2.5rem !important;
+            }
+
+            h2 {
+                font-size: 1.75rem !important;
+            }
+
+            h3 {
+                font-size: 1.25rem !important;
+            }
+
+            .glass {
+                padding: 1.5rem !important;
+            }
+
+            .badge-recommended {
+                font-size: 9px;
+                padding: 4px 8px;
+                top: -8px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .min-h-screen {
+                padding: 0.5rem;
+            }
+
+            .package-card {
+                padding: 0.75rem;
+            }
+
+            .glass {
+                padding: 1rem !important;
+            }
+
+            h1 {
+                font-size: 2rem !important;
+            }
+
+            h2 {
+                font-size: 1.5rem !important;
+            }
+
+            .btn-modern {
+                padding: 10px 16px;
+                font-size: 12px;
+            }
+
+            .form-input {
+                padding: 10px 14px;
+                font-size: 13px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Success Animation */
+        .success-checkmark {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #10b981;
+            position: relative;
+        }
+
+        .success-checkmark::after {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 4px;
+            width: 6px;
+            height: 12px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
         }
     </style>
 </head>
-<body class="py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-6xl mx-auto">
-        <!-- Header -->
-        <div class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-purple-800 mb-4">Xüsusi Hədiyyə Paketləri</h1>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Sevdiyiniz üçün xüsusi an yaradın! Paket seçin, əlavələri əlavə edin və unudulmaz hədiyyəni təqdim edin.</p>
-        </div>
 
-        <!-- Countdown Timer -->
-        <div id="countdown" class="hidden text-center mb-8 bg-red-100 border border-red-300 rounded-lg p-4">
-            <h3 class="text-lg font-bold text-red-800 mb-2">⚡ ENDİRİM AKTİVDİR! ⚡</h3>
-            <div id="countdown-timer" class="countdown">00g 00s 00d 00s</div>
-            <p class="text-sm text-red-600 mt-2">Tez ol, endirimdən yararlan!</p>
-        </div>
-
-        <!-- Package Selection -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-semibold mb-6 text-center">Paket Seçimi</h2>
-            <div class="grid md:grid-cols-2 gap-6" style="padding-top: 15px;">
-                <!-- Simple Package -->
-                <div id="simple-package" class="package-card p-6 cursor-pointer" onclick="selectPackage('simple')">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-xl font-bold">Sadə Paket</h3>
-                        <div class="text-right relative">
-                            <span id="simple-old-price" class="old-price hidden">30₼</span>
-                            <span class="price-badge relative" style="margin-top: 8px;">
-                                <span id="simple-discount-percent" class="discount-badge hidden">33%</span>
-                                <span id="simple-current-price">30₼</span>
-                            </span>
+<body class="font-inter">
+    <!-- Main Container -->
+    <div class="min-h-screen py-8 px-4">
+        <div class="max-w-7xl mx-auto">
+            
+            <!-- Header Section -->
+            <header class="text-center mb-16" data-aos="fade-up">
+                <div class="glass rounded-3xl p-12 mb-8">
+                    <h1 class="font-playfair text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-6">
+                        Xüsusi Hədiyyə Paketləri
+                    </h1>
+                    <p class="text-lg sm:text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-8 px-4">
+                        Sevdiyiniz insanlar üçün unudulmaz digital təcrübələr yaradın. Hər hədiyyə unikal dizayn və fərdi yanaşma ilə hazırlanır.
+                    </p>
+                    
+                    <!-- Trust Indicators -->
+                    <div class="flex flex-wrap justify-center gap-6 text-sm font-medium text-gray-500">
+                        <div class="flex items-center">
+                            <i class="fas fa-shield-check text-green-500 mr-2"></i>
+                            <span>100% Təhlükəsiz</span>
                         </div>
-                    </div>
-                    <ul class="space-y-2 mb-6">
-                        <li class="feature-item">15 pulsuz foto</li>
-                        <li class="feature-item">1 musiqi</li>
-                        <li class="feature-item">Özəl tarix zamanı</li>
-                        <li class="feature-item">Xüsusi məktub</li>
-                        <li class="feature-item">Kiçik şeir (qeyd)</li>
-                    </ul>
-                    <div class="text-center">
-                        <div id="simple-check" class="hidden text-purple-600 text-2xl">
-                            <i class="fas fa-check-circle"></i>
+                        <div class="flex items-center">
+                            <i class="fas fa-clock text-blue-500 mr-2"></i>
+                            <span>24 saat ərzində hazır</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-heart text-red-500 mr-2"></i>
+                            <span>5000+ xoşbəxt müştəri</span>
                         </div>
                     </div>
                 </div>
+            </header>
 
-                <!-- VIP Package -->
-                <div id="vip-package" class="package-card p-6 cursor-pointer relative" onclick="selectPackage('vip')">
-                    <div class="recommended-badge">⭐ Tövsiyə olunur</div>
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-xl font-bold">VIP Paket</h3>
-                        <div class="text-right relative">
-                            <span id="vip-old-price" class="old-price hidden">35₼</span>
-                            <span class="price-badge relative" style="margin-top: 8px;">
-                                <span id="vip-discount-percent" class="discount-badge hidden">29%</span>
-                                <span id="vip-current-price">35₼</span>
-                            </span>
+            <!-- Discount Timer -->
+            <div id="discount-section" class="hidden mb-12" data-aos="zoom-in">
+                <div class="countdown-timer glass max-w-md mx-auto">
+                    <h3 class="text-lg font-bold mb-2">
+                        <i class="fas fa-bolt"></i> Məhdud Vaxt Endirimi!
+                    </h3>
+                    <div id="countdown-display" class="text-3xl font-bold mb-2"></div>
+                    <p class="text-sm opacity-90">Tələsin, endirimdən yararlanın!</p>
+                </div>
+            </div>
+
+            <!-- Package Selection -->
+            <section class="mb-20">
+                <div class="text-center mb-12" data-aos="fade-up">
+                    <h2 class="font-playfair text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+                        Sizin üçün uyğun paketi seçin
+                    </h2>
+                    <p class="text-xl text-white/80 max-w-2xl mx-auto">
+                        Hər paket sevgi ilə hazırlanır və professional standartlarda təqdim olunur
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-16 justify-items-center max-w-6xl mx-auto">
+                    <!-- Simple Package -->
+                    <div class="package-card glass rounded-3xl p-8 cursor-pointer relative w-full max-w-lg" 
+                         onclick="selectPackage('simple')" 
+                         id="simple-package" 
+                         data-aos="fade-right">
+                        
+                        <div class="flex justify-between items-start mb-8">
+                            <div>
+                                <h3 class="font-playfair text-3xl font-bold text-gray-800 mb-2">Sadə Paket</h3>
+                                <p class="text-lg text-gray-600">Klassik və zərif seçim</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="relative">
+                                    <span id="simple-old-price" class="hidden absolute -top-6 right-0 text-sm text-red-500 line-through"></span>
+                                    <span id="simple-discount-badge" class="hidden badge-discount"></span>
+                                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-3 rounded-2xl font-bold text-2xl">
+                                        <span id="simple-current-price">20₼</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 mb-8">
+                            <div class="flex items-center">
+                                <i class="fas fa-camera feature-icon text-indigo-500 mr-4 text-xl"></i>
+                                <span class="text-gray-700 text-lg">15 premium foto</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-music feature-icon text-indigo-500 mr-4 text-xl"></i>
+                                <span class="text-gray-700 text-lg">1 arxa fon musiqisi</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-calendar feature-icon text-indigo-500 mr-4 text-xl"></i>
+                                <span class="text-gray-700 text-lg">Xüsusi tarix və zaman</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-envelope feature-icon text-indigo-500 mr-4 text-xl"></i>
+                                <span class="text-gray-700 text-lg">Fərdi məktub</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-feather feature-icon text-indigo-500 mr-4 text-xl"></i>
+                                <span class="text-gray-700 text-lg">Romantik şeir</span>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <div id="simple-selected" class="hidden">
+                                <div class="success-checkmark mx-auto mb-2"></div>
+                                <p class="text-lg font-semibold">Seçildi</p>
+                            </div>
                         </div>
                     </div>
-                    <ul class="space-y-2 mb-6">
-                        <li class="feature-item">20 pulsuz foto</li>
-                        <li class="feature-item">2 musiqi</li>
-                        <li class="feature-item">Xüsusi məktub/şeir</li>
-                        <li class="feature-item">1 video</li>
-                        <li class="feature-item">Slideshow (5 şəkil)</li>
-                        <li class="feature-item">Özəl tarix zamanı</li>
-                        <li class="feature-item">Geri sayım tarix zamanı</li>
-                    </ul>
-                    <div class="text-center">
-                        <div id="vip-check" class="hidden text-purple-600 text-2xl">
-                            <i class="fas fa-check-circle"></i>
+
+                    <!-- VIP Package -->
+                    <div class="package-card glass rounded-3xl p-8 cursor-pointer relative w-full max-w-lg" 
+                         onclick="selectPackage('vip')" 
+                         id="vip-package" 
+                         data-aos="fade-left">
+                        
+                        <div class="badge-recommended">
+                            <i class="fas fa-crown mr-1"></i>
+                            Ən Məşhur Seçim
+                        </div>
+
+                        <div class="flex justify-between items-start mb-8">
+                            <div>
+                                <h3 class="font-playfair text-3xl font-bold text-gray-800 mb-2">VIP Paket</h3>
+                                <p class="text-lg text-gray-600">Premium təcrübə</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="relative">
+                                    <span id="vip-old-price" class="hidden absolute -top-6 right-0 text-sm text-red-500 line-through"></span>
+                                    <span id="vip-discount-badge" class="hidden badge-discount"></span>
+                                    <div class="bg-gradient-to-r from-purple-500 to-pink-600 text-white px-6 py-3 rounded-2xl font-bold text-2xl">
+                                        <span id="vip-current-price">30₼</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 mb-8">
+                            <div class="flex items-center">
+                                <i class="fas fa-images feature-icon text-purple-500 mr-4 text-xl"></i>
+                                <span class="text-gray-700 text-lg">20 premium foto</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-music feature-icon text-purple-500 mr-4 text-xl"></i>
+                                <span class="text-gray-700 text-lg">2 musiqi seçimi</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-envelope-open feature-icon text-purple-500 mr-4 text-xl"></i>
+                                <span class="text-gray-700 text-lg">Fərdi məktub/şeir</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-video feature-icon text-purple-500 mr-4 text-xl"></i>
+                                <span class="text-gray-700 text-lg">1 eksklüziv video</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-play-circle feature-icon text-purple-500 mr-4 text-xl"></i>
+                                <span class="text-gray-700 text-lg">Slideshow (5 şəkil)</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-calendar-alt feature-icon text-purple-500 mr-4 text-xl"></i>
+                                <span class="text-gray-700 text-lg">Xüsusi tarix və zaman</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-stopwatch feature-icon text-purple-500 mr-4 text-xl"></i>
+                                <span class="text-gray-700 text-lg">Geri sayım timer</span>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <div id="vip-selected" class="hidden">
+                                <div class="success-checkmark mx-auto mb-2"></div>
+                                <p class="text-lg font-semibold">Seçildi</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- Additional Options -->
-        <div id="additional-options" class="hidden mb-8">
-            <h2 class="text-2xl font-semibold mb-6 text-center">Əlavə Seçimlər</h2>
-            <div class="grid md:grid-cols-2 gap-4">
-                <div class="additional-option flex justify-between items-center">
-                    <div>
-                        <h3 class="font-medium">Özəl video (hərəsi 5₼)</h3>
-                        <p class="text-sm text-gray-500">Xüsusi mesajlı video hədiyyə</p>
-                    </div>
-                    <div class="flex items-center">
-                        <button class="quantity-btn bg-gray-200 px-2 rounded hover:bg-gray-300" onclick="adjustQuantity('video','decrease')">-</button>
-                        <input type="number" min="0" class="w-12 text-center mx-2 border rounded" id="video-quantity" value="0" readonly>
-                        <button class="quantity-btn bg-gray-200 px-2 rounded hover:bg-gray-300" onclick="adjustQuantity('video','increase')">+</button>
-                        <span class="text-purple-600 font-bold ml-4" id="video-total">0₼</span>
-                    </div>
+            <!-- Additional Options -->
+            <section id="additional-options" class="hidden mb-20" data-aos="fade-up">
+                <div class="text-center mb-12">
+                    <h2 class="font-playfair text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+                        Hədiyyənizi daha da xüsusi edin
+                    </h2>
+                    <p class="text-xl text-white/80 max-w-2xl mx-auto">
+                        Əlavə seçimlərlə paketinizi fərdiləşdirin və sevdiyiniz insanı daha da sevindirin
+                    </p>
                 </div>
 
-                <div class="additional-option flex justify-between items-center">
-                    <div>
-                        <h3 class="font-medium">Əlavə foto (5 şəkil bloku - 2₼)</h3>
-                        <p class="text-sm text-gray-500">Foto sayını artırın</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-12">
+                    <!-- Video Option -->
+                    <div class="glass rounded-2xl p-6">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-video text-indigo-500 text-2xl mr-3"></i>
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-lg text-gray-800">Özəl Video Mesaj</h3>
+                                <p class="text-sm text-gray-600">Hər video üçün 5₼</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-4">Şəxsi mesajınızla video hədiyyə</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <button class="quantity-control" onclick="adjustQuantity('video', 'decrease')">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <span class="w-12 text-center font-semibold text-lg" id="video-quantity">0</span>
+                                <button class="quantity-control" onclick="adjustQuantity('video', 'increase')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <span class="text-indigo-600 font-bold text-lg" id="video-total">0₼</span>
+                        </div>
                     </div>
-                    <div class="flex items-center">
-                        <button class="quantity-btn bg-gray-200 px-2 rounded hover:bg-gray-300" onclick="adjustQuantity('photos','decrease')">-</button>
-                        <input type="number" min="0" class="w-12 text-center mx-2 border rounded" id="photos-quantity" value="0" readonly>
-                        <button class="quantity-btn bg-gray-200 px-2 rounded hover:bg-gray-300" onclick="adjustQuantity('photos','increase')">+</button>
-                        <span class="text-purple-600 font-bold ml-4" id="photos-total">0₼</span>
+
+                    <!-- Photos Option -->
+                    <div class="glass rounded-2xl p-6">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-images text-purple-500 text-2xl mr-3"></i>
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-lg text-gray-800">Əlavə Fotolar</h3>
+                                <p class="text-sm text-gray-600">5 foto bloku - 2₼</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-4">Foto sayını artırın</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <button class="quantity-control" onclick="adjustQuantity('photos', 'decrease')">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <span class="w-12 text-center font-semibold text-lg" id="photos-quantity">0</span>
+                                <button class="quantity-control" onclick="adjustQuantity('photos', 'increase')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <span class="text-purple-600 font-bold text-lg" id="photos-total">0₼</span>
+                        </div>
+                    </div>
+
+                    <!-- Music Option -->
+                    <div class="glass rounded-2xl p-6">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-music text-pink-500 text-2xl mr-3"></i>
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-lg text-gray-800">Əlavə Musiqi</h3>
+                                <p class="text-sm text-gray-600">Hər musiqi üçün 3₼</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-4">Daha çox musiqi seçimi</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <button class="quantity-control" onclick="adjustQuantity('music', 'decrease')">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <span class="w-12 text-center font-semibold text-lg" id="music-quantity">0</span>
+                                <button class="quantity-control" onclick="adjustQuantity('music', 'increase')">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <span class="text-pink-600 font-bold text-lg" id="music-total">0₼</span>
+                        </div>
+                    </div>
+
+                    <!-- Snow Effect Option -->
+                    <div class="glass rounded-2xl p-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-snowflake text-blue-500 text-2xl mr-3"></i>
+                                <div>
+                                    <h3 class="font-semibold text-lg text-gray-800">Qar Dənələri Effekti</h3>
+                                    <p class="text-sm text-gray-600">Romantik atmosfer effektləri</p>
+                                    <p class="text-xs text-gray-500">2₼</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="text-blue-600 font-bold text-lg">2₼</span>
+                                <div class="toggle-switch" onclick="toggleOption('snow-effect')" id="snow-effect-toggle"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Entrance Letter Option -->
+                    <div class="glass rounded-2xl p-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-envelope-open-text text-green-500 text-2xl mr-3"></i>
+                                <div>
+                                    <h3 class="font-semibold text-lg text-gray-800">Giriş Məktubu</h3>
+                                    <p class="text-sm text-gray-600">Xüsusi qarşılama mesajı</p>
+                                    <p class="text-xs text-gray-500">2₼</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="text-green-600 font-bold text-lg">2₼</span>
+                                <div class="toggle-switch" onclick="toggleOption('entrance-letter')" id="entrance-letter-toggle"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </section>
 
-                <div class="additional-option flex justify-between items-center">
-                    <div>
-                        <h3 class="font-medium">Əlavə musiqi (hərəsi 3₼)</h3>
-                        <p class="text-sm text-gray-500">Daha çox musiqi seçimi</p>
+            <!-- Order Summary -->
+            <section id="order-summary" class="hidden mb-12" data-aos="fade-up">
+                <div class="glass rounded-3xl p-8 max-w-2xl mx-auto">
+                    <div class="flex justify-between items-center mb-8">
+                        <h3 class="font-playfair text-3xl font-bold text-gray-800">Sifarişinizin xülasəsi</h3>
+                        <div class="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent" id="total-price">0₼</div>
                     </div>
-                    <div class="flex items-center">
-                        <button class="quantity-btn bg-gray-200 px-2 rounded hover:bg-gray-300" onclick="adjustQuantity('music','decrease')">-</button>
-                        <input type="number" min="0" class="w-12 text-center mx-2 border rounded" id="music-quantity" value="0" readonly>
-                        <button class="quantity-btn bg-gray-200 px-2 rounded hover:bg-gray-300" onclick="adjustQuantity('music','increase')">+</button>
-                        <span class="text-purple-600 font-bold ml-4" id="music-total">0₼</span>
+
+                    <!-- Order Details -->
+                    <div class="glass-dark rounded-2xl p-6 mb-8">
+                        <div class="text-white/90 space-y-2">
+                            <div class="flex justify-between">
+                                <span class="font-medium">Seçilmiş paket:</span>
+                                <span id="selected-package-name">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="font-medium">Əlavələr:</span>
+                                <span id="additional-summary">Yoxdur</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Customer Form -->
+                    <form class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-800 mb-2">
+                                <i class="fas fa-user mr-2"></i>Tam adınız *
+                            </label>
+                            <input type="text" id="customer-name" class="form-input w-full" placeholder="Adınızı daxil edin">
+                        </div>
+
+
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-800 mb-2">
+                                <i class="fas fa-comment mr-2"></i>Xüsusi qeydlər
+                            </label>
+                            <textarea id="special-notes" rows="3" class="form-input w-full resize-none" placeholder="Əlavə istəkləriniz varsa qeyd edin..."></textarea>
+                        </div>
+
+                        <button type="button" id="submit-order" class="btn-modern w-full text-lg" disabled>
+                            <i class="fab fa-whatsapp mr-2"></i>
+                            <span>WhatsApp ilə Sifariş Ver</span>
+                        </button>
+
+                        <p class="text-sm text-gray-600 text-center">
+                            <i class="fas fa-shield-check text-green-500 mr-1"></i>
+                            Sifarişinizi təsdiq etdikdən sonra sizinlə əlaqə saxlayacağıq
+                        </p>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Contact Information -->
+            <footer class="text-center text-white/80 space-y-4" data-aos="fade-up">
+                <div class="glass-dark rounded-2xl p-6 max-w-md mx-auto">
+                    <h4 class="font-semibold text-lg mb-4 text-white">Bizimlə əlaqə</h4>
+                    <div class="space-y-2">
+                        <p class="flex items-center justify-center">
+                            <i class="fas fa-phone mr-2"></i>
+                            <span>+994 XX XXX XX XX</span>
+                        </p>
+
+                        <p class="flex items-center justify-center">
+                            <i class="fas fa-clock mr-2"></i>
+                            <span>24/7 dəstək</span>
+                        </p>
                     </div>
                 </div>
+            </footer>
 
-                <div class="additional-option flex justify-between items-center">
-                    <div>
-                        <h3 class="font-medium">Qar dənələri/yağışı</h3>
-                        <p class="text-sm text-gray-500">Xüsusi effektlər</p>
-                    </div>
-                    <div class="flex items-center">
-                        <span class="text-purple-600 font-bold mr-4">2₼</span>
-                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500" id="snow-effect" value="2">
-                    </div>
-                </div>
-
-                <div class="additional-option flex justify-between items-center">
-                    <div>
-                        <h3 class="font-medium">Giriş sistemində xüsusi məktub</h3>
-                        <p class="text-sm text-gray-500">Xüsusi qarşılama mesajı</p>
-                    </div>
-                    <div class="flex items-center">
-                        <span class="text-purple-600 font-bold mr-4">2₼</span>
-                        <input type="checkbox" class="w-5 h-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500" id="entrance-letter" value="2">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Total & Submit -->
-        <div class="bg-white rounded-xl shadow-md p-6 max-w-2xl mx-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold">Yekun</h3>
-                <div id="total-price" class="text-2xl font-bold text-purple-600">0₼</div>
-            </div>
-
-            <div class="mb-6">
-                <label for="customer-name" class="block text-sm font-medium text-gray-700 mb-1">Adınız</label>
-                <input type="text" id="customer-name" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500" placeholder="Adınızı daxil edin">
-            </div>
-
-            <div class="mb-6">
-                <label for="special-message" class="block text-sm font-medium text-gray-700 mb-1">Xüsusi qeydlər (istəyə bağlı)</label>
-                <textarea id="special-message" rows="3" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-purple-500 focus:border-purple-500" placeholder="İstədiyiniz xüsusi qeydləri yazın..."></textarea>
-            </div>
-
-            <button id="submit-btn" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 disabled:opacity-50" disabled>
-                WhatsApp ilə Sifariş ver
-            </button>
         </div>
     </div>
 
+    <!-- AOS Animation Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <script>
-        let selectedPackage = null;
-        let totalPrice = 0;
-        let basePackagePrice = 0;
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out-cubic',
+            once: true
+        });
 
-        // Discount settings Endirim zamanı
-        const discountStart = new Date('2025-08-15T13:30:00');
-        const discountEnd = new Date('2025-08-15T23:59:59');
+        // Application State
+        let selectedPackage = null;
+        let selectedPackageName = '';
+        let basePrice = 0;
+        let totalPrice = 0;
         let discountActive = false;
 
-        // Price configuration - tək yerdə qiymətləri idarə etmək üçün
+        // Package pricing configuration
         const packagePrices = {
-            simple: {
-                normal: 20,
-                discount: 15
-            },
-            vip: {
-                normal: 30,
-                discount: 25
-            }
+            simple: { normal: 20, discount: 15 },
+            vip: { normal: 30, discount: 25 }
         };
 
-        // Avtomatik faiz hesablama
-        function calculateDiscountPercent(normalPrice, discountPrice) {
-            return Math.round(((normalPrice - discountPrice) / normalPrice) * 100);
-        }
+        // Additional options state
+        let additionalOptions = {
+            video: 0,
+            photos: 0,
+            music: 0,
+            snowEffect: false,
+            entranceLetter: false
+        };
 
-        // Check if discount is active
-        function checkDiscountStatus() {
+        // Option prices
+        const optionPrices = { video: 5, photos: 2, music: 3 };
+
+        // Discount system
+        const discountStart = new Date('2025-08-15T13:30:00');
+        const discountEnd = new Date('2025-08-15T23:59:59');
+
+        // Initialize discount system
+        function initializeDiscount() {
             const now = new Date();
             discountActive = now >= discountStart && now <= discountEnd;
-            updatePrices();
+            
             if (discountActive) {
-                document.getElementById('countdown').classList.remove('hidden');
+                document.getElementById('discount-section').classList.remove('hidden');
+                updatePriceDisplay();
                 startCountdown();
-            } else {
-                document.getElementById('countdown').classList.add('hidden');
             }
         }
 
-        // Update prices based on discount - avtomatik sistem
-        function updatePrices() {
-            if (discountActive) {
-                // Simple package
-                const simpleDiscount = calculateDiscountPercent(packagePrices.simple.normal, packagePrices.simple.discount);
-                document.getElementById('simple-old-price').textContent = packagePrices.simple.normal + '₼';
-                document.getElementById('simple-old-price').classList.remove('hidden');
-                document.getElementById('simple-discount-percent').textContent = simpleDiscount + '%';
-                document.getElementById('simple-discount-percent').classList.remove('hidden');
-                document.getElementById('simple-current-price').textContent = packagePrices.simple.discount + '₼';
+        // Update price display
+        function updatePriceDisplay() {
+            ['simple', 'vip'].forEach(packageType => {
+                const prices = packagePrices[packageType];
+                const currentPrice = discountActive ? prices.discount : prices.normal;
                 
-                // VIP package
-                const vipDiscount = calculateDiscountPercent(packagePrices.vip.normal, packagePrices.vip.discount);
-                document.getElementById('vip-old-price').textContent = packagePrices.vip.normal + '₼';
-                document.getElementById('vip-old-price').classList.remove('hidden');
-                document.getElementById('vip-discount-percent').textContent = vipDiscount + '%';
-                document.getElementById('vip-discount-percent').classList.remove('hidden');
-                document.getElementById('vip-current-price').textContent = packagePrices.vip.discount + '₼';
-            } else {
-                // Normal prices
-                document.getElementById('simple-old-price').classList.add('hidden');
-                document.getElementById('simple-discount-percent').classList.add('hidden');
-                document.getElementById('simple-current-price').textContent = packagePrices.simple.normal + '₼';
+                document.getElementById(`${packageType}-current-price`).textContent = `${currentPrice}₼`;
                 
-                document.getElementById('vip-old-price').classList.add('hidden');
-                document.getElementById('vip-discount-percent').classList.add('hidden');
-                document.getElementById('vip-current-price').textContent = packagePrices.vip.normal + '₼';
-            }
+                if (discountActive) {
+                    const discountPercent = Math.round(((prices.normal - prices.discount) / prices.normal) * 100);
+                    document.getElementById(`${packageType}-old-price`).textContent = `${prices.normal}₼`;
+                    document.getElementById(`${packageType}-old-price`).classList.remove('hidden');
+                    document.getElementById(`${packageType}-discount-badge`).textContent = `-${discountPercent}%`;
+                    document.getElementById(`${packageType}-discount-badge`).classList.remove('hidden');
+                } else {
+                    document.getElementById(`${packageType}-old-price`).classList.add('hidden');
+                    document.getElementById(`${packageType}-discount-badge`).classList.add('hidden');
+                }
+            });
         }
 
         // Countdown timer
         function startCountdown() {
-            const countdownTimer = document.getElementById('countdown-timer');
+            const display = document.getElementById('countdown-display');
             
             function updateCountdown() {
                 const now = new Date();
@@ -347,12 +975,9 @@
 
                 if (distance < 0) {
                     discountActive = false;
-                    updatePrices();
-                    document.getElementById('countdown').classList.add('hidden');
-                    // Recalculate total if package is selected
-                    if (selectedPackage) {
-                        calculateTotalPrice();
-                    }
+                    document.getElementById('discount-section').classList.add('hidden');
+                    updatePriceDisplay();
+                    if (selectedPackage) calculateTotal();
                     return;
                 }
 
@@ -361,102 +986,127 @@
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                countdownTimer.textContent = `${days}g ${hours}s ${minutes}d ${seconds}s`;
+                display.textContent = `${days}g ${hours}s ${minutes}d ${seconds}s`;
             }
-            
+
             updateCountdown();
-            const interval = setInterval(updateCountdown, 1000);
+            setInterval(updateCountdown, 1000);
         }
 
-        // Initialize discount system
-        checkDiscountStatus();
-
+        // Package selection
         function selectPackage(packageType) {
-            // Reset package selection
-            document.getElementById('simple-package').classList.remove('selected-package');
-            document.getElementById('vip-package').classList.remove('selected-package');
-            document.getElementById('simple-check').classList.add('hidden');
-            document.getElementById('vip-check').classList.add('hidden');
+            // Reset previous selection
+            document.querySelectorAll('.package-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelectorAll('[id$="-selected"]').forEach(el => {
+                el.classList.add('hidden');
+            });
+
+            // Set new selection
+            selectedPackage = packageType;
+            selectedPackageName = packageType === 'simple' ? 'Sadə Paket' : 'VIP Paket';
             
-            // Select new package - avtomatik qiymət sistemi ilə
-            if (packageType === 'simple') {
-                document.getElementById('simple-package').classList.add('selected-package');
-                document.getElementById('simple-check').classList.remove('hidden');
-                selectedPackage = 'Sadə Paket';
-                basePackagePrice = discountActive ? packagePrices.simple.discount : packagePrices.simple.normal;
-            } else {
-                document.getElementById('vip-package').classList.add('selected-package');
-                document.getElementById('vip-check').classList.remove('hidden');
-                selectedPackage = 'VIP Paket';
-                basePackagePrice = discountActive ? packagePrices.vip.discount : packagePrices.vip.normal;
-            }
-            
-            // Show additional options
+            document.getElementById(`${packageType}-package`).classList.add('selected');
+            document.getElementById(`${packageType}-selected`).classList.remove('hidden');
+
+            // Set base price
+            const prices = packagePrices[packageType];
+            basePrice = discountActive ? prices.discount : prices.normal;
+
+            // Show additional options and order summary
             document.getElementById('additional-options').classList.remove('hidden');
-            calculateTotalPrice();
-            checkSubmitButton();
+            document.getElementById('order-summary').classList.remove('hidden');
+
+            // Update displays
+            updateOrderSummary();
+            calculateTotal();
+            validateForm();
+
+            // Smooth scroll to additional options
+            document.getElementById('additional-options').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
         }
 
-        // Quantity variables
-        let videoQuantity = 0;
-        let photosQuantity = 0;
-        let musicQuantity = 0;
-        const prices = { video: 5, photos: 2, music: 3 };
-
+        // Quantity adjustment
         function adjustQuantity(type, action) {
-            const input = document.getElementById(`${type}-quantity`);
-            let quantity = parseInt(input.value) || 0;
+            const currentValue = additionalOptions[type];
             
             if (action === 'increase') {
-                quantity++;
-            } else if (action === 'decrease' && quantity > 0) {
-                quantity--;
+                additionalOptions[type] = currentValue + 1;
+            } else if (action === 'decrease' && currentValue > 0) {
+                additionalOptions[type] = currentValue - 1;
             }
-            
-            input.value = quantity;
-            
-            // Update quantity variables
-            if (type === 'video') videoQuantity = quantity;
-            if (type === 'photos') photosQuantity = quantity;
-            if (type === 'music') musicQuantity = quantity;
-            
-            // Update subtotal display
-            const subtotal = quantity * prices[type];
-            document.getElementById(`${type}-total`).textContent = subtotal + '₼';
-            
-            // Recalculate grand total
-            calculateTotalPrice();
+
+            // Update display
+            document.getElementById(`${type}-quantity`).textContent = additionalOptions[type];
+            document.getElementById(`${type}-total`).textContent = `${additionalOptions[type] * optionPrices[type]}₼`;
+
+            // Update totals
+            updateOrderSummary();
+            calculateTotal();
         }
 
-        function calculateTotalPrice() {
+        // Toggle options (checkboxes)
+        function toggleOption(optionId) {
+            const toggle = document.getElementById(`${optionId}-toggle`);
+            const isActive = toggle.classList.contains('active');
+            
+            if (isActive) {
+                toggle.classList.remove('active');
+                if (optionId === 'snow-effect') {
+                    additionalOptions.snowEffect = false;
+                } else if (optionId === 'entrance-letter') {
+                    additionalOptions.entranceLetter = false;
+                }
+            } else {
+                toggle.classList.add('active');
+                if (optionId === 'snow-effect') {
+                    additionalOptions.snowEffect = true;
+                } else if (optionId === 'entrance-letter') {
+                    additionalOptions.entranceLetter = true;
+                }
+            }
+
+            updateOrderSummary();
+            calculateTotal();
+        }
+
+        // Calculate total price
+        function calculateTotal() {
             if (!selectedPackage) return;
-            
-            // Start with base package price
-            totalPrice = basePackagePrice;
-            
-            // Add quantity-based options
-            totalPrice += (videoQuantity * 5);
-            totalPrice += (photosQuantity * 2);
-            totalPrice += (musicQuantity * 3);
-            
-            // Add checkbox options
-            if (document.getElementById('snow-effect').checked) {
-                totalPrice += 2;
-            }
-            if (document.getElementById('entrance-letter').checked) {
-                totalPrice += 2;
-            }
-            
-            updateTotalPrice();
+
+            totalPrice = basePrice;
+            totalPrice += additionalOptions.video * optionPrices.video;
+            totalPrice += additionalOptions.photos * optionPrices.photos;
+            totalPrice += additionalOptions.music * optionPrices.music;
+            if (additionalOptions.snowEffect) totalPrice += 2;
+            if (additionalOptions.entranceLetter) totalPrice += 2;
+
+            document.getElementById('total-price').textContent = `${totalPrice}₼`;
         }
 
-        function updateTotalPrice() {
-            document.getElementById('total-price').textContent = totalPrice + '₼';
+        // Update order summary
+        function updateOrderSummary() {
+            document.getElementById('selected-package-name').textContent = selectedPackageName;
+
+            const extras = [];
+            if (additionalOptions.video > 0) extras.push(`${additionalOptions.video} əlavə video`);
+            if (additionalOptions.photos > 0) extras.push(`${additionalOptions.photos} foto bloku`);
+            if (additionalOptions.music > 0) extras.push(`${additionalOptions.music} əlavə musiqi`);
+            if (additionalOptions.snowEffect) extras.push('Qar effekti');
+            if (additionalOptions.entranceLetter) extras.push('Giriş məktubu');
+
+            document.getElementById('additional-summary').textContent = 
+                extras.length > 0 ? extras.join(', ') : 'Yoxdur';
         }
 
-        function checkSubmitButton() {
+        // Form validation
+        function validateForm() {
             const name = document.getElementById('customer-name').value.trim();
-            const submitBtn = document.getElementById('submit-btn');
+            const submitBtn = document.getElementById('submit-order');
             
             if (selectedPackage && name) {
                 submitBtn.disabled = false;
@@ -466,60 +1116,63 @@
         }
 
         // Event listeners
-        document.getElementById('customer-name').addEventListener('input', checkSubmitButton);
+        document.getElementById('customer-name').addEventListener('input', validateForm);
 
-        // Update total price when checkboxes are changed
-        document.getElementById('snow-effect').addEventListener('change', calculateTotalPrice);
-        document.getElementById('entrance-letter').addEventListener('change', calculateTotalPrice);
-
-        // WhatsApp submission
-        document.getElementById('submit-btn').addEventListener('click', function() {
+        // Submit order
+        document.getElementById('submit-order').addEventListener('click', function() {
             const name = document.getElementById('customer-name').value.trim();
-            const specialMessage = document.getElementById('special-message').value.trim();
-            
-            // Collect selected additional options
-            const additionalOptions = [];
-            if (videoQuantity > 0) {
-                additionalOptions.push(`Özəl video: ${videoQuantity} ədəd (${videoQuantity * 5}₼)`);
-            }
-            if (photosQuantity > 0) {
-                additionalOptions.push(`Əlavə foto: ${photosQuantity * 5} foto (${photosQuantity} blok - ${photosQuantity * 2}₼)`);
-            }
-            if (musicQuantity > 0) {
-                additionalOptions.push(`Əlavə musiqi: ${musicQuantity} ədəd (${musicQuantity * 3}₼)`);
-            }
-            if (document.getElementById('snow-effect').checked) {
-                additionalOptions.push('Qar dənələri/yağışı: 2₼');
-            }
-            if (document.getElementById('entrance-letter').checked) {
-                additionalOptions.push('Giriş sistemində xüsusi məktub: 2₼');
-            }
-            
+            const notes = document.getElementById('special-notes').value.trim();
+
             // Prepare WhatsApp message
-            let whatsappMessage = `Salam, ${name} sifariş verir:%0A%0A`;
-            whatsappMessage += `Seçilən Paket: ${selectedPackage}%0A`;
+            let message = `Salam! ${name} hədiyyə paketi sifariş verir:%0A%0A`;
+            message += `📦 Paket: ${selectedPackageName}%0A`;
+            
             if (discountActive) {
-                whatsappMessage += `⚡ ENDİRİM AKTİVDİR! ⚡%0A`;
-            }
-            whatsappMessage += `Ümumi Qiymət: ${totalPrice}₼%0A%0A`;
-            
-            if (additionalOptions.length > 0) {
-                whatsappMessage += `Əlavə Seçimlər:%0A`;
-                whatsappMessage += additionalOptions.join('%0A') + '%0A%0A';
+                message += `⚡ ENDİRİM AKTİVDİR! ⚡%0A`;
             }
             
-            if (specialMessage) {
-                whatsappMessage += `Xüsusi Qeyd:%0A${encodeURIComponent(specialMessage)}%0A%0A`;
+            message += `💰 Ümumi Qiymət: ${totalPrice}₼%0A%0A`;
+
+            // Add additional options
+            const optionsList = [];
+            if (additionalOptions.video > 0) optionsList.push(`• ${additionalOptions.video} əlavə video (${additionalOptions.video * 5}₼)`);
+            if (additionalOptions.photos > 0) optionsList.push(`• ${additionalOptions.photos} foto bloku (${additionalOptions.photos * 2}₼)`);
+            if (additionalOptions.music > 0) optionsList.push(`• ${additionalOptions.music} əlavə musiqi (${additionalOptions.music * 3}₼)`);
+            if (additionalOptions.snowEffect) optionsList.push(`• Qar effekti (2₼)`);
+            if (additionalOptions.entranceLetter) optionsList.push(`• Giriş məktubu (2₼)`);
+
+            if (optionsList.length > 0) {
+                message += `🎁 Əlavə seçimlər:%0A${optionsList.join('%0A')}%0A%0A`;
             }
-            
-            whatsappMessage += `Ətraflı müzakirə üçün əlaqə saxlayın.`;
-            
-            // Open WhatsApp with pre-filled message
-            window.open(`https://wa.me/994552929502?text=${whatsappMessage}`, '_blank');
+
+            // Add notes if provided
+            if (notes) message += `📝 Qeydlər: ${encodeURIComponent(notes)}%0A`;
+
+            message += `%0AƏtraflı məlumat üçün gözləyirəm! 🎉`;
+
+            // Open WhatsApp
+            window.open(`https://wa.me/994552929502?text=${message}`, '_blank');
+        });
+
+        // Initialize the application
+        initializeDiscount();
+        updatePriceDisplay();
+
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to cards
+            document.querySelectorAll('.package-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    if (!this.classList.contains('selected')) {
+                        this.style.transform = 'translateY(0) scale(1)';
+                    }
+                });
+            });
         });
     </script>
 </body>
 </html>
-
-
-
