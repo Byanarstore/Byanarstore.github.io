@@ -199,7 +199,7 @@
     // Baza (normal) qiymətlər:
     const basePrices = {
       simple: 27,  // Standart paket normal qiymət
-      vip: 30      // VIP paket normal qiymət
+      vip: 35      // VIP paket normal qiymət
     };
 
     // Kampaniyalar siyahısı (tarix aralığı + endirim növü)
@@ -209,17 +209,17 @@
         id: 'simple-august',
         target: 'simple',
         type: 'fixed',
-        value: 8, // 27 - 7 = 20
-        start: '2025-08-15T12:08',
-    end:   '2025-08-31T23:59' // istəyə görə dəyiş
+        value: 7, // 27 - 7 = 20
+        start: '2025-08-15T12:18',
+        end:   '2025-12-31' // istəyə görə dəyiş
       },
       {
         id: 'vip-august',
         target: 'vip',
         type: 'fixed',
-        value: 8, // 35 - 5 = 30
-        start: '',
-        end:   ''
+        value: 5, // 35 - 5 = 30
+        start: '2025-08-01',
+        end:   '2025-12-31'
       }
       // Nümunə (faiz endirimi əlavə etmək istəsən):
       // { id:'black-friday', target:'vip', type:'percent', value:20, start:'2025-11-25', end:'2025-11-29' }
@@ -397,7 +397,6 @@
     }
 
     document.getElementById('customer-name').addEventListener('input', checkSubmitButton);
-    
 
     // WhatsApp submission
     document.getElementById('submit-btn').addEventListener('click', function(){
