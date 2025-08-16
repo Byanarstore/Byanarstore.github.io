@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birlikdəki Anlarımız</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#FFD166">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #fff9fb;
+            color: #5a3d5c;
+        }
+        .love-font {
+            font-family: 'Great Vibes', cursive;
+        }
+        .heart-beat {
+            animation: heartbeat 1.5s infinite;
+        }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .audio-progress {
+            -webkit-appearance: none;
+            height: 6px;
+            background: #e2c2e1;
+            border-radius: 3px;
+            outline: none;
+        }
+        .audio-progress::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #b76e8b;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .audio-progress::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #b76e8b;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .music-container {
+            background: linear-gradient(135deg, #fff9fb 0%, #f3e5f5 100%);
+            border: 2px solid #e8a2e8;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(183, 110, 139, 0.3);
+        }
+        
+        /* Player Kontrolları - Mərkəzə alınmış */
+        .player-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 24px;
+        }
+
+        .nav-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 182, 193, 0.3);
+            border: 2px solid #ff6b9d;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: #ff6b9d;
+        }
+
+        .nav-button:hover {
+            background: #ff6b9d;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .play-button {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.4);
+        }
+        
+        .play-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.6);
+        }
+        .play-button.playing {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+        }
+        .music-info {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .volume-slider {
+            -webkit-appearance: none;
+            height: 4px;
+            background: #e2c2e1;
+            border-radius: 2px;
+            outline: none;
+            flex: 1;
+        }
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #b76e8b;
+            cursor: pointer;
+        }
+        .equalizer {
+            display: flex;
+            align-items: end;
+            gap: 2px;
+            height: 20px;
+        }
+        .bar {
+            width: 3px;
+            background: linear-gradient(to top, #ff6b9d, #c44569);
+            border-radius: 2px;
+            animation: bounce 1.5s infinite ease-in-out;
+        }
+        .bar:nth-child(2) { animation-delay: -1.4s; }
+        .bar:nth-child(3) { animation-delay: -1.3s; }
+        .bar:nth-child(4) { animation-delay: -1.2s; }
+        .bar:nth-child(5) { animation-delay: -1.1s; }
+        @keyframes bounce {
+            0%, 80%, 100% { height: 5px; }
+            40% { height: 20px; }
+        }
+
+         /* Sadə və Zərif Video Container */
+        .video-container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(183, 110, 139, 0.15);
+            border: 1px solid rgba(255, 182, 193, 0.3);
+        }
+
+        .video-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.2rem;
+            color: #be185d;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        /* Video Seçimi */
+        .video-selector {
+            width: 100%;
+            background: white;
+            border: 2px solid #f3e8ff;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 15px;
+            color: #be185d;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .video-selector:focus {
+            outline: none;
+            border-color: #ec4899;
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+        }
+
+        /* Video Player */
+        .video-wrapper {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            background: #000;
+        }
+
+        .video-player {
+            width: 100%;
+            height: 350px;
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .video-player {
+                height: 220px;
+            }
+        }
+
+        /* Sadə Kontrollar */
+        .video-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #ec4899;
+            background: white;
+            color: #ec4899;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #ec4899;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .play-btn {
+            width: 60px;
+            height: 60px;
+            background: #ec4899;
+            color: white;
+            border: none;
+        }
+
+        .play-btn:hover {
+            background: #be185d;
+            transform: scale(1.05);
+        }
+
+        .play-btn.playing {
+            background: #10b981;
+        }
+
+        /* Video İnfo */
+        .video-info {
+            background: #fdf2f8;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            border-left: 4px solid #ec4899;
+        }
+
+        .video-info h3 {
+            color: #be185d;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .video-info p {
+            color: #9d174d;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Gallery Categories */
+        .gallery-categories {
+            margin-bottom: 20px;
+        }
+
+        .category-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #e2c2e1;
+            border-radius: 25px;
+            padding: 12px 20px;
+            color: #8e44ad;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .category-btn:hover {
+            background: #f3e8ff;
+            border-color: #ec4899;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.2);
+        }
+
+        .category-btn.active {
+            background: linear-gradient(135deg, #ec4899, #be185d);
+            color: white;
+            border-color: #ec4899;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+        }
+
+        .category-btn.active i {
+            color: white;
+        }
+
+        /* Gallery Grid */
+        .gallery-stats {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 10px 15px;
+            border: 1px solid #f3e8ff;
+        }
+
+        .gallery-grid {
+            gap: 15px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            aspect-ratio: 4/3;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.2);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-item .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            padding: 15px 10px 10px;
+            transform: translateY(100%);
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover .overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-item .overlay h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .gallery-item .overlay p {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
+        .gallery-item .category-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(236, 72, 153, 0.9);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Load Control Buttons */
+        .load-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .load-btn {
+            background: linear-gradient(135deg, #ec4899, #be185d);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .load-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+        }
+
+        .load-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .load-btn.load-less {
+            background: linear-gradient(135deg, #8e44ad, #6b2c87);
+        }
+
+        .load-btn.load-less:hover {
+            background: linear-gradient(135deg, #6b2c87, #4a1b5c);
+        }
+
+
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .lightbox.show {
+            display: flex;
+            animation: lightboxFadeIn 0.3s ease-out;
+        }
+
+        @keyframes lightboxFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 95%;
+            max-height: 95%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .lightbox-caption {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            text-align: center;
+            font-size: 16px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            max-width: 80%;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 1001;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: #10b981;
+        }
+
+        .notification.error {
+            background: #ef4444;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .load-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .category-btn {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            .lightbox-content {
+                max-width: 98%;
+                max-height: 98%;
+            }
+            
+            .lightbox-caption {
+                font-size: 14px;
+                max-width: 90%;
+                padding: 8px 15px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .load-btn {
+                padding: 10px 20px;
+                font-size: 12px;
+            }
+            
+            .lightbox-close {
+                top: 10px;
+                right: 10px;
+                width: 35px;
+                height: 35px;
+                font-size: 20px;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Slideshow styles */
+        .slideshow-container {
+            position: relative;
+            overflow: hidden;
+            height: 300px;
+        }
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .slide.active {
+            opacity: 1;
+        }
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .letter {
+            background-color: #fff9fb;
+            box-shadow: 0 10px 30px rgba(183, 110, 139, 0.2);
+        }
+        
+        /* Time counter animation */
+        .time-block {
+            transition: all 0.3s ease;
+            min-width: 60px;
+            border-radius: 12px;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            box-shadow: 5px 5px 10px #d9d9d9, 
+                       -5px -5px 10px #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1rem;
+        }
+        @media (max-width: 640px) {
+            .time-block {
+                min-width: 50px;
+                padding: 0.75rem;
+            }
+        }
+        .time-block:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(183, 110, 139, 0.3);
+        }
+        .time-block div:first-child {
+            font-size: 2.5rem;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            background: linear-gradient(to right, #ff6b6b, #9c27b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 4px;
+        }
+        .time-block div:last-child {
+            color: #6d6875;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: -8px;
+        }
+    /* Countdown Timer */
+        .countdown-container {
+            background: linear-gradient(135deg, #f5e6fa, #e2c2e1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px rgba(183, 110, 139, 0.2);
+        }
+        .countdown-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #8e44ad;
+        }
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+        .countdown-box {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+        .countdown-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #9b59b6;
+        }
+        .countdown-label {
+            font-size: 0.875rem;
+            color: #8e44ad;
+            text-transform: uppercase;
+            margin-top: 0.5rem;
+        }
+        @media (max-width: 640px) {
+            .countdown-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .giristext{
+            text-align: center;
+            font-size: 30px;
+             font-family: 'Great Vibes', cursive;
+             color: #CDB4DB;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+<!-- Giriş Ekranı -->
+<div id="login-screen" class="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-pink-50 to-purple-50 z-50 transition-all duration-500">
+    <div class="bg-white p-8 rounded-xl shadow-xl max-w-md w-full mx-4 text-center">
+        <div class="heart-beat mb-6">
+            <p class="giristext">Elçin ❤️ Nigar</p>
+        </div>
+        <h1 class="love-font text-4xl text-pink-600 mb-4">Xoş Gəlmisiniz</h1>
+        <p class="mb-6 italic text-gray-600">"Birlikdə keçirdiyimiz hər an, ömrümüzün ən gözəl xatirəsidir..."</p>
+        
+        <div class="mb-4">
+            <input type="password" id="password" placeholder="Sevgilimizin parolu..." 
+                   class="w-full px-4 py-2 border border-pink-300 rounded-lg focus:ring-2 focus:ring-pink-200 focus:border-pink-500">
+        </div>
+        <button onclick="checkPassword()" class="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-2 rounded-lg hover:opacity-90 transition-all">
+            Giriş
+        </button>
+        <p id="error-message" class="text-red-500 mt-2 hidden">Zəhmət olmasa düzgün xatırlayın parolu</p>
+    </div>
+</div>
+
+<!-- Ana İçerik -->
+<div id="main-content" class="hidden container mx-auto px-4 py-12 max-w-6xl">
+
+    <!-- Başlık -->
+    <header class="text-center mb-12">
+        <h1 class="love-font text-5xl md:text-6xl text-pink-600 mb-2">Elçin ❤️ Nigar</h1>
+        <div class="w-24 h-1 bg-pink-300 mx-auto mb-4"></div>
+        <p class="italic text-lg text-gray-600">"Gözəllik yalnız səndə, sənsiz hər şey xarab..."</p>
+    </header>
+
+    <!-- Slideshow -->
+    <div class="slideshow-container mb-8 max-w-4xl mx-auto">
+        <div class="slide active">
+            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/7c237d77-498e-4d75-bec9-75aac59a28cc.png" class="w-full rounded-xl" alt="Romantic moment">
+        </div>
+        <div class="slide">
+            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/fecc973f-6740-419a-8cfc-ff598b1e1d9e.png" class="w-full rounded-xl" alt="Together forever">
+        </div>
+        <div class="slide">
+            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/19d4583d-3b09-4a35-bc94-4afe7abed986.png" class="w-full rounded-xl" alt="Special moments">
+        </div>
+    </div>
+
+    <!-- Zaman Dilimi -->
+    <section class="bg-white/80 backdrop-blur-sm p-4 sm:p-8 rounded-2xl shadow-lg mb-12 text-center border border-pink-100">
+        <h2 class="love-font text-4xl text-pink-700 mb-10">Birlikdəki Zamanımız</h2>
+        <div class="time-counter grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4 max-w-3xl mx-auto">
+            <div class="time-block p-6 text-center">
+                <div id="years">0</div>
+                <div>İL</div>
+            </div>
+            <div class="time-block p-6 text-center">
+                <div id="months">0</div>
+                <div>AY</div>
+            </div>
+            <div class="time-block p-6 text-center">
+                <div id="days">0</div>
+                <div>GÜN</div>
+            </div>
+            <div class="time-block p-6 text-center">
+                <div id="hours">0</div>
+                <div>SAAT</div>
+            </div>
+            <!-- 
+            <div class="time-block p-6 text-center">
+                <div id="minutes">0</div>
+                <div>DƏQ</div>
+            </div>
+        </div>
+         -->
+    </section>
+
+     <!-- Müzik Çalıcı Bölməsi -->
+    <div class="container mx-auto px-4 py-12 max-w-4xl">
+        <h2 class="love-font text-4xl text-center text-pink-600 mb-8">❤️ Bizim Musiqi ❤️</h2>
+        
+        <div class="music-container max-w-2xl mx-auto">
+            <!-- Musiqi Məlumatları -->
+            <div class="music-info">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 id="song-title" class="font-semibold text-lg text-gray-800">Sevgilim Üçün</h3>
+                        <p id="song-artist" class="text-gray-600">Bizim Mahnı</p>
+                    </div>
+                    <div class="equalizer" id="equalizer" style="display: none;">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Musiqi Seçimi -->
+            <div class="mb-6">
+                <select id="music-selector" class="w-full bg-white rounded-lg px-4 py-3 text-gray-700 font-medium border-2 border-pink-200 focus:border-pink-400 focus:outline-none transition-all">
+                    <option value="https://pub-9b1ca65794244b0f928e47248a603e9e.r2.dev/Ayaz%20Babayev%20%E2%80%94%20Ay%20T%C9%99nli%20Qad%C4%B1n%20(R%C9%99smi%20Musiqi%20Videosu)%20-%20Ayaz%20Babayev.mp3" data-title="Ay Tənli Qadın" data-artist="Ayaz Babayev">🌙 Ay Tənli Qadın</option>
+                    <option value="https://pub-9b1ca65794244b0f928e47248a603e9e.r2.dev/muzik3.mp3" data-title="Bahar Gəldi" data-artist="Sevgi Mahnısı">🌸 Bahar Gəldi</option>
+                    <option value="" data-title="Xatirələrimiz" data-artist="Birgə Mahnımız">🌹 Xatirələrimiz</option>
+                </select>
+            </div>
+
+            <!-- Player Kontrolları - Mərkəzə alınmış -->
+            <div class="player-controls">
+                <button id="prev-btn" class="nav-button">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+
+                <button id="play-btn" class="play-button">
+                    <svg id="play-icon" class="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
+                    </svg>
+                    <svg id="pause-icon" class="w-8 h-8 text-white hidden" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+
+                <button id="next-btn" class="nav-button">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414zm6 0a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L14.586 10l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Vaxt və Progress Bar -->
+            <div class="mb-6">
+                <div class="flex items-center gap-4">
+                    <span id="current-time" class="text-sm text-gray-600 font-mono">0:00</span>
+                    <input type="range" id="progress" class="audio-progress flex-1" value="0" min="0" max="100">
+                    <span id="duration" class="text-sm text-gray-600 font-mono">0:00</span>
+                </div>
+            </div>
+
+            <!-- Səs Kontrolu -->
+            <div class="volume-container">
+                <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.816L4.96 14H2a1 1 0 01-1-1V7a1 1 0 011-1h2.96l3.423-2.816a1 1 0 011.617.816zM14.657 2.343a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 11-1.414-1.414A7.972 7.972 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd"></path>
+                </svg>
+                <input type="range" id="volume" class="volume-slider" value="70" min="0" max="100">
+                <span id="volume-percentage" class="text-sm text-gray-600 font-mono">70%</span>
+            </div>
+        </div>
+
+        <!-- Audio Element -->
+        <audio id="audio" preload="metadata">
+            <source src="https://pub-9b1ca65794244b0f928e47248a603e9e.r2.dev/Ayaz%20Babayev%20%E2%80%94%20Ay%20T%C9%99nli%20Qad%C4%B1n%20(R%C9%99smi%20Musiqi%20Videosu)%20-%20Ayaz%20Babayev.mp3" type="audio/mpeg">
+            Brauzəriniz audio faylını dəstəkləmir.
+        </audio>
+    </div>
+
+    <div class="container mx-auto px-4 py-12 max-w-4xl">
+        
+        <!-- Video Bölməsi -->
+        <div class="video-container">
+            
+            <!-- Başlıq -->
+            <h2 class="video-title">💕 Bizim Videolarımız 💕</h2>
+            
+            <!-- Video Seçimi -->
+            <select id="video-selector" class="video-selector">
+                <option value="video1.mp4" data-title="İlk Görüş" data-desc="Sevgimizin başladığı o gözəl gün">🌹 İlk Görüş</option>
+                <option value="video2.mp4" data-title="Birinci İldönümü" data-desc="Sevgimizin 1 yaşını qeyd etdiyimiz gün">🎉 Birinci İldönümü</option>
+                <option value="video3.mp4" data-title="Təklif Anı" data-desc="Həyatımızın ən xoşbəxt anı">💍 Evlilik Təklifi</option>
+                <option value="video4.mp4" data-title="Bal Ayı" data-desc="Birlikdə gəzdiyimiz romantik yerlər">🌴 Bal Ayı</option>
+                <option value="video5.mp4" data-title="Gündəlik Xoşbəxtlik" data-desc="Hər günümüz bir bayram">☀️ Gündəlik Anlarımız</option>
+            </select>
+            
+            <!-- Video Player -->
+            <div class="video-wrapper">
+                <video id="video-player" class="video-player" controls poster="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/7c237d77-498e-4d75-bec9-75aac59a28cc.png">
+                    <source src="video1.mp4" type="video/mp4">
+                    Brauzəriniz video faylını dəstəkləmir.
+                </video>
+            </div>
+            
+            <!-- Sadə Kontrollar -->
+            <div class="video-controls">
+                <button id="video-prev" class="control-btn">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M8.445 14.832A1 1 0 0010 14v-4a1 1 0 00-1.555-.832L5 11.202a1 1 0 000 1.596l3.445 2.034zM14 5a1 1 0 00-1 1v8a1 1 0 001 1h1a1 1 0 001-1V6a1 1 0 00-1-1h-1z"></path>
+                    </svg>
+                </button>
+                
+                <button id="video-play" class="control-btn play-btn">
+                    <svg id="video-play-icon" class="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M8 5v10l8-5-8-5z"></path>
+                    </svg>
+                    <svg id="video-pause-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M5 4a1 1 0 011 1v10a1 1 0 01-2 0V5a1 1 0 011-1zM14 4a1 1 0 011 1v10a1 1 0 01-2 0V5a1 1 0 011-1z"></path>
+                    </svg>
+                </button>
+                
+                <button id="video-next" class="control-btn">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L8 12.798a1 1 0 000-1.596L4.555 9.168zM11 5a1 1 0 011 1v8a1 1 0 01-1 1H10a1 1 0 01-1-1V6a1 1 0 011-1h1z"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Video Məlumatları -->
+            <div class="video-info">
+                <h3 id="current-video-title">İlk Görüş</h3>
+                <p id="current-video-desc">Sevgimizin başladığı o gözəl gün</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="text-center mb-8">
+        <h1 class="love-font text-4xl text-purple-600 mb-2">Foto Galereyamız</h1>
+        <p class="text-lg text-purple-500">Xatirələrimizi kateqoriyalar üzrə təşkil edirik</p>
+    </div>
+
+    <!-- Main Gallery Container -->
+    <div class="max-w-6xl mx-auto">
+        
+        <!-- Gallery Categories -->
+        <div class="gallery-categories mb-6">
+            <div class="flex flex-wrap justify-center gap-3 mb-4">
+                <button class="category-btn active" data-category="all">
+                    <i class="fas fa-images mr-2"></i>Hamısı
+                </button>
+                <button class="category-btn" data-category="memories">
+                    <i class="fas fa-heart mr-2"></i>Xatirələr
+                </button>
+                <button class="category-btn" data-category="special-days">
+                    <i class="fas fa-calendar-heart mr-2"></i>Özəl Günlər
+                </button>
+                <button class="category-btn" data-category="romantic">
+                    <i class="fas fa-kiss-wink-heart mr-2"></i>Romantik Anlar
+                </button>
+                <button class="category-btn" data-category="travel">
+                    <i class="fas fa-map-marked-alt mr-2"></i>Səyahətlər
+                </button>
+            </div>
+        </div>
+
+        <!-- Gallery Stats -->
+        <div class="gallery-stats mb-6 text-center">
+            <div class="text-sm text-purple-600">
+                <span id="currentGalleryCategory">Hamısı</span> - 
+                <span id="showingCount">0</span> / <span id="totalCount">0</span> şəkil göstərilir
+            </div>
+        </div>
+        
+        <!-- Gallery Grid -->
+        <div class="gallery-grid grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6" id="galleryGrid">
+            <!-- Gallery items will be dynamically added here -->
+        </div>
+        
+        <!-- Load Control Buttons -->
+        <div class="text-center mb-6" id="loadControlsContainer">
+            <div class="load-controls">
+                <button class="load-btn load-less" id="loadLessBtn" style="display: none;">
+                    <i class="fas fa-minus mr-2"></i>Daha az
+                    <span class="ml-2 text-sm">-5 şəkil</span>
+                </button>
+                <button class="load-btn" id="loadMoreBtn" style="display: none;">
+                    <i class="fas fa-plus mr-2"></i>Daha çox
+                    <span class="ml-2 text-sm">+5 şəkil</span>
+                </button>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div id="lightboxModal" class="lightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close" id="closeLightbox">
+                <i class="fas fa-times"></i>
+            </button>
+            <img id="lightboxImage" src="" alt="">
+            <div class="lightbox-caption" id="lightboxCaption"></div>
+        </div>
+    </div>
+
+    <!-- Mektup -->
+    <section class="mb-12">
+        <div class="letter px-8 py-10 md:px-12 md:py-14 max-w-3xl mx-auto rounded-lg">
+            <h2 class="love-font text-3xl text-pink-600 mb-6">Sevgilimə...</h2>
+            <div class="prose text-gray-700">
+                <p>Səninlə keçirdiyim hər an, həyatıma qattığın hər rəng mənim üçün çox qiymətlidir.</p>
+                <p class="my-4">Səni sevmək, səni düşünmək, səninlə olmaq... Bunlar mənim üçün həyatın özü deməkdir. Gülüşün ürəyimə işıq, səsin könlümə səfa gətirir.</p>
+                <p>Səninlə olmağım hər gün mənə yeni bir yaşamaq səbəbi verir. Birlikdə yaratdığımız bu gözəl sevgi hekayəsinin daim davam etməsini arzulayıram.</p>
+                <p class="love-font text-right text-xl text-pink-600 mt-6">Sevgi ilə, <br>Elçin</p>
+            </div>
+        </div>
+    </section>
+    <!-- Geri sayım -->
+    <section class="countdown-container mb-12 max-w-2xl mx-auto">
+        <h2 class="countdown-title">Xüsusi Tarix Üçün Geri Sayım</h2>
+        <div class="countdown-grid">
+            <div class="countdown-box">
+                <div id="countdown-days" class="countdown-number">00</div>
+                <div class="countdown-label">Gün</div>
+            </div>
+            <div class="countdown-box">
+                <div id="countdown-hours" class="countdown-number">00</div>
+                <div class="countdown-label">Saat</div>
+            </div>
+            <div class="countdown-box">
+                <div id="countdown-minutes" class="countdown-number">00</div>
+                <div class="countdown-label">Dəqiqə</div>
+            </div>
+            <div class="countdown-box">
+                <div id="countdown-seconds" class="countdown-number">00</div>
+                <div class="countdown-label">Saniyə</div>
+            </div>
+        </div>
+    </section>
+    
+    
+
+    <!-- Footer -->
+    <footer class="text-center py-6 border-t border-pink-100">
+        <div class="flex items-center justify-center space-x-2">
+            <span class="love-font text-xl text-pink-600">Elçin</span>
+            <span class="text-gray-400">∞</span>
+            <span class="love-font text-xl text-pink-600">Nigar</span>
+        </div>
+        <p class="mt-2 text-gray-500">©2025 Bütün hüquqlar qorunur</p>
+    </footer>
+</div>
+
+<script>
+    // Şifre kontrolü
+    const correctPassword = ""; // Gerçek projede bu değer daha güvenli bir şekilde saklanmalıdır
+    
+    function checkPassword() {
+        const enteredPassword = document.getElementById('password').value;
+        const errorMessage = document.getElementById('error-message');
+        
+        if (enteredPassword === correctPassword) {
+            document.getElementById('login-screen').classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('main-content').classList.remove('hidden');
+            document.getElementById('main-content').classList.add('animate-fadeIn');
+        } else {
+            errorMessage.classList.remove('hidden');
+            setTimeout(() => errorMessage.classList.add('hidden'), 2000);
+        }
+    }
+
+    // Zaman hesaplama fonksiyonu
+    function updateTimeTogether() {
+        const startDate = new Date('2020-04-25T21:14:00'); // 25 Nisan 2020, 21:14
+        const now = new Date();
+        
+        let diff = now - startDate;
+        
+        // Calculate years difference
+        const years = now.getFullYear() - startDate.getFullYear();
+        
+        // Calculate months difference considering the year difference
+        let months = now.getMonth() - startDate.getMonth();
+        if (months < 0) {
+            months += 12;
+        }
+        
+        // Calculate days difference
+        let days = now.getDate() - startDate.getDate();
+        if (days < 0) {
+            // Adjust for month rollover
+            const daysInLastMonth = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                0
+            ).getDate();
+            days += daysInLastMonth;
+        }
+        
+        // Calculate hours difference
+        let hours = now.getHours() - startDate.getHours();
+        if (hours < 0) {
+            hours += 24;
+            days--; // Adjust day count if we rolled over a day
+        }
+        
+        // Animasyonlu güncelleme
+        animateValue('years', 0, years);
+        animateValue('months', 0, months); 
+        animateValue('days', 0, days);
+        animateValue('hours', 0, hours);
+        animateValue('minutes', 0, now.getMinutes() - startDate.getMinutes());
+    }
+    
+    // Animasyonlu sayı artış fonksiyonu
+    function animateValue(id, start, end) {
+        const obj = document.getElementById(id);
+        let startTimestamp = null;
+        const duration = 1000;
+        
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const value = Math.floor(progress * (end - start) + start);
+            obj.textContent = value;
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+    
+    // Slideshow functionality
+    const slides = document.querySelectorAll('.slide');
+    let currentSlide = 0;
+
+    function showSlide() {
+        slides.forEach(slide => slide.classList.remove('active'));
+        slides[currentSlide].classList.add('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+    }
+
+    // Start slideshow and change every 1.5 seconds
+    showSlide();
+    setInterval(showSlide, 1500);
+
+    // Sayacı her saat yenile
+    updateTimeTogether();
+    setInterval(updateTimeTogether, 1000 * 60 * 60);
+
+    // Video elementləri
+        const videoPlayer = document.getElementById('video-player');
+        const videoSelector = document.getElementById('video-selector');
+        const videoPlayBtn = document.getElementById('video-play');
+        const videoPlayIcon = document.getElementById('video-play-icon');
+        const videoPauseIcon = document.getElementById('video-pause-icon');
+        const videoPrevBtn = document.getElementById('video-prev');
+        const videoNextBtn = document.getElementById('video-next');
+        const currentVideoTitle = document.getElementById('current-video-title');
+        const currentVideoDesc = document.getElementById('current-video-desc');
+
+        let currentVideoIndex = 0;
+        let isVideoPlaying = false;
+
+        // Video seçimi
+        videoSelector.addEventListener('change', function() {
+            const selectedOption = videoSelector.options[videoSelector.selectedIndex];
+            const videoSrc = selectedOption.value;
+            const title = selectedOption.dataset.title;
+            const desc = selectedOption.dataset.desc;
+            
+            videoPlayer.src = videoSrc;
+            videoPlayer.load();
+            
+            currentVideoTitle.textContent = title;
+            currentVideoDesc.textContent = desc;
+            
+            currentVideoIndex = videoSelector.selectedIndex;
+            resetVideoState();
+        });
+
+        // Play/Pause funksiyası
+        videoPlayBtn.addEventListener('click', function() {
+            if (isVideoPlaying) {
+                pauseVideo();
+            } else {
+                playVideo();
+            }
+        });
+
+        function playVideo() {
+            videoPlayer.play().then(() => {
+                isVideoPlaying = true;
+                videoPlayIcon.classList.add('hidden');
+                videoPauseIcon.classList.remove('hidden');
+                videoPlayBtn.classList.add('playing');
+            }).catch(error => {
+                console.log('Video xətası:', error);
+                alert('Video faylı tapılmadı.');
+            });
+        }
+
+        function pauseVideo() {
+            videoPlayer.pause();
+            isVideoPlaying = false;
+            videoPlayIcon.classList.remove('hidden');
+            videoPauseIcon.classList.add('hidden');
+            videoPlayBtn.classList.remove('playing');
+        }
+
+        function resetVideoState() {
+            pauseVideo();
+            videoPlayer.currentTime = 0;
+        }
+
+        // Əvvəlki/Növbəti video
+        videoPrevBtn.addEventListener('click', function() {
+            currentVideoIndex--;
+            if (currentVideoIndex < 0) {
+                currentVideoIndex = videoSelector.options.length - 1;
+            }
+            videoSelector.selectedIndex = currentVideoIndex;
+            videoSelector.dispatchEvent(new Event('change'));
+        });
+
+        videoNextBtn.addEventListener('click', function() {
+            currentVideoIndex++;
+            if (currentVideoIndex >= videoSelector.options.length) {
+                currentVideoIndex = 0;
+            }
+            videoSelector.selectedIndex = currentVideoIndex;
+            videoSelector.dispatchEvent(new Event('change'));
+        });
+
+        // Video bitəndə növbəti videoya keç
+        videoPlayer.addEventListener('ended', function() {
+            resetVideoState();
+            setTimeout(() => {
+                videoNextBtn.click();
+            }, 1000);
+        });
+
+        // Video player kontrolları ilə sync
+        videoPlayer.addEventListener('play', function() {
+            isVideoPlaying = true;
+            videoPlayIcon.classList.add('hidden');
+            videoPauseIcon.classList.remove('hidden');
+            videoPlayBtn.classList.add('playing');
+        });
+
+        videoPlayer.addEventListener('pause', function() {
+            isVideoPlaying = false;
+            videoPlayIcon.classList.remove('hidden');
+            videoPauseIcon.classList.add('hidden');
+            videoPlayBtn.classList.remove('playing');
+        });
+
+        // Klaviatura dəstəyi
+        document.addEventListener('keydown', function(event) {
+            switch(event.code) {
+                case 'Space':
+                    event.preventDefault();
+                    videoPlayBtn.click();
+                    break;
+                case 'ArrowLeft':
+                    event.preventDefault();
+                    videoPrevBtn.click();
+                    break;
+                case 'ArrowRight':
+                    event.preventDefault();
+                    videoNextBtn.click();
+                    break;
+            }
+        });
+
+        // İlk yükləmə
+        window.addEventListener('load', function() {
+            const firstOption = videoSelector.options[0];
+            currentVideoTitle.textContent = firstOption.dataset.title;
+            currentVideoDesc.textContent = firstOption.dataset.desc;
+        });
+    // Audio elementləri
+        const audio = document.getElementById('audio');
+        const playBtn = document.getElementById('play-btn');
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress');
+        const currentTimeSpan = document.getElementById('current-time');
+        const durationSpan = document.getElementById('duration');
+        const volumeSlider = document.getElementById('volume');
+        const volumePercentage = document.getElementById('volume-percentage');
+        const musicSelector = document.getElementById('music-selector');
+        const songTitle = document.getElementById('song-title');
+        const songArtist = document.getElementById('song-artist');
+        const equalizer = document.getElementById('equalizer');
+
+        let isPlaying = false;
+        let currentSongIndex = 0;
+
+        // Səsi təyin et
+        audio.volume = 0.7;
+
+        // Musiqi yüklənəndə məlumatları yenilə
+        audio.addEventListener('loadedmetadata', function() {
+            durationSpan.textContent = formatTime(audio.duration);
+            progressBar.max = audio.duration;
+        });
+
+        // Vaxt yenilənməsi
+        audio.addEventListener('timeupdate', function() {
+            currentTimeSpan.textContent = formatTime(audio.currentTime);
+            progressBar.value = audio.currentTime;
+            
+            // Progress bar rəngini dəyiş
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.background = `linear-gradient(to right, #b76e8b ${progress}%, #e2c2e1 ${progress}%)`;
+        });
+
+        // Play/Pause funksiyası
+        playBtn.addEventListener('click', function() {
+            if (isPlaying) {
+                pauseAudio();
+            } else {
+                playAudio();
+            }
+        });
+
+        function playAudio() {
+            audio.play().then(() => {
+                isPlaying = true;
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+                playBtn.classList.add('playing');
+                equalizer.style.display = 'flex';
+            }).catch(error => {
+                console.log('Audio oynadılması xətası:', error);
+                alert('Audio faylı yüklənmədi. İnternet bağlantınızı yoxlayın.');
+            });
+        }
+
+        function pauseAudio() {
+            audio.pause();
+            isPlaying = false;
+            playIcon.classList.remove('hidden');
+            pauseIcon.classList.add('hidden');
+            playBtn.classList.remove('playing');
+            equalizer.style.display = 'none';
+        }
+
+        // Progress bar kontrol
+        progressBar.addEventListener('input', function() {
+            audio.currentTime = progressBar.value;
+        });
+
+        // Səs kontrol
+        volumeSlider.addEventListener('input', function() {
+            const volume = volumeSlider.value / 100;
+            audio.volume = volume;
+            volumePercentage.textContent = volumeSlider.value + '%';
+        });
+
+        // Musiqi seçimi
+        musicSelector.addEventListener('change', function() {
+            const selectedOption = musicSelector.options[musicSelector.selectedIndex];
+            const newSrc = selectedOption.value;
+            const title = selectedOption.dataset.title;
+            const artist = selectedOption.dataset.artist;
+            
+            // Audio src dəyiş
+            audio.src = newSrc;
+            audio.load();
+            
+            // Məlumatları yenilə
+            songTitle.textContent = title;
+            songArtist.textContent = artist;
+            
+            // Əgər oynadılırsa, yeni mahnını oynat
+            if (isPlaying) {
+                audio.play();
+            }
+            
+            currentSongIndex = musicSelector.selectedIndex;
+        });
+
+        // Əvvəlki/Növbəti mahnı
+        prevBtn.addEventListener('click', function() {
+            currentSongIndex--;
+            if (currentSongIndex < 0) {
+                currentSongIndex = musicSelector.options.length - 1;
+            }
+            musicSelector.selectedIndex = currentSongIndex;
+            musicSelector.dispatchEvent(new Event('change'));
+        });
+
+        nextBtn.addEventListener('click', function() {
+            currentSongIndex++;
+            if (currentSongIndex >= musicSelector.options.length) {
+                currentSongIndex = 0;
+            }
+            musicSelector.selectedIndex = currentSongIndex;
+            musicSelector.dispatchEvent(new Event('change'));
+        });
+
+        // Mahnı bitəndə
+        audio.addEventListener('ended', function() {
+            // Avtomatik növbəti mahnıya keç
+            nextBtn.click();
+        });
+
+        // Vaxt formatı
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '0:00';
+            
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        // Klaviatura qısayolları
+        document.addEventListener('keydown', function(event) {
+            switch(event.code) {
+                case 'Space':
+                    event.preventDefault();
+                    playBtn.click();
+                    break;
+                case 'ArrowLeft':
+                    event.preventDefault();
+                    prevBtn.click();
+                    break;
+                case 'ArrowRight':
+                    event.preventDefault();
+                    nextBtn.click();
+                    break;
+                case 'ArrowUp':
+                    event.preventDefault();
+                    volumeSlider.value = Math.min(100, parseInt(volumeSlider.value) + 10);
+                    volumeSlider.dispatchEvent(new Event('input'));
+                    break;
+                case 'ArrowDown':
+                    event.preventDefault();
+                    volumeSlider.value = Math.max(0, parseInt(volumeSlider.value) - 10);
+                    volumeSlider.dispatchEvent(new Event('input'));
+                    break;
+            }
+        });
+
+        // Mobil cihazlar üçün touch əməliyyatları
+        let isDragging = false;
+
+        progressBar.addEventListener('touchstart', function() {
+            isDragging = true;
+        });
+
+        progressBar.addEventListener('touchend', function() {
+            isDragging = false;
+        });
+
+        // Audio yüklənmə xətası
+        audio.addEventListener('error', function(e) {
+            console.log('Audio xətası:', e);
+            alert('Audio faylı yüklənmədi. Başqa mahnı seçin.');
+        });
+
+        // Səhifə yüklənəndə ilk mahnını yüklə
+        window.addEventListener('load', function() {
+            const firstOption = musicSelector.options[0];
+            songTitle.textContent = firstOption.dataset.title;
+            songArtist.textContent = firstOption.dataset.artist;
+        });
+
+
+     class GallerySystem {
+            constructor() {
+                this.allGalleryItems = [];
+                this.currentCategory = 'all';
+                this.visibleCount = 5;
+                this.loadIncrement = 5;
+                this.filteredItems = [];
+                
+                this.init();
+            }
+            
+            init() {
+                this.initializeElements();
+                this.setupEventListeners();
+                this.loadDefaultGallery();
+                this.renderGallery();
+                this.updateGalleryStats();
+                
+                // Add fade-in animation
+                setTimeout(() => {
+                    document.body.classList.add('fade-in');
+                }, 100);
+            }
+            
+            initializeElements() {
+                this.galleryGrid = document.getElementById('galleryGrid');
+                this.loadMoreBtn = document.getElementById('loadMoreBtn');
+                this.loadLessBtn = document.getElementById('loadLessBtn');
+                this.loadControlsContainer = document.getElementById('loadControlsContainer');
+                this.currentGalleryCategory = document.getElementById('currentGalleryCategory');
+                this.showingCount = document.getElementById('showingCount');
+                this.totalCount = document.getElementById('totalCount');
+                
+                // Lightbox elements
+                this.lightboxModal = document.getElementById('lightboxModal');
+                this.lightboxImage = document.getElementById('lightboxImage');
+                this.lightboxCaption = document.getElementById('lightboxCaption');
+            }
+            
+            setupEventListeners() {
+                // Category buttons
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => this.switchCategory(e.target.dataset.category));
+                });
+                
+                // Load control buttons
+                this.loadMoreBtn.addEventListener('click', () => this.loadMoreImages());
+                this.loadLessBtn.addEventListener('click', () => this.loadLessImages());
+                
+
+                
+                // Lightbox controls
+                document.getElementById('closeLightbox').addEventListener('click', () => this.closeLightbox());
+                this.lightboxModal.addEventListener('click', (e) => {
+                    if (e.target === this.lightboxModal) this.closeLightbox();
+                });
+                
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.lightboxModal.classList.contains('show')) {
+                        this.closeLightbox();
+                    }
+                });
+            }
+            
+            loadDefaultGallery() {
+                this.allGalleryItems = [
+                    // Xatirələr
+                    {
+                        id: 1,
+                        src: 'https://picsum.photos/400/300?random=11',
+                        title: 'İlk görüş',
+                        caption: 'O gözəl günü heç vaxt unutmayacam',
+                        category: 'memories',
+                        categoryName: 'Xatirələr'
+                    },
+                    {
+                        id: 2,
+                        src: 'https://picsum.photos/400/300?random=12',
+                        title: 'İlk söhbət',
+                        caption: 'Saatlarca danışdığımız gecə',
+                        category: 'memories',
+                        categoryName: 'Xatirələr'
+                    },
+                    {
+                        id: 3,
+                        src: 'https://picsum.photos/400/300?random=13',
+                        title: 'İlk gəzinti',
+                        caption: 'Əl-ələ verə birlikdə getdiyimiz yol',
+                        category: 'memories',
+                        categoryName: 'Xatirələr'
+                    },
+                    {
+                        id: 4,
+                        src: 'https://picsum.photos/400/300?random=14',
+                        title: 'Gülüşlərimiz',
+                        caption: 'Sevincimizi paylaşdığımız anlar',
+                        category: 'memories',
+                        categoryName: 'Xatirələr'
+                    },
+                    {
+                        id: 5,
+                        src: 'https://picsum.photos/400/300?random=15',
+                        title: 'Səssiz anlar',
+                        caption: 'Sözsüz anlayışımız',
+                        category: 'memories',
+                        categoryName: 'Xatirələr'
+                    },
+                    {
+                        id: 6,
+                        src: 'https://picsum.photos/400/300?random=16',
+                        title: 'Gözlərinə baxdığım an',
+                        caption: 'İçimdəki sevgini hiss etdiyim ilk dəfə',
+                        category: 'memories',
+                        categoryName: 'Xatirələr'
+                    },
+                    
+                    // Özəl Günlər
+                    {
+                        id: 7,
+                        src: 'https://picsum.photos/400/300?random=21',
+                        title: 'Doğum günün',
+                        caption: 'Səni şad etmək üçün hazırladığımız sürpriz',
+                        category: 'special-days',
+                        categoryName: 'Özəl Günlər'
+                    },
+                    {
+                        id: 8,
+                        src: 'https://picsum.photos/400/300?random=22',
+                        title: 'Yeni il bayramı',
+                        caption: 'Birlikdə qarşıladığımız yeni il',
+                        category: 'special-days',
+                        categoryName: 'Özəl Günlər'
+                    },
+                    {
+                        id: 9,
+                        src: 'https://picsum.photos/400/300?random=23',
+                        title: 'Sevgilimlər günü',
+                        caption: 'Sevgimizi bütün dünyaya elan etdiyimiz gün',
+                        category: 'special-days',
+                        categoryName: 'Özəl Günlər'
+                    },
+                    {
+                        id: 10,
+                        src: 'https://picsum.photos/400/300?random=24',
+                        title: 'İldönümümüz',
+                        caption: 'Hər il daha da güclənən sevgimiz',
+                        category: 'special-days',
+                        categoryName: 'Özəl Günlər'
+                    },
+                    
+                    // Romantik Anlar
+                    {
+                        id: 11,
+                        src: 'https://picsum.photos/400/300?random=31',
+                        title: 'Gün batımı',
+                        caption: 'Səninlə gözəl mənzərə qarşısında',
+                        category: 'romantic',
+                        categoryName: 'Romantik Anlar'
+                    },
+                    {
+                        id: 12,
+                        src: 'https://picsum.photos/400/300?random=32',
+                        title: 'Şam yeməyi',
+                        caption: 'Şamın işığında romantik axşam',
+                        category: 'romantic',
+                        categoryName: 'Romantik Anlar'
+                    },
+                    {
+                        id: 13,
+                        src: 'https://picsum.photos/400/300?random=33',
+                        title: 'Dans',
+                        caption: 'Musiqi səsində ürəkdən rəqs',
+                        category: 'romantic',
+                        categoryName: 'Romantik Anlar'
+                    },
+                    {
+                        id: 14,
+                        src: 'https://picsum.photos/400/300?random=34',
+                        title: 'Gül',
+                        caption: 'Mənə bağışladığın ilk gül',
+                        category: 'romantic',
+                        categoryName: 'Romantik Anlar'
+                    },
+                    {
+                        id: 15,
+                        src: 'https://picsum.photos/400/300?random=35',
+                        title: 'Öpüş',
+                        caption: 'Ən gözəl anımız',
+                        category: 'romantic',
+                        categoryName: 'Romantik Anlar'
+                    },
+                    
+                    // Səyahətlər
+                    {
+                        id: 16,
+                        src: 'https://picsum.photos/400/300?random=41',
+                        title: 'Dağlarda',
+                        caption: 'Yüksəkliklərdə sevgimizi elan etdik',
+                        category: 'travel',
+                        categoryName: 'Səyahətlər'
+                    },
+                    {
+                        id: 17,
+                        src: 'https://picsum.photos/400/300?random=42',
+                        title: 'Dəniz kənarında',
+                        caption: 'Dalğaların səsində romantika',
+                        category: 'travel',
+                        categoryName: 'Səyahətlər'
+                    },
+                    {
+                        id: 18,
+                        src: 'https://picsum.photos/400/300?random=43',
+                        title: 'Şəhərdə gəzinti',
+                        caption: 'Yeni yerlər, yeni xatirələr',
+                        category: 'travel',
+                        categoryName: 'Səyahətlər'
+                    }
+                    
+                ];
+                
+                this.filteredItems = [...this.allGalleryItems];
+            }
+            
+            switchCategory(category) {
+                this.currentCategory = category;
+                this.visibleCount = 5; // Reset visible count
+                
+                // Update active button
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-category="${category}"]`).classList.add('active');
+                
+                // Filter items
+                if (category === 'all') {
+                    this.filteredItems = [...this.allGalleryItems];
+                } else {
+                    this.filteredItems = this.allGalleryItems.filter(item => item.category === category);
+                }
+                
+                this.renderGallery();
+                this.updateGalleryStats();
+                this.updateLoadButtons();
+            }
+            
+            renderGallery() {
+                this.galleryGrid.innerHTML = '';
+                
+                // Show only visible count
+                const itemsToShow = this.filteredItems.slice(0, this.visibleCount);
+                
+                itemsToShow.forEach((item, index) => {
+                    const galleryItem = document.createElement('div');
+                    galleryItem.className = 'gallery-item slide-in';
+                    galleryItem.style.animationDelay = `${index * 0.1}s`;
+                    galleryItem.innerHTML = `
+                        <img src="${item.src}" alt="${item.title}" loading="lazy">
+                        <div class="category-badge">${item.categoryName}</div>
+                        <div class="overlay">
+                            <h4>${item.title}</h4>
+                            <p>${item.caption}</p>
+                        </div>
+                    `;
+                    
+                    // Add click event to open lightbox
+                    galleryItem.addEventListener('click', () => {
+                        this.openLightbox(item.src, `${item.title} - ${item.caption}`);
+                    });
+                    
+                    this.galleryGrid.appendChild(galleryItem);
+                });
+                
+                this.updateLoadButtons();
+            }
+            
+            loadMoreImages() {
+                this.visibleCount += this.loadIncrement;
+                if (this.visibleCount > this.filteredItems.length) {
+                    this.visibleCount = this.filteredItems.length;
+                }
+                this.renderGallery();
+                this.updateGalleryStats();
+                
+                // Add loading animation
+                this.loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Yüklənir...';
+                
+                setTimeout(() => {
+                    this.loadMoreBtn.innerHTML = '<i class="fas fa-plus mr-2"></i>Daha çox<span class="ml-2 text-sm">+5 şəkil</span>';
+                }, 800);
+            }
+            
+            loadLessImages() {
+                this.visibleCount -= this.loadIncrement;
+                if (this.visibleCount < this.loadIncrement) {
+                    this.visibleCount = this.loadIncrement;
+                }
+                this.renderGallery();
+                this.updateGalleryStats();
+                
+                // Add loading animation
+                this.loadLessBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Azaldılır...';
+                
+                setTimeout(() => {
+                    this.loadLessBtn.innerHTML = '<i class="fas fa-minus mr-2"></i>Daha az<span class="ml-2 text-sm">-5 şəkil</span>';
+                }, 800);
+            }
+            
+            updateLoadButtons() {
+                // Show/hide load more button
+                if (this.visibleCount < this.filteredItems.length) {
+                    this.loadMoreBtn.style.display = 'flex';
+                } else {
+                    this.loadMoreBtn.style.display = 'none';
+                }
+                
+                // Show/hide load less button
+                if (this.visibleCount > this.loadIncrement) {
+                    this.loadLessBtn.style.display = 'flex';
+                } else {
+                    this.loadLessBtn.style.display = 'none';
+                }
+                
+                // Show/hide controls container
+                if (this.visibleCount > this.loadIncrement || this.visibleCount < this.filteredItems.length) {
+                    this.loadControlsContainer.style.display = 'block';
+                } else {
+                    this.loadControlsContainer.style.display = 'none';
+                }
+            }
+            
+            updateGalleryStats() {
+                const categoryNames = {
+                    'all': 'Hamısı',
+                    'memories': 'Xatirələr', 
+                    'special-days': 'Özəl Günlər',
+                    'romantic': 'Romantik Anlar',
+                    'travel': 'Səyahətlər'
+                };
+                
+                this.currentGalleryCategory.textContent = categoryNames[this.currentCategory];
+                this.showingCount.textContent = Math.min(this.visibleCount, this.filteredItems.length);
+                this.totalCount.textContent = this.filteredItems.length;
+            }
+            
+
+            
+            showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        <span>${message}</span>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Show notification
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 100);
+                
+                // Hide notification after 3 seconds
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            }
+            
+            openLightbox(src, caption) {
+                this.lightboxImage.src = src;
+                this.lightboxCaption.textContent = caption;
+                this.lightboxModal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            closeLightbox() {
+                this.lightboxModal.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Initialize the gallery system
+        document.addEventListener('DOMContentLoaded', () => {
+            new GallerySystem();
+        });
+
+    // Initial setup
+    updateGalleryVisibility();
+
+    loadMoreBtn.addEventListener('click', () => {
+        visibleCount += 5;
+        updateGalleryVisibility();
+    });
+
+    // Countdown Timer for October 3, 2025
+    const countdownDate = new Date('2025-10-03').getTime();
+    
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = countdownDate - now;
+        
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        document.getElementById('countdown-days').textContent = days.toString().padStart(2, '0');
+        document.getElementById('countdown-hours').textContent = hours.toString().padStart(2, '0');
+        document.getElementById('countdown-minutes').textContent = minutes.toString().padStart(2, '0');
+        document.getElementById('countdown-seconds').textContent = seconds.toString().padStart(2, '0');
+    }
+    
+    // Update countdown every second
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // Update gallery when filter changes
+    document.querySelectorAll('.gallery-filter').forEach(button => {
+        button.addEventListener('click', () => {
+            showingAll = false;
+            visibleCount = 5;
+            updateGalleryVisibility();
+        });
+    });
+</script>
+</body>
+</html>
+
