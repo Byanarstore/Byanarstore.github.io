@@ -646,7 +646,16 @@
 
             emptyState.style.display = 'none';
             
-            // Sort by creation date (newest first)
+            // First sort by creation date (oldest first) to assign sequential numbers
+            const chronologicalDeliveries = [...deliveries].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+            
+            // Create a map of delivery ID to sequential number
+            const deliveryNumbers = {};
+            chronologicalDeliveries.forEach((delivery, index) => {
+                deliveryNumbers[delivery.id] = index + 1;
+            });
+            
+            // Then sort by creation date (newest first) for display
             const sortedDeliveries = [...deliveries].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             
             deliveryList.innerHTML = sortedDeliveries.map(delivery => `
@@ -655,7 +664,7 @@
                         <div class="delivery-info">
                             <div>
                                 <span class="delivery-date">${formatDate(delivery.date)}</span>
-                                <span class="delivery-id">#${delivery.id.slice(-6)}</span>
+                                <span class="delivery-id">№${deliveryNumbers[delivery.id]}</span>
                             </div>
                             <p class="delivery-order">Sifariş: ${delivery.order}</p>
                             <p class="delivery-to">Təhvil verilən: ${delivery.deliveredTo}</p>
