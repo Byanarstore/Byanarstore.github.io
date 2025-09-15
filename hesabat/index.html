@@ -77,6 +77,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 8px;
+            margin-top: 12px; /* Filter bölməsi ilə arasına məsafə */
         }
 
         .stat-card {
@@ -432,6 +433,25 @@
             50% { opacity: 0.5; }
         }
 
+        /* Yeni əlavə olunan stil */
+        .calculation-details {
+            font-size: 12px;
+            color: #4b5563;
+            margin-top: 8px;
+            padding: 8px;
+            background-color: #f9fafb;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+        .calculation-details p {
+            margin-bottom: 4px;
+        }
+        .calculation-details p:last-child {
+            margin-bottom: 0;
+            font-weight: 600;
+            color: #111827;
+        }
+
         @media (max-width: 640px) {
             .delivery-details {
                 grid-template-columns: 1fr;
@@ -460,6 +480,30 @@
                 </div>
             </div>
             
+            <!-- Yeni Filter Bölməsi -->
+            <div class="filter-section" style="margin-top: 16px; display: flex; gap: 8px; align-items: center;">
+                <select id="monthFilter" class="form-select" style="flex: 1;">
+                    <option value="">Bütün Aylar</option>
+                    <option value="0">Yanvar</option>
+                    <option value="1">Fevral</option>
+                    <option value="2">Mart</option>
+                    <option value="3">Aprel</option>
+                    <option value="4">May</option>
+                    <option value="5">İyun</option>
+                    <option value="6">İyul</option>
+                    <option value="7">Avqust</option>
+                    <option value="8">Sentyabr</option>
+                    <option value="9">Oktyabr</option>
+                    <option value="10">Noyabr</option>
+                    <option value="11">Dekabr</option>
+                </select>
+                <select id="yearFilter" class="form-select" style="flex: 1;">
+                    <option value="">Bütün İllər</option>
+                    <!-- İllər JavaScript tərəfindən doldurulacaq -->
+                </select>
+                <button type="button" class="btn btn-primary" onclick="applyFilters()" style="padding: 8px 12px;">Filterlə</button>
+            </div>
+
             <div class="stats-grid">
                 <div class="stat-card blue">
                     <p class="label">Təhvilat</p>
@@ -470,7 +514,7 @@
                     <p class="value" id="monthlyWeight">0.0</p>
                 </div>
                 <div class="stat-card orange">
-                    <p class="label">Ortalama</p>
+                    <p class="label">Ümumi Məbləğ</p> <!-- Dəyişdirildi: Ortalama -> Ümumi Məbləğ -->
                     <p class="value" id="averageAmount">0 ₼</p>
                 </div>
             </div>
@@ -539,7 +583,11 @@
 
                     <div class="form-group">
                         <label class="form-label">Təxmini Məbləğ (₼)</label>
-                        <input type="number" class="form-input" id="amount" step="0.01" min="0" placeholder="180" autocomplete="off" required>
+                        <input type="number" class="form-input" id="amount" step="0.01" min="0" placeholder="180" autocomplete="off" required readonly style="background-color: #e5e7eb;">
+                        <!-- Yeni əlavə olunan hesablama detalları -->
+                        <div id="calculationDetails" class="calculation-details">
+                            <!-- Hesablama detalları JavaScript tərəfindən doldurulacaq -->
+                        </div>
                     </div>
 
                     <div class="form-actions">
@@ -562,12 +610,22 @@
         let deliveries = [];
         let editingDelivery = null;
 
+        // Sabit qiymətlər və faiz
+        const PRICE_PER_TON = 3; // 1 ton * 3 AZN
+        const PRICE_PER_DELIVERY = 1; // 1 təhvilat * 1 AZN
+        const PERCENTAGE_TO_CALCULATE = 0.65; // 65%
+
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
             loadData();
             setDefaultDate();
+            populateYearFilter(); // İl filterini doldur
             updateStats();
             renderDeliveries();
+
+            // Filter dəyişdikdə yeniləmə
+            document.getElementById('monthFilter').addEventListener('change', applyFilters);
+            document.getElementById('yearFilter').addEventListener('change', applyFilters);
         });
 
         // Load data from localStorage
@@ -604,41 +662,148 @@
             return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
         }
 
-        // Update header statistics
-        function updateStats() {
-            const currentMonth = new Date().getMonth();
+        // Qiyməti avtomatik hesablamaq (65% tətbiq olunur)
+        function calculateAmount() {
+            const weightInput = document.getElementById('weight');
+            const weightUnitSelect = document.getElementById('weightUnit');
+            const deliveredToInput = document.getElementById('deliveredTo');
+            const amountInput = document.getElementById('amount');
+            const calculationDetailsDiv = document.getElementById('calculationDetails');
+
+            const weight = parseFloat(weightInput.value) || 0;
+            const weightUnit = weightUnitSelect.value;
+            const deliveredTo = parseInt(deliveredToInput.value) || 0;
+
+            let totalWeightInTons = weight;
+            if (weightUnit === "Kq") {
+                totalWeightInTons = weight / 1000;
+            }
+
+            // Hesablamanın addımları
+            const weightBasedAmount = totalWeightInTons * PRICE_PER_TON;
+            const deliveryBasedAmount = deliveredTo * PRICE_PER_DELIVERY;
+            const baseAmount = weightBasedAmount + deliveryBasedAmount;
+            const finalCalculatedAmount = baseAmount * PERCENTAGE_TO_CALCULATE;
+
+            amountInput.value = finalCalculatedAmount.toFixed(2); // 2 ondalık basamakla göster
+
+            // Hesablama detallarını göstər
+            calculationDetailsDiv.innerHTML = `
+                <p>Yük Çəkisi (${weight.toFixed(1)} ${weightUnit}) x Ton Qiyməti (${PRICE_PER_TON} ₼) = ${weightBasedAmount.toFixed(2)} ₼</p>
+                <p>Təhvil Verilən (${deliveredTo}) x Təhvilat Qiyməti (${PRICE_PER_DELIVERY} ₼) = ${deliveryBasedAmount.toFixed(2)} ₼</p>
+                <p>Ümumi Əsas Məbləğ = ${baseAmount.toFixed(2)} ₼</p>
+                <p>Tətbiq Olunan Faiz (${(PERCENTAGE_TO_CALCULATE * 100).toFixed(0)}%) = ${(baseAmount * (1 - PERCENTAGE_TO_CALCULATE)).toFixed(2)} ₼</p>
+                <p>Yekun Məbləğ = ${finalCalculatedAmount.toFixed(2)} ₼</p>
+            `;
+        }
+
+        // İl filterini doldurmaq üçün
+        function populateYearFilter() {
+            const yearFilter = document.getElementById('yearFilter');
             const currentYear = new Date().getFullYear();
-            
-            const currentMonthDeliveries = deliveries.filter(delivery => {
-                const deliveryDate = new Date(delivery.date);
-                return deliveryDate.getMonth() === currentMonth && deliveryDate.getFullYear() === currentYear;
+            const years = new Set();
+
+            deliveries.forEach(delivery => {
+                years.add(new Date(delivery.date).getFullYear());
             });
 
-            const monthlyTotal = currentMonthDeliveries.reduce((sum, delivery) => {
+            // Cari ili də əlavə et, əgər yoxdursa
+            years.add(currentYear);
+
+            // İlləri azalan sıra ilə çeşidlə
+            const sortedYears = Array.from(years).sort((a, b) => b - a);
+
+            yearFilter.innerHTML = '<option value="">Bütün İllər</option>';
+            sortedYears.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearFilter.appendChild(option);
+            });
+        }
+
+        // Filterləmə funksiyası
+        function applyFilters() {
+            renderDeliveries(); // Filterləri tətbiq edərək təhvilatları yenidən render et
+            updateStats(); // Filterlənmiş məlumatlara əsasən statistikaları yenilə
+        }
+
+        // Update header statistics
+        function updateStats() {
+            const monthFilter = document.getElementById('monthFilter').value;
+            const yearFilter = document.getElementById('yearFilter').value;
+            
+            let deliveriesToCalculate = [...deliveries];
+
+            if (monthFilter !== "") {
+                deliveriesToCalculate = deliveriesToCalculate.filter(delivery => {
+                    return new Date(delivery.date).getMonth() === parseInt(monthFilter);
+                });
+            }
+
+            if (yearFilter !== "") {
+                deliveriesToCalculate = deliveriesToCalculate.filter(delivery => {
+                    return new Date(delivery.date).getFullYear() === parseInt(yearFilter);
+                });
+            } else {
+                // Əgər il filtri seçilməyibsə, cari ilin statistikalarını göstər
+                const currentYear = new Date().getFullYear();
+                deliveriesToCalculate = deliveriesToCalculate.filter(delivery => {
+                    return new Date(delivery.date).getFullYear() === currentYear;
+                });
+            }
+
+            const monthlyTotal = deliveriesToCalculate.reduce((sum, delivery) => {
                 return sum + parseFloat(delivery.amount);
             }, 0);
 
-            const monthlyWeight = currentMonthDeliveries.reduce((sum, delivery) => {
+            const monthlyDeliveriesCount = deliveriesToCalculate.length;
+
+            const monthlyWeight = deliveriesToCalculate.reduce((sum, delivery) => {
                 const weight = parseFloat(delivery.weight);
                 return sum + (delivery.weightUnit === "Kq" ? weight / 1000 : weight);
             }, 0);
 
-            const averageAmount = currentMonthDeliveries.length > 0 
-                ? monthlyTotal / currentMonthDeliveries.length 
-                : 0;
+            // "Bu ay" hissəsi üçün cari ayın ümumi məbləği
+            const currentMonth = new Date().getMonth();
+            const currentYearForMonthlyTotal = new Date().getFullYear();
+            const currentMonthDeliveries = deliveries.filter(delivery => {
+                const deliveryDate = new Date(delivery.date);
+                return deliveryDate.getMonth() === currentMonth && deliveryDate.getFullYear() === currentYearForMonthlyTotal;
+            });
+            const currentMonthlyTotalAmount = currentMonthDeliveries.reduce((sum, delivery) => {
+                return sum + parseFloat(delivery.amount);
+            }, 0);
 
-            document.getElementById('monthlyTotal').textContent = `${monthlyTotal.toFixed(0)} ₼`;
-            document.getElementById('monthlyDeliveries').textContent = currentMonthDeliveries.length;
-            document.getElementById('monthlyWeight').textContent = monthlyWeight.toFixed(1);
-            document.getElementById('averageAmount').textContent = `${averageAmount.toFixed(0)} ₼`;
+
+            document.getElementById('monthlyTotal').textContent = `${currentMonthlyTotalAmount.toFixed(0)} ₼`; // "Bu ay" üçün ümumi məbləğ
+            document.getElementById('monthlyDeliveries').textContent = monthlyDeliveriesCount; // Filterlənmiş təhvilat sayı
+            document.getElementById('monthlyWeight').textContent = monthlyWeight.toFixed(1); // Filterlənmiş ümumi çəki
+            document.getElementById('averageAmount').textContent = `${monthlyTotal.toFixed(0)} ₼`; // Filterlənmiş Ümumi Məbləğ
         }
 
         // Render delivery list
         function renderDeliveries() {
             const deliveryList = document.getElementById('deliveryList');
             const emptyState = document.getElementById('emptyState');
+            const monthFilter = document.getElementById('monthFilter').value;
+            const yearFilter = document.getElementById('yearFilter').value;
+
+            let filteredDeliveries = [...deliveries];
+
+            if (monthFilter !== "") {
+                filteredDeliveries = filteredDeliveries.filter(delivery => {
+                    return new Date(delivery.date).getMonth() === parseInt(monthFilter);
+                });
+            }
+
+            if (yearFilter !== "") {
+                filteredDeliveries = filteredDeliveries.filter(delivery => {
+                    return new Date(delivery.date).getFullYear() === parseInt(yearFilter);
+                });
+            }
             
-            if (deliveries.length === 0) {
+            if (filteredDeliveries.length === 0) {
                 deliveryList.innerHTML = '';
                 emptyState.style.display = 'block';
                 return;
@@ -656,7 +821,7 @@
             });
             
             // Then sort by creation date (newest first) for display
-            const sortedDeliveries = [...deliveries].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            const sortedDeliveries = filteredDeliveries.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             
             deliveryList.innerHTML = sortedDeliveries.map(delivery => `
                 <div class="delivery-card">
@@ -702,6 +867,14 @@
             document.getElementById('deliveryForm').reset();
             setDefaultDate();
             document.getElementById('modal').classList.add('show');
+
+            // Yeni: Avtomatik hesablama üçün hadisə dinləyiciləri
+            document.getElementById('weight').addEventListener('input', calculateAmount);
+            document.getElementById('weightUnit').addEventListener('change', calculateAmount);
+            document.getElementById('deliveredTo').addEventListener('input', calculateAmount);
+            document.getElementById('amount').setAttribute('readonly', true);
+            document.getElementById('amount').style.backgroundColor = '#e5e7eb';
+            calculateAmount(); // Modal açıldıqda ilkin hesablamanı et
         }
 
         // Edit existing delivery
@@ -712,15 +885,25 @@
             document.getElementById('modalTitle').textContent = 'Təhvilatı Redaktə Et';
             document.getElementById('deleteSection').style.display = 'block';
             
-            // Fill form with existing data
+            // Formu mövcud məlumatlarla doldur
             document.getElementById('date').value = editingDelivery.date;
             document.getElementById('weight').value = editingDelivery.weight;
             document.getElementById('weightUnit').value = editingDelivery.weightUnit;
             document.getElementById('order').value = editingDelivery.order;
             document.getElementById('deliveredTo').value = editingDelivery.deliveredTo;
-            document.getElementById('amount').value = editingDelivery.amount;
+            document.getElementById('amount').value = editingDelivery.amount; // Mövcud məbləği göstər
             
             document.getElementById('modal').classList.add('show');
+
+            // Yeni: Avtomatik hesablama üçün hadisə dinləyiciləri
+            document.getElementById('weight').addEventListener('input', calculateAmount);
+            document.getElementById('weightUnit').addEventListener('change', calculateAmount);
+            document.getElementById('deliveredTo').addEventListener('input', calculateAmount);
+            document.getElementById('amount').setAttribute('readonly', true);
+            document.getElementById('amount').style.backgroundColor = '#e5e7eb';
+
+            // Redaktə zamanı ilkin hesablamanı et
+            calculateAmount();
         }
 
         // Close modal
@@ -728,6 +911,14 @@
             document.getElementById('modal').classList.remove('show');
             editingDelivery = null;
             document.getElementById('deliveryForm').reset();
+            document.getElementById('calculationDetails').innerHTML = ''; // Detalları təmizlə
+
+            // Yeni: Hadisə dinləyicilərini qaldır və readonly atributunu təmizlə
+            document.getElementById('weight').removeEventListener('input', calculateAmount);
+            document.getElementById('weightUnit').removeEventListener('change', calculateAmount);
+            document.getElementById('deliveredTo').removeEventListener('input', calculateAmount);
+            document.getElementById('amount').removeAttribute('readonly');
+            document.getElementById('amount').style.backgroundColor = '';
         }
 
         // Delete delivery
@@ -753,7 +944,7 @@
                 weightUnit: document.getElementById('weightUnit').value,
                 order: document.getElementById('order').value,
                 deliveredTo: document.getElementById('deliveredTo').value,
-                amount: document.getElementById('amount').value,
+                amount: document.getElementById('amount').value, // Avtomatik hesablanmış dəyəri götürürük
             };
 
             if (editingDelivery) {
