@@ -740,6 +740,38 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+        
+        /* Mobil gu00f6ru00fcnu00fcu015fdu0259 zaman kartlaru0131 u00fcu00e7u00fcn xu00fcsusi du00fczu00fclu00fcu015f */
+        @media (max-width: 640px) {
+            .time-counter.has-minutes {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.75rem !important;
+                max-width: 100%;
+            }
+            
+            .time-counter.has-minutes .time-block:nth-child(5) {
+                grid-column: 1 / -1;
+                margin: 0.5rem auto 0;
+                max-width: 48%;
+            }
+            
+            .time-counter:not(.has-minutes) {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.75rem !important;
+            }
+        }
+        
+        /* Desktop gu00f6ru00fcnu00fcu015fdu0259 hamu0131su0131 bir su0131rada */
+        @media (min-width: 641px) {
+            .time-counter {
+                display: flex !important;
+                justify-content: center;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+        }
         .giristext{
             text-align: center;
             font-size: 30px;
@@ -766,7 +798,7 @@
         <button onclick="checkPassword()" class="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-2 rounded-lg hover:opacity-90 transition-all">
             Giriş
         </button>
-        <p id="error-message" class="text-red-500 mt-2 hidden">Zəhmət olmasa düzgün xatırlayın parolu</p>
+        <p id="error-message" class="text-red-500 mt-2 hidden">Zəhmət olmasa düzgün xatırlayın </p>
     </div>
 </div>
 
@@ -796,8 +828,8 @@
     <!-- Zaman Dilimi -->
     <section class="bg-white/80 backdrop-blur-sm p-4 sm:p-8 rounded-2xl shadow-lg mb-12 text-center border border-pink-100">
         <h2 class="love-font text-4xl text-pink-700 mb-10">Birlikdəki Zamanımız</h2>
-        <div class="time-counter grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4 max-w-3xl mx-auto">
-            <div class="time-block p-6 text-center">
+        <div id="time-counter" class="time-counter gap-3 sm:gap-3 max-w-2xl mx-auto" style="display: flex; justify-content: center; flex-wrap: wrap;">
+            <div id="year-block" class="time-block p-6 text-center">
                 <div id="years">0</div>
                 <div>İL</div>
             </div>
@@ -813,13 +845,11 @@
                 <div id="hours">0</div>
                 <div>SAAT</div>
             </div>
-            <!-- 
-            <div class="time-block p-6 text-center">
+            <div id="minute-block" class="time-block p-6 text-center">
                 <div id="minutes">0</div>
-                <div>DƏQ</div>
+                <div>DƏQİQƏ</div>
             </div>
         </div>
-         -->
     </section>
 
      <!-- Müzik Çalıcı Bölməsi -->
@@ -1043,6 +1073,7 @@
             </div>
         </div>
     </section>
+
     <!-- Geri sayım -->
     <section class="countdown-container mb-12 max-w-2xl mx-auto">
         <h2 class="countdown-title">Xüsusi Tarix Üçün Geri Sayım</h2>
@@ -1099,45 +1130,65 @@
 
     // Zaman hesaplama fonksiyonu
     function updateTimeTogether() {
-        const startDate = new Date('2020-04-25T21:14:00'); // 25 Nisan 2020, 21:14
+        const startDate = new Date('2020-04-25T21:14:00');
         const now = new Date();
         
-        let diff = now - startDate;
+        // Tam günləri hesabla
+        const totalDays = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
         
-        // Calculate years difference
-        const years = now.getFullYear() - startDate.getFullYear();
-        
-        // Calculate months difference considering the year difference
+        // İl fərqini hesabla
+        let years = now.getFullYear() - startDate.getFullYear();
         let months = now.getMonth() - startDate.getMonth();
-        if (months < 0) {
-            months += 12;
-        }
-        
-        // Calculate days difference
         let days = now.getDate() - startDate.getDate();
-        if (days < 0) {
-            // Adjust for month rollover
-            const daysInLastMonth = new Date(
-                now.getFullYear(),
-                now.getMonth(),
-                0
-            ).getDate();
-            days += daysInLastMonth;
-        }
-        
-        // Calculate hours difference
         let hours = now.getHours() - startDate.getHours();
+        let minutes = now.getMinutes() - startDate.getMinutes();
+        
+        // Düzəltmələr
+        if (minutes < 0) {
+            minutes += 60;
+            hours--;
+        }
         if (hours < 0) {
             hours += 24;
-            days--; // Adjust day count if we rolled over a day
+            days--;
+        }
+        if (days < 0) {
+            const daysInLastMonth = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+            days += daysInLastMonth;
+            months--;
+        }
+        if (months < 0) {
+            months += 12;
+            years--;
         }
         
-        // Animasyonlu güncelleme
-        animateValue('years', 0, years);
-        animateValue('months', 0, months); 
-        animateValue('days', 0, days);
-        animateValue('hours', 0, hours);
-        animateValue('minutes', 0, now.getMinutes() - startDate.getMinutes());
+        // 365 gündən (12 aydan) çox olduqda 5 kart göstər
+        const timeCounter = document.getElementById('time-counter');
+        const yearBlock = document.getElementById('year-block');
+        const minuteBlock = document.getElementById('minute-block');
+        
+        if (totalDays >= 365) {
+            // 365+ gün: İl, Ay, Gün, Saat, Dəqiqə
+            yearBlock.style.display = 'flex';
+            minuteBlock.style.display = 'flex';
+            timeCounter.classList.add('has-minutes');
+            
+            animateValue('years', 0, years);
+            animateValue('months', 0, months);
+            animateValue('days', 0, days);
+            animateValue('hours', 0, hours);
+            animateValue('minutes', 0, minutes);
+        } else {
+            // 365-dən az: Ay, Gün, Saat, Dəqiqə
+            yearBlock.style.display = 'none';
+            minuteBlock.style.display = 'flex';
+            timeCounter.classList.remove('has-minutes');
+            
+            animateValue('months', 0, months);
+            animateValue('days', 0, days);
+            animateValue('hours', 0, hours);
+            animateValue('minutes', 0, minutes);
+        }
     }
     
     // Animasyonlu sayı artış fonksiyonu
@@ -1499,7 +1550,7 @@
         });
 
 
-     class GallerySystem {
+     class GallerySystem {  // Galeri sistemi 
             constructor() {
                 this.allGalleryItems = [];
                 this.currentCategory = 'all';
@@ -1566,7 +1617,7 @@
             
             loadDefaultGallery() {
                 this.allGalleryItems = [
-                    // Xatirələr
+                    // Xatirələr  memories
                     {
                         id: 1,
                         src: 'https://picsum.photos/400/300?random=11',
@@ -1616,8 +1667,8 @@
                         categoryName: 'Xatirələr'
                     },
                     
-                    // Özəl Günlər
-                    {
+                    // Özəl Günlər special-days
+                    { 
                         id: 7,
                         src: 'https://picsum.photos/400/300?random=21',
                         title: 'Doğum günün',
@@ -1650,7 +1701,7 @@
                         categoryName: 'Özəl Günlər'
                     },
                     
-                    // Romantik Anlar
+                    // Romantik Anlar romantic
                     {
                         id: 11,
                         src: 'https://picsum.photos/400/300?random=31',
@@ -1692,7 +1743,7 @@
                         categoryName: 'Romantik Anlar'
                     },
                     
-                    // Səyahətlər
+                    // Səyahətlər travel
                     {
                         id: 16,
                         src: 'https://picsum.photos/400/300?random=41',
@@ -1830,7 +1881,7 @@
                 }
             }
             
-            updateGalleryStats() {
+            updateGalleryStats() {  // Kategoriya əlavə & silinməsi idarə olunnmasıs
                 const categoryNames = {
                     'all': 'Hamısı',
                     'memories': 'Xatirələr', 
@@ -1891,19 +1942,29 @@
         });
 
     // Initial setup
-    updateGalleryVisibility();
+    // updateGalleryVisibility();
 
     loadMoreBtn.addEventListener('click', () => {
         visibleCount += 5;
-        updateGalleryVisibility();
+        // updateGalleryVisibility();
     });
 
-    // Countdown Timer for October 3, 2025
-    const countdownDate = new Date('2025-10-03').getTime();
+    // Countdown Timer - Avtomatik yeniləmə
+    let countdownDate = new Date('2025-10-03').getTime();
     
     function updateCountdown() {
         const now = new Date().getTime();
-        const distance = countdownDate - now;
+        let distance = countdownDate - now;
+        
+        // Əgər geri sayım bitibsə (mənfi olarsa), növbəti ilə keç
+        if (distance < 0) {
+            const currentYear = new Date(countdownDate).getFullYear();
+            const nextYear = currentYear + 1;
+            const targetDate = new Date(countdownDate);
+            targetDate.setFullYear(nextYear);
+            countdownDate = targetDate.getTime();
+            distance = countdownDate - now;
+        }
         
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -1925,7 +1986,7 @@
         button.addEventListener('click', () => {
             showingAll = false;
             visibleCount = 5;
-            updateGalleryVisibility();
+            // updateGalleryVisibility();
         });
     });
 </script>
