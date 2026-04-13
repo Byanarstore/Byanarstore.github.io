@@ -1,0 +1,2231 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anar & Səma — Toy Dəvətnaməsi</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* =============================================
+       AYARLAR — Buradan istədiyinizi dəyişə bilərsiniz
+       ============================================= */
+
+    /* Cütlüyün adları */
+    /* JS-də dəyişin: COUPLE_NAMES dəyişəni */
+
+    /* Geri sayım tarixi */
+    /* JS-də dəyişin: TARGET_DATE dəyişəni */
+
+    /* WhatsApp nömrəsi */
+    /* JS-də dəyişin: WHATSAPP_NUMBER dəyişəni */
+
+    /* =============================================
+       ÜMUMI STİL
+       ============================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: hsl(345, 35%, 55%);
+      --primary-light: hsl(345, 50%, 70%);
+      --bg-deep: #1a0b13;
+      --bg-mid: #2d121e;
+      --text-ivory: hsl(40, 33%, 96%);
+      --text-muted: hsl(40, 20%, 75%);
+      --glass-bg: rgba(45, 18, 30, 0.45);
+      --border-color: rgba(183, 90, 110, 0.3);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #1a0b13 0%, #2d121e 50%, #13070d 100%);
+      color: var(--text-ivory);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* =============================================
+       GİRİŞ — MUM MÖHÜR EKRANı
+       ============================================= */
+    #seal-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at center, #2d121e 0%, #1a0b13 70%);
+      transition: opacity 1.2s ease, transform 1.2s ease;
+    }
+
+    #seal-screen.opening {
+      opacity: 0;
+      transform: scale(1.08);
+      pointer-events: none;
+    }
+
+    #seal-screen.hidden {
+      display: none;
+    }
+
+    .seal-label {
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--primary);
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 0.5s;
+    }
+
+    /* Dekorativ künc çərçivələri */
+    .corner-decor {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      opacity: 0.25;
+      pointer-events: none;
+    }
+    .corner-decor svg {
+      width: 100%;
+      height: 100%;
+    }
+    .corner-tl { top: 0; left: 0; transform: rotate(180deg); }
+    .corner-br { bottom: 0; right: 0; }
+
+    /* Mum Möhür */
+    .wax-seal {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%,
+        #c0394c 0%,
+        #8b1a28 45%,
+        #5c0d18 80%,
+        #3d0810 100%
+      );
+      box-shadow:
+        0 0 0 6px rgba(160, 40, 60, 0.4),
+        0 0 0 12px rgba(120, 20, 40, 0.2),
+        0 0 40px rgba(180, 50, 70, 0.5),
+        inset 0 -8px 20px rgba(0,0,0,0.5),
+        inset 0 4px 10px rgba(255,180,180,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: sealPulse 3s ease-in-out infinite, fadeScale 1.5s ease forwards;
+      position: relative;
+    }
+
+    .wax-seal::before {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 200, 200, 0.15);
+    }
+
+    .wax-seal::after {
+      content: '';
+      position: absolute;
+      inset: 15px;
+      border-radius: 50%;
+      border: 1px dashed rgba(255, 180, 180, 0.1);
+    }
+
+    .wax-seal:hover {
+      transform: scale(1.06);
+      box-shadow:
+        0 0 0 6px rgba(160, 40, 60, 0.5),
+        0 0 0 12px rgba(120, 20, 40, 0.3),
+        0 0 60px rgba(200, 60, 80, 0.7),
+        inset 0 -8px 20px rgba(0,0,0,0.5),
+        inset 0 4px 10px rgba(255,180,180,0.15);
+    }
+
+    .wax-seal:active {
+      transform: scale(0.96);
+    }
+
+    .seal-text {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.8rem;
+      color: #f4dcd6;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      position: relative;
+      z-index: 2;
+      user-select: none;
+    }
+
+    .seal-hint {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      color: rgba(183, 110, 121, 0.7);
+      text-transform: uppercase;
+      margin-top: 2rem;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 2s, blinkPulse 2s ease-in-out infinite 2s;
+    }
+
+    /* =============================================
+       ARXA PLAN — ÜZƏN LƏÇƏKLƏr
+       ============================================= */
+    #petals-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .petal {
+      position: absolute;
+      border-radius: 50% 0 50% 0;
+      opacity: 0;
+      animation: petalFall linear infinite;
+    }
+
+    /* =============================================
+       ANA MƏZMUN
+       ============================================= */
+    #main-content {
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+      padding-bottom: 5rem;
+    }
+
+    #main-content.visible {
+      opacity: 1;
+    }
+
+    /* =============================================
+       HERO BÖLMƏSİ
+       ============================================= */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 1rem 6rem;
+      position: relative;
+    }
+
+    .hero-tag {
+      font-size: 0.75rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: none;
+    }
+    .hero-tag.animate {
+      animation: fadeUp 1s ease forwards 0.3s;
+    }
+
+    .couple-names {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(4rem, 15vw, 10rem);
+      color: var(--text-ivory);
+      line-height: 1.1;
+      text-shadow: 0 0 60px rgba(183, 90, 110, 0.3);
+      opacity: 0;
+    }
+    .couple-names.animate {
+      animation: fadeUp 1.5s ease forwards 0.5s;
+    }
+
+    .couple-names .ampersand {
+      color: var(--primary);
+      font-size: 0.7em;
+    }
+
+    /* =============================================
+       GERİ SAYIM
+       ============================================= */
+    .countdown {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin: 3rem auto 2rem;
+      opacity: 0;
+    }
+    .countdown.animate {
+      animation: fadeUp 1s ease forwards 1s;
+    }
+
+    .time-block {
+      background: var(--glass-bg);
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(12px);
+      border-radius: 1rem;
+      padding: 1rem 1.5rem;
+      min-width: 85px;
+      text-align: center;
+    }
+
+    .time-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: var(--text-ivory);
+      display: block;
+      line-height: 1;
+    }
+
+    .time-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--primary);
+      display: block;
+      margin-top: 0.4rem;
+    }
+
+    /* Sürüşdür oxu */
+    .scroll-arrow {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: rgba(183, 110, 121, 0.6);
+      opacity: 0;
+    }
+    .scroll-arrow.animate {
+      animation: fadeUp 1s ease forwards 2.5s;
+    }
+
+    .scroll-arrow span {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .scroll-arrow svg {
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    /* =============================================
+       KARTlar / MƏZMUN BÖLMƏLƏRİ
+       ============================================= */
+    .section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+
+    .glass-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(12px);
+      border-radius: 1.5rem;
+      padding: 2.5rem 2rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Ayırıcı zolaq */
+    .divider {
+      width: 1px;
+      height: 3.5rem;
+      background: var(--primary);
+      opacity: 0.4;
+      margin: 0 auto 2rem;
+    }
+
+    /* =============================================
+       DƏVƏT MESAJI
+       ============================================= */
+    .invite-message {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.3rem, 3vw, 1.9rem);
+      font-style: italic;
+      font-weight: 300;
+      line-height: 1.8;
+      color: rgba(245, 238, 220, 0.92);
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    .invite-sign {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.2rem;
+      color: var(--primary);
+      text-align: center;
+    }
+
+    /* =============================================
+       MƏRASIM DETALları
+       ============================================= */
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media (max-width: 640px) {
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 400;
+      text-align: center;
+      margin-bottom: 2rem;
+      color: var(--text-ivory);
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .detail-icon {
+      width: 2.8rem;
+      height: 2.8rem;
+      border-radius: 50%;
+      background: rgba(183, 90, 110, 0.15);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .detail-icon svg {
+      width: 1.1rem;
+      height: 1.1rem;
+      stroke: var(--primary);
+      fill: none;
+    }
+
+    .detail-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      color: var(--text-ivory);
+      margin-bottom: 0.2rem;
+    }
+
+    .detail-value {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Google Maps */
+    .map-frame {
+      width: 100%;
+      height: 260px;
+      border-radius: 1rem;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .map-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      filter: invert(90%) hue-rotate(180deg) contrast(75%) saturate(140%) brightness(75%);
+    }
+
+    /* =============================================
+       ÜRƏK SÖZLƏRİ FORMU
+       ============================================= */
+    .wishes-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(2.2rem, 6vw, 3.2rem);
+      color: var(--primary-light);
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .wishes-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 480px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .form-input,
+    .form-textarea {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 0.6rem;
+      padding: 0.75rem 1rem;
+      color: var(--text-ivory);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      border-color: var(--primary);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+      color: rgba(255, 255, 255, 0.2);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 0.9rem;
+      background: linear-gradient(135deg, hsl(345, 40%, 45%) 0%, hsl(345, 50%, 35%) 100%);
+      border: 1px solid hsl(345, 40%, 50%);
+      border-radius: 0.7rem;
+      color: var(--text-ivory);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(135deg, hsl(345, 45%, 52%) 0%, hsl(345, 55%, 42%) 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(183, 60, 80, 0.4);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .error-text {
+      color: hsl(0, 70%, 60%);
+      font-size: 0.72rem;
+      margin-top: 0.2rem;
+    }
+
+
+    /* =============================================
+       FOOTER
+       ============================================= */
+    .footer {
+      text-align: center;
+      padding: 3rem 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-line {
+      width: 6rem;
+      height: 1px;
+      background: var(--primary);
+      opacity: 0.3;
+      margin: 0 auto 2rem;
+    }
+
+    .footer-names {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2rem;
+      color: rgba(183, 110, 121, 0.8);
+    }
+
+    .footer-date {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(245, 238, 220, 0.3);
+      margin-top: 0.8rem;
+    }
+
+    /* =============================================
+       ANİMASİYALAR
+       ============================================= */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeScale {
+      from { opacity: 0; transform: scale(0.7); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes sealPulse {
+      0%, 100% { box-shadow:
+        0 0 0 6px rgba(160, 40, 60, 0.4),
+        0 0 0 12px rgba(120, 20, 40, 0.2),
+        0 0 40px rgba(180, 50, 70, 0.5),
+        inset 0 -8px 20px rgba(0,0,0,0.5),
+        inset 0 4px 10px rgba(255,180,180,0.15); }
+      50% { box-shadow:
+        0 0 0 8px rgba(160, 40, 60, 0.5),
+        0 0 0 16px rgba(120, 20, 40, 0.25),
+        0 0 70px rgba(200, 60, 80, 0.7),
+        inset 0 -8px 20px rgba(0,0,0,0.5),
+        inset 0 4px 10px rgba(255,180,180,0.15); }
+    }
+
+    @keyframes blinkPulse {
+      0%, 100% { opacity: 0.7; }
+      50%       { opacity: 0.3; }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(8px); }
+    }
+
+    @keyframes petalFall {
+      0%   { transform: translateY(-10vh) rotate(0deg);   opacity: 0; }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.4; }
+      100% { transform: translateY(115vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* Görünmə animasiyası (scroll) */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /*musiqi*/
+
+    #music-control {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .music-btn {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: clamp(44px, 6vw, 52px);
+    height: clamp(44px, 6vw, 52px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-ivory);
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    transition: all 0.3s ease;
+  }
+  .music-btn svg {
+    width: clamp(18px, 4vw, 22px);
+    height: clamp(18px, 4vw, 22px);
+  }
+  .music-btn:hover {
+    background: rgba(255,255,255,0.15);
+    transform: scale(1.08);
+  }
+  .music-status {
+    font-size: clamp(0.65rem, 2vw, 0.8rem);
+    color: var(--text-muted);
+    text-shadow: 0 0 6px rgba(0,0,0,0.5);
+  }
+  /* Dalğalanma animasiyası */
+  .playing {
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+
+
+
+
+
+  /*RSVP*/
+  /* Radio seçimləri üçün konteyner */
+.attendance-options {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.option-item {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-ivory);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+}
+
+/* Gizli radio düyməsi */
+.option-item input {
+  display: none;
+}
+
+/* Yeni radio dairəsi */
+.checkmark {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Seçiləndə dairənin rəngi */
+.option-item input:checked + .checkmark {
+  background: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 0 10px rgba(183, 90, 110, 0.4);
+}
+
+/* Təsdiq işarəsi (Checkmark) - İdeal mərkəzləmə */
+.checkmark::after {
+  content: "";
+  width: 6px;
+  height: 11px;
+  border: solid rgb(255, 255, 255);
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg) translate(-1px, -1px);
+  display: none;
+}
+
+/* Seçiləndə işarənin görünməsi */
+.option-item input:checked + .checkmark::after {
+  display: block;
+}
+
+/* Hover effekti */
+.option-item:hover .checkmark {
+  border-color: var(--primary);
+  transform: scale(1.1);
+}
+
+
+.guest-selection-container {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.selection-label {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-ivory);
+  margin-bottom: 12px;
+  opacity: 0.8;
+}
+
+.guest-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-ivory);
+  padding: 8px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.chip.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  box-shadow: 0 4px 10px rgba(183, 90, 110, 0.3);
+}
+
+.chip:hover:not(.active) {
+  background: rgba(183, 90, 110, 0.1);
+  border-color: var(--primary);
+}
+
+.custom-input-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.custom-input-wrapper input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  padding: 8px;
+  color: var(--text-ivory);
+  width: 100px;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  outline: none;
+}
+
+.input-suffix {
+  color: var(--text-ivory);
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+/*Slayder Foto*/
+.photo-section {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.slider-container {
+  position: relative;
+  max-width: 500px;
+  height: 600px;
+  margin: 0 auto;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.slider-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1s ease-in-out, transform 1.2s ease-in-out;
+  transform: scale(1.1);
+}
+
+.slide.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Naviqasiya oxları */
+.slider-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 45px;
+  height: 45px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  outline: none;
+}
+
+.slider-nav.prev {
+  left: 15px;
+}
+
+.slider-nav.next {
+  right: 15px;
+}
+
+.slider-nav:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 0 15px rgba(183, 90, 110, 0.4);
+}
+
+@media (max-width: 480px) {
+  .slider-nav {
+    width: 35px;
+    height: 35px;
+    font-size: 0.8rem;
+  }
+  .slider-nav.prev { left: 10px; }
+  .slider-nav.next { right: 10px; }
+}
+
+.slider-dots {
+  position: absolute;
+  bottom: 25px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  z-index: 30;
+  pointer-events: auto;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot.active {
+  background-color: var(--primary);
+  transform: scale(1.4);
+  box-shadow: 0 0 10px var(--primary);
+}
+
+/*Dress Code*/
+.dress-code-container {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+    padding: 20px;
+}
+
+.dress-code-content {
+    display: inline-block;
+    position: relative;
+}
+
+.dress-code-icon {
+    color: var(--primary);
+    margin-bottom: 10px;
+    opacity: 0.8;
+}
+
+.dress-code-icon svg {
+    width: 35px;
+    height: 35px;
+}
+
+.dress-code-label {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.dress-code-value {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    color: var(--primary-light);
+    text-shadow: 0 0 20px rgba(183, 90, 110, 0.2);
+    margin-bottom: 15px;
+}
+
+.dress-code-line {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    margin: 0 auto;
+    opacity: 0.6;
+}
+
+.dress-code-value {
+    animation: goldGlow 3s ease-in-out infinite;
+}
+
+@keyframes goldGlow {
+    0%, 100% { opacity: 0.9; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.02); text-shadow: 0 0 30px rgba(183, 90, 110, 0.5); }
+}
+
+
+/*Proqramlar*/
+.luxury-schedule {
+    padding: 60px 20px;
+    background: transparent;
+}
+
+.premium-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 5px;
+}
+
+.premium-line {
+    width: 60px;
+    height: 2px;
+    background: var(--primary);
+    margin: 0 auto 40px;
+    position: relative;
+}
+
+.timeline-wrapper {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+    padding-left: 50px;
+}
+
+.main-line {
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, transparent, var(--primary), transparent);
+    opacity: 0.3;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 40px;
+    transition: 0.4s all ease;
+}
+
+.timeline-icon {
+    position: absolute;
+    left: -42px;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border: 1px solid var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    z-index: 2;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: 0.3s;
+}
+
+.timeline-item:hover .timeline-icon {
+    background: var(--primary);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(183, 90, 110, 0.4);
+}
+
+.timeline-content {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(5px);
+    padding: 15px 20px;
+    border-radius: 15px;
+    border-left: 3px solid transparent;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+    text-align: left;
+    transition: 0.3s;
+}
+
+.timeline-item:hover .timeline-content {
+    background: white;
+    border-left: 3px solid var(--primary);
+    transform: translateX(5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+}
+
+.time-tag {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--primary);
+    display: block;
+    margin-bottom: 5px;
+}
+
+.event-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.event-desc {
+    font-size: 0.85rem;
+    color: #777;
+    margin-top: 5px;
+}
+
+@media (max-width: 480px) {
+    .timeline-wrapper { padding-left: 40px; }
+    .main-line { left: 15px; }
+    .timeline-icon { left: -37px; width: 35px; height: 35px; font-size: 0.9rem; }
+    .event-name { font-size: 1.1rem; }
+}
+
+
+/*Ad Soyad input RSVP*/
+.premium-input-group {
+  margin: 30px 0;
+  width: 100%;
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input-wrapper:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(183, 90, 110, 0.3);
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 20px 20px 20px 50px; /* İkon üçün soldan boşluq */
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-ivory);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  z-index: 1;
+  position: relative;
+}
+
+/* Label-ın ilkin vəziyyəti */
+.input-wrapper label {
+  position: absolute;
+  left: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-ivory);
+  opacity: 0.6;
+  font-size: 0.9rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  font-family: 'Montserrat', sans-serif;
+  z-index: 10; /* Yazını xəttdən daha yuxarı qata qaldırırıq */
+  padding: 0 5px; /* Yazının kənarlarında boşluq olsun ki, xətti yapışmasın */
+}
+
+/* Klik edəndə və ya yazı olanda Yuxarı Qalxma Effekti */
+.input-wrapper input:focus ~ label,
+.input-wrapper input:not(:placeholder-shown) ~ label {
+  top: 0; /* Tam yuxarı xəttin üzərinə çıxır */
+  left: 15px;
+  font-size: 0.75rem;
+  color: var(--primary); /* Fokuslananda qızılı/çəhrayı rəng */
+  opacity: 1;
+  font-weight: 600;
+  
+  /* CRITICAL: Yazının arxasında fon rəngi olmalıdır ki, xətti örtsün */
+  background-color: #1a0b13; /* Bu rəng sizin dəvətnamənin tünd arxa fon rəngi ilə EYNİ olmalıdır */
+  z-index: 20; /* Fokuslananda daha da önə çıxır */
+}
+
+/* İnputun özü */
+.input-wrapper input {
+  width: 100%;
+  padding: 18px 20px 18px 50px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-ivory);
+  font-family: 'Montserrat', sans-serif;
+  position: relative;
+  z-index: 5; /* İnput yazının altında qalmalıdır */
+}
+
+/* Xarici çərçivə (Xətt) */
+.input-wrapper {
+  position: relative;
+  z-index: 1; /* Ən alt qat */
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15); /* Standart xətt */
+}
+
+/* Fokuslananda çərçivənin rənglənməsi */
+.input-wrapper:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 10px rgba(183, 90, 110, 0.2);
+}
+/* İnputa fokuslananda və ya yazı olanda label-ın hərəkəti */
+.input-wrapper input:focus ~ label,
+.input-wrapper input:not(:placeholder-shown) ~ label {
+  top: 0;
+  left: 20px;
+  font-size: 0.75rem;
+  color: var(--primary);
+  opacity: 1;
+  background: rgba(26, 11, 19, 0.9); /* Arxa fonun rənginə uyğun tutun */
+  padding: 0 8px;
+  border-radius: 4px;
+}
+
+/* Sol tərəfdəki istifadəçi ikonu */
+.input-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: var(--primary);
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.input-wrapper input:focus ~ .input-icon {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Klik edəndə yaranan canlı çərçivə */
+.focus-border {
+  position: absolute;
+  top: -1px; left: -1px; right: -1px; bottom: -1px;
+  border: 2px solid var(--primary);
+  border-radius: 15px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.input-wrapper input:focus ~ .focus-border {
+  opacity: 1;
+  box-shadow: 0 0 15px rgba(183, 90, 110, 0.2);
+}
+
+/* Klik edəndə yaranan canlı çərçivə */
+.focus-border {
+  position: absolute;
+  top: -1px; left: -1px; right: -1px; bottom: -1px;
+  border: 2px solid var(--primary);
+  border-radius: 15px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.input-wrapper input:focus ~ .focus-border {
+  opacity: 1;
+  box-shadow: 0 0 15px rgba(183, 90, 110, 0.2);
+}
+
+/*Maps hissəsi*/
+
+.map-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #b75a6e 0%, #8b1a28 100%);
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  margin-top: 15px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.map-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(183, 90, 110, 0.4);
+  background: linear-gradient(135deg, #c56b7f 0%, #a02030 100%);
+}
+
+/*bolt tetbiq*/
+
+.bolt-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #34d186; /* Bolt Yaşılı */
+  color: #ffffff;
+  border: none;
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 12px;
+  margin-top: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(52, 209, 134, 0.3);
+}
+
+.bolt-button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow: 0 6px 18px rgba(52, 209, 134, 0.4);
+}
+
+
+
+
+
+        /* =============================================
+   HƏDİYYƏ BÖLMƏSİ — YENİLƏNMİŞ VƏ MƏRKƏZLƏNMİŞ
+   ============================================= */
+.gift-section {
+    display: flex; /* İçindəki kartları nizamlamaq üçün */
+    justify-content: center; /* Üfüqi mərkəzləmə */
+    align-items: center; /* Şaquli mərkəzləmə */
+    width: 100%;
+    padding: 40px 15px; /* Mobil cihazlar üçün kənar boşluqları */
+}
+
+.accordion {
+    width: 100%;
+    max-width: 500px; /* Kartın enini ideallaşdırdıq */
+    background: var(--glass-bg); /* Ümumi dizayn rənginə uyğunlaşdırıldı */
+    border-radius: 24px;
+    overflow: hidden;
+    backdrop-filter: blur(15px); /* Boğunuqluğu aradan qaldırmaq üçün şəffaflıq artırıldı */
+    border: 1px solid var(--border-color); /* Mövcud sərhəd rəngi ilə eyniləşdirildi */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); /* Daha dərin və təmiz kölgə */
+    margin: 0 auto; /* Tam mərkəzləmə */
+}
+
+.accordion-header {
+    padding: 20px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    background: rgba(183, 90, 110, 0.1); /* Mövcud --primary rənginin yüngül tonu */
+    transition: background 0.3s ease;
+}
+
+.accordion-header:hover {
+    background: rgba(183, 90, 110, 0.2);
+}
+
+.accordion-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--text-ivory); /* Mətn rəngi uyğunlaşdırıldı */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.gift-icon {
+    font-size: 1.6rem;
+    color: var(--primary-light); /* İkon rəngi parlaqlaşdırıldı */
+}
+
+/* Mobil cihazlar üçün optimallaşdırma */
+@media (max-width: 480px) {
+    .accordion-title {
+        font-size: 1.2rem; /* Kiçik ekranlarda daha oxunaqlı */
+    }
+    
+    .accordion-header {
+        padding: 15px 20px;
+    }
+
+    .accordion {
+        max-width: 100%; /* Mobildə tam eni tutur */
+    }
+}
+
+
+
+
+  </style>
+</head>
+<body>
+
+<!-- ================================================
+     GİRİŞ MÖHÜR EKRANı
+     ================================================ -->
+<div id="seal-screen">
+  <!-- Künc bəzəkləri (SVG) -->
+  <div class="corner-decor corner-tl">
+    <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 10 Q60 10 60 60 Q60 110 110 110" stroke="#b76e79" stroke-width="1.5" fill="none" opacity="0.5"/>
+      <circle cx="20" cy="20" r="6" fill="#b76e79" opacity="0.4"/>
+      <circle cx="50" cy="50" r="4" fill="#b76e79" opacity="0.3"/>
+      <circle cx="90" cy="90" r="5" fill="#b76e79" opacity="0.3"/>
+      <path d="M40 10 Q40 40 10 40" stroke="#b76e79" stroke-width="1" fill="none" opacity="0.3"/>
+      <path d="M10 70 Q40 70 40 100 Q40 130 70 130" stroke="#b76e79" stroke-width="0.8" fill="none" opacity="0.2"/>
+    </svg>
+  </div>
+  <div class="corner-decor corner-br">
+    <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 10 Q60 10 60 60 Q60 110 110 110" stroke="#b76e79" stroke-width="1.5" fill="none" opacity="0.5"/>
+      <circle cx="20" cy="20" r="6" fill="#b76e79" opacity="0.4"/>
+      <circle cx="50" cy="50" r="4" fill="#b76e79" opacity="0.3"/>
+      <circle cx="90" cy="90" r="5" fill="#b76e79" opacity="0.3"/>
+      <path d="M40 10 Q40 40 10 40" stroke="#b76e79" stroke-width="1" fill="none" opacity="0.3"/>
+    </svg>
+  </div>
+
+  <p class="seal-label">Toy Dəvətnaməsi</p>
+
+  <div class="wax-seal" id="wax-seal" onclick="openSeal()">
+    <span class="seal-text">A & S</span>
+  </div>
+
+  <p class="seal-hint">Açmaq üçün toxunun</p>
+</div>
+
+
+<!-- ================================================
+     ÜZƏN LƏÇƏKLƏr
+     ================================================ -->
+<div id="petals-container"></div>
+
+
+<!-- ================================================
+     ANA MƏZMUN
+     ================================================ -->
+<div id="main-content">
+
+
+  <!-- Musiqi idarəetmə -->
+<div id="music-control">
+  <button id="music-btn" class="music-btn" onclick="toggleMusic()">
+    <!-- Play ikon -->
+    <svg id="icon-play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <polygon points="6,4 20,12 6,20" fill="currentColor"/>
+    </svg>
+    <!-- Pause ikon -->
+    <svg id="icon-pause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="display:none;">
+      <rect x="6" y="4" width="4" height="16" fill="currentColor"/>
+      <rect x="14" y="4" width="4" height="16" fill="currentColor"/>
+    </svg>
+  </button>
+  <span id="music-status" class="music-status">Musiqi dayandırılıb</span>
+</div>
+
+<audio id="bg-music" loop>
+  <source src="BLOK3 - NAPIYOSUN MESELA  (Official Music Video) - Blok3.mp3" type="audio/mpeg">
+</audio>
+
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-tag" id="hero-tag">Biz evlənirik</p>
+
+    <h1 class="couple-names" id="couple-names">
+      Anar <span class="ampersand">&amp;</span> Səma
+    </h1>
+
+    <!-- Geri sayım -->
+    <div class="countdown" id="countdown">
+      <div class="time-block">
+        <span class="time-number" id="days">00</span>
+        <span class="time-label">Gün</span>
+      </div>
+      <div class="time-block">
+        <span class="time-number" id="hours">00</span>
+        <span class="time-label">Saat</span>
+      </div>
+      <div class="time-block">
+        <span class="time-number" id="minutes">00</span>
+        <span class="time-label">Dəqiqə</span>
+      </div>
+      <div class="time-block">
+        <span class="time-number" id="seconds">00</span>
+        <span class="time-label">Saniyə</span>
+      </div>
+    </div>
+
+    <!-- Aşağı sürüşdür oxu -->
+    <div class="scroll-arrow" id="scroll-arrow">
+      <span>Aşağı sürüşdürün</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 9l6 6 6-6"/>
+      </svg>
+    </div>
+  </section>
+
+<!--Slayder Foto -->
+  <section class="photo-section">
+  <div class="section-title">Bizim Hekayəmiz</div>
+  <div class="slider-container">
+    <div class="slider-wrapper" id="sliderWrapper">
+      <div class="slide" style="background-image: url('Anar Bayramov foto 1.png')"></div>
+      <div class="slide" style="background-image: url('Anar foto 1.png')"></div>
+      <div class="slide" style="background-image: url('bg.jpg.png')"></div>
+    </div>
+    
+    <button class="slider-nav prev" onclick="changeSlide(-1)">&#10094;</button>
+    <button class="slider-nav next" onclick="changeSlide(1)">&#10095;</button>
+    
+    <div class="slider-dots" id="sliderDots"></div>
+  </div>
+</section>
+
+  <!-- DƏVƏT MESAJI -->
+  <section class="section">
+    <div class="divider reveal"></div>
+
+    <p class="invite-message reveal">
+      "Sizi ən xoşbəxt günümüzə — toy mərasimimizə dəvət etmək bizim üçün böyük sevinc mənbəyidir.
+      Bu əlamətdar günü bizimlə bölüşməniz bizə ilham verəcək."
+    </p>
+
+    <p class="invite-sign reveal">Sevgi ilə, Anar &amp; Səma</p>
+  </section>
+
+  <!-- Dress Code -->
+<div class="dress-code-container reveal">
+    <div class="dress-code-content">
+        <div class="dress-code-icon">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 4L4 7V10C4 15.5228 7.58172 20.4446 12 22C16.4183 20.4446 20 15.5228 20 10V7L12 4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 10L12 13L15 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <span class="dress-code-label">Dress Code</span>
+        <h2 class="dress-code-value">Elegant Classic</h2>
+        <div class="dress-code-line"></div>
+    </div>
+</div>
+  
+
+  
+
+
+
+  <!-- Proqramlar-->
+   <section class="section luxury-schedule reveal">
+    <div class="section-title">
+        <h2 class="premium-title">Mərasim Proqramı</h2>
+        <div class="premium-line"></div>
+    </div>
+
+    <div class="timeline-wrapper">
+        <div class="main-line"></div>
+
+        <div class="timeline-item">
+            <div class="timeline-icon">
+                <i class="fas fa-wine-glass-alt"></i>
+            </div>
+            <div class="timeline-content">
+                <span class="time-tag">18:00</span>
+                <h3 class="event-name">Qonaqların qarşılanması</h3>
+                <p class="event-desc">Xoş gəldin kokteyli və qonaqların qəbulu</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-icon">
+                <i class="fas fa-heart"></i>
+            </div>
+            <div class="timeline-content">
+                <span class="time-tag">19:00</span>
+                <h3 class="event-name">Təntənəli Giriş</h3>
+                <p class="event-desc">Cütlüyün ilk rəqsi və açılış</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-icon">
+                <i class="fas fa-utensils"></i>
+            </div>
+            <div class="timeline-content">
+                <span class="time-tag">20:00</span>
+                <h3 class="event-name">Şam Yeməyi</h3>
+                <p class="event-desc">Musiqi fasiləsi və ləziz təamlar</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-icon">
+                <i class="fas fa-birthday-cake"></i>
+            </div>
+            <div class="timeline-content">
+                <span class="time-tag">21:00</span>
+                <h3 class="event-name">Tort Kəsimi</h3>
+                <p class="event-desc">Şirin anların paylaşılması</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-icon">
+                <i class="fas fa-music"></i>
+            </div>
+            <div class="timeline-content">
+                <span class="time-tag">22:00</span>
+                <h3 class="event-name">Rəqs və Əyləncə</h3>
+                <p class="event-desc">DJ müşayiəti ilə unudulmaz şənlik</p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-icon">
+                
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="timeline-content">
+                <span class="time-tag">24:00</span>
+                <h3 class="event-name">Günün Sonu</h3>
+                <p class="event-desc">Təşəkkür və vida</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+  <!-- Maps hissəsi -->
+   <!-- MƏRASIM DETALları -->
+  <section class="section">
+    <div class="glass-card reveal">
+      <h2 class="section-title">Mərasim Detalları</h2>
+
+      <div class="details-grid">
+        <!-- Sol: Tarix, Saat, Məkan -->
+        <div>
+          <!-- Tarix -->
+          <div class="detail-item">
+            <div class="detail-icon">
+              <svg viewBox="0 0 24 24" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <div>
+              <p class="detail-label">Tarix</p>
+              <p class="detail-value">25 Aprel 2026<br>Şənbə günü</p>
+            </div>
+          </div>
+
+          <!-- Saat -->
+          <div class="detail-item">
+            <div class="detail-icon">
+              <svg viewBox="0 0 24 24" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div>
+              <p class="detail-label">Saat</p>
+              <p class="detail-value">Məclisin başlanması: 18:00</p>
+            </div>
+          </div>
+
+          <!-- Məkan -->
+          <div class="detail-item">
+            <div class="detail-icon">
+              <svg viewBox="0 0 24 24" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </div>
+            <div>
+              <p class="detail-label">Məkan</p>
+              <p class="detail-value">Restoran Sevgili Palace<br>Bakı, Azərbaycan</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sağ: Google Maps -->
+        <div class="map-frame">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3040.0603535329533!2d49.8279727!3d40.36318610000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40307dcc3fb4e115%3A0x4f823af04d1ddfc9!2zxZ7JmWxhbMmZIFBhcms!5e0!3m2!1str!2saz!4v1775231150466!5m2!1str!2saz" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+
+<a href="https://maps.app.goo.gl/nMs6LpKdqQNw1uEn6"   target="_blank" 
+   class="map-button">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;">
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+    <circle cx="12" cy="10" r="3"></circle>
+  </svg>
+  Xəritədə Naviqasiyanı Aç
+</a>
+
+
+<!--Bolt tetbiq-->
+
+<button onclick="openBolt()" class="bolt-button">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+  </svg>
+  Bolt ilə gəlin
+</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ÜRƏK SÖZLƏRİ FORMU -->
+<section class="section">
+  <div class="glass-card reveal">
+    <h3 class="wishes-title">Ürək Sözləriniz</h3>
+    <p class="wishes-subtitle">Arzularınızı bizimlə bölüşün</p>
+
+    <form id="wish-form">
+      
+      <!-- Ad Soyad -->
+      <div class="premium-input-group">
+        <div class="input-wrapper">
+          <input type="text" id="guestName" placeholder=" " required autocomplete="off">
+          <label for="guestName">Adınız və Soyadınız</label>
+          <div class="focus-border"></div>
+          <div class="input-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- İştirak Seçimi -->
+      <div class="attendance-options">
+        <label class="option-item">
+          <input type="radio" name="attendance" value="Gəlirəm" checked>
+          <span class="checkmark"></span>
+          Gəlirəm
+        </label>
+        
+        <label class="option-item">
+          <input type="radio" name="attendance" value="Gələ bilmirəm">
+          <span class="checkmark"></span>
+          Gələ bilmirəm
+        </label>
+      </div>
+
+      <!-- Nəfər Sayı -->
+      <div class="guest-selection-container">
+        <label class="selection-label">Nəfər sayı</label>
+        
+        <div class="guest-chips" id="guestChips">
+          <button type="button" class="chip active" onclick="selectGuestCount(1, this)">1</button>
+          <button type="button" class="chip" onclick="selectGuestCount(2, this)">2</button>
+          <button type="button" class="chip" onclick="selectGuestCount(3, this)">3</button>
+          <button type="button" class="chip" onclick="selectGuestCount(4, this)">4</button>
+          <button type="button" class="chip" onclick="selectGuestCount(5, this)">5</button>
+          <button type="button" class="chip" onclick="toggleCustomInput(this)">Digər</button>
+        </div>
+ 
+        <div id="customInputWrapper" class="custom-input-wrapper" style="display: none;">
+          <input type="number" id="guestCount" placeholder="6" min="6" max="30" 
+                 onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+          <span class="input-suffix">nəfər</span>
+        </div>
+      </div>
+
+      <!-- Ürək Sözü -->
+      <div class="form-group">
+        <label class="form-label" for="guestMessage">Ürək sözünüz</label>
+        <textarea class="form-textarea" id="guestMessage" 
+                  placeholder="Səmimi arzularınızı bura yazın..."></textarea>
+      </div>
+
+      <!-- Göndər düyməsi -->
+      <button type="button" class="submit-btn" onclick="sendRSVP()">
+        Təsdiqlə və Göndər
+      </button>
+    </form>
+  </div>
+</section>
+
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-line"></div>
+    <p class="footer-names">Anar &amp; Səma</p>
+    <p class="footer-date">25.04.2026</p>
+  </footer>
+
+
+</div><!-- /#main-content -->
+
+
+
+<!-- ================================================
+     JAVASCRIPT
+     ================================================ -->
+<script>
+  /* ==================================================
+     AYARLAR — BU HİSSƏNİ DƏYİŞİN
+     ================================================== */
+
+  
+
+  // Toy tarixi — Bakı vaxtı (UTC+4)
+  // Format: "İL-AY-GÜNTsaat:dəqiqə:saniyə+04:00"
+ /* ==================================================
+     AYARLAR
+     ================================================== */
+  const TARGET_DATE = new Date("2026-04-25T18:00:00+04:00").getTime();
+
+  /* ==================================================
+     MÖHÜR AÇILIŞI
+     ================================================== */
+  function openSeal() {
+    const sealScreen = document.getElementById('seal-screen');
+    const audio = document.getElementById('bg-music');
+    
+    sealScreen.classList.add('opening');
+    
+    // Möhür açılarkən musiqi avtomatik başlasın
+    if (audio) {
+      audio.play().then(() => {
+        // Musiqi başladı → düyməni "pause" vəziyyətinə gətir
+        updateMusicButtonUI(true);
+      }).catch(err => {
+        console.log("Musiqi avtomatik başlama xətası:", err);
+      });
+    }
+
+    setTimeout(() => {
+      sealScreen.classList.add('hidden');
+      showContent();
+    }, 1200);
+  }
+
+  function showContent() {
+    const main = document.getElementById('main-content');
+    main.classList.add('visible');
+
+    setTimeout(() => {
+      document.getElementById('hero-tag').classList.add('animate');
+      document.getElementById('couple-names').classList.add('animate');
+      document.getElementById('countdown').classList.add('animate');
+    }, 100);
+
+    setTimeout(() => {
+      document.getElementById('scroll-arrow').classList.add('animate');
+    }, 2000);
+
+    initScrollReveal();
+    initSlider();
+  }
+
+  /* ==================================================
+     MUSİQİ DÜYMƏSİ UI-ni yeniləyən funksiya (yeni əlavə)
+     ================================================== */
+  function updateMusicButtonUI(isPlaying) {
+    const playIcon = document.getElementById('icon-play');
+    const pauseIcon = document.getElementById('icon-pause');
+    const status = document.getElementById('music-status');
+    const btn = document.getElementById('music-btn');
+
+    if (isPlaying) {
+      if (playIcon) playIcon.style.display = "none";
+      if (pauseIcon) pauseIcon.style.display = "block";
+      if (status) status.textContent = "Musiqi açıqdır";
+      if (btn) btn.classList.add("playing");
+    } else {
+      if (playIcon) playIcon.style.display = "block";
+      if (pauseIcon) pauseIcon.style.display = "none";
+      if (status) status.textContent = "Musiqi dayandırılıb";
+      if (btn) btn.classList.remove("playing");
+    }
+  }
+
+  /* ==================================================
+     MUSİQİ İDARƏETMƏ (toggleMusic)
+     ================================================== */
+  function toggleMusic() {
+    const audio = document.getElementById('bg-music');
+    if (!audio) return;
+
+    if (audio.paused) {
+      audio.play().then(() => {
+        updateMusicButtonUI(true);
+      });
+    } else {
+      audio.pause();
+      updateMusicButtonUI(false);
+    }
+  }
+
+
+  /* ==================================================
+     GERİ SAYIM
+     ================================================== */
+  function updateCountdown() {
+    const now = Date.now();
+    const diff = TARGET_DATE - now;
+
+    if (diff <= 0) {
+      document.getElementById('days').textContent    = '00';
+      document.getElementById('hours').textContent   = '00';
+      document.getElementById('minutes').textContent = '00';
+      document.getElementById('seconds').textContent = '00';
+      return;
+    }
+
+    const days    = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours   = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    document.getElementById('days').textContent    = String(days).padStart(2, '0');
+    document.getElementById('hours').textContent   = String(hours).padStart(2, '0');
+    document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+    document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+
+  /* ==================================================
+     ÜZƏN LƏÇƏKLƏr
+     ================================================== */
+  function createPetals() {
+    const container = document.getElementById('petals-container');
+    const colors = [
+      'rgba(235,160,175,0.55)',
+      'rgba(210,120,140,0.45)',
+      'rgba(255,190,205,0.4)',
+      'rgba(183,100,120,0.5)',
+    ];
+
+    for (let i = 0; i < 30; i++) {
+      const petal = document.createElement('div');
+      petal.className = 'petal';
+
+      const size   = 12 + Math.random() * 20;
+      const x      = Math.random() * 100;
+      const dur    = 10 + Math.random() * 18;
+      const delay  = Math.random() * 12;
+      const color  = colors[Math.floor(Math.random() * colors.length)];
+
+      petal.style.cssText = `
+        width: ${size}px;
+        height: ${size * 0.75}px;
+        left: ${x}%;
+        top: -10%;
+        background: radial-gradient(ellipse at 40% 35%, ${color} 0%, transparent 70%);
+        filter: blur(${Math.random() * 1.5}px);
+        animation-duration: ${dur}s;
+        animation-delay: -${delay}s;
+        transform: rotate(${Math.random() * 360}deg);
+      `;
+
+      container.appendChild(petal);
+    }
+  }
+
+  createPetals();
+
+
+  /* ==================================================
+     SCROLL REVEAL
+     ================================================== */
+  function initScrollReveal() {
+    const elements = document.querySelectorAll('.reveal');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+    elements.forEach(el => observer.observe(el));
+  }
+
+
+  /* ==================================================
+     ÜRƏK SÖZLƏRİ — WHATSAPP GÖNDƏRİLMƏSİ
+     ================================================== */
+  function sendRSVP() {
+    // 1. Ayarlar (Öz nömrənizi bura yazın)
+    const WHATSAPP_NUMBER = "994552929502"; 
+    
+    // 2. Elementləri tək-tək götürək
+    const nameInput = document.getElementById('guestName');
+    const messageInput = document.getElementById('guestMessage');
+    const attendanceInput = document.querySelector('input[name="attendance"]:checked');
+    const customGuestInput = document.getElementById('guestCount'); // "Digər" üçün olan input
+    const activeChip = document.querySelector('.chip.active'); // Seçilmiş chip
+
+    // 3. Dəyərləri yoxlayaq
+    const name = nameInput ? nameInput.value.trim() : "";
+    const attendance = attendanceInput ? attendanceInput.value : "Gəlirəm";
+    const message = messageInput ? messageInput.value.trim() : "";
+    
+    // Nəfər sayını təyin edək
+    let count = "1";
+    if (customGuestInput && customGuestInput.value !== "") {
+        count = customGuestInput.value;
+    } else if (activeChip) {
+        count = activeChip.innerText;
+    }
+
+    // 4. XƏTA BURADADIR: Ad yoxlanışı
+    if (name === "") {
+        alert("Zəhmət olmasa adınızı qeyd edin.");
+        nameInput.focus(); // Ad xanasına fokuslanır
+        return;
+    }
+
+    // 5. Mesajı quraq
+    let text = `*Toy Dəvətnaməsi — RSVP*%0A`;
+    text += `---------------------------%0A`;
+    text += `*Qonaq:* ${name}%0A`;
+    text += `*Status:* ${attendance === 'Gəlirəm' ? '✅ İştirak edir' : '❌ İştirak edə bilmir'}%0A`;
+    
+    if (attendance === 'Gəlirəm') {
+        text += `*Nəfər sayı:* ${count}%0A`;
+    }
+    
+    if (message) {
+        text += `%0A*Təbrik:* ${message}%0A`;
+    }
+    
+    text += `---------------------------`;
+
+    // 6. WhatsApp-ı aç
+    const url = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${text}`;
+    window.open(url, '_blank');
+  }
+
+
+  /*musiqi*/ 
+  function toggleMusic() {
+    const audio = document.getElementById('bg-music');
+    const playIcon = document.getElementById('icon-play');
+    const pauseIcon = document.getElementById('icon-pause');
+    const status = document.getElementById('music-status');
+    const btn = document.getElementById('music-btn');
+
+    if (audio.paused) {
+      audio.play();
+      playIcon.style.display = "none";
+      pauseIcon.style.display = "block";
+      status.textContent = "Musiqi açıqdır";
+      btn.classList.add("playing");
+    } else {
+      audio.pause();
+      playIcon.style.display = "block";
+      pauseIcon.style.display = "none";
+      status.textContent = "Musiqi dayandırılıb";
+      btn.classList.remove("playing");
+    }
+  }
+
+
+ /*nəfər sayı*/
+  
+  /* nəfər sayı funksiyaları */
+function selectGuestCount(count, element) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  element.classList.add('active');
+  
+  const wrapper = document.getElementById('customInputWrapper');
+  wrapper.style.display = 'none';
+}
+
+function toggleCustomInput(element) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  element.classList.add('active');
+  
+  const wrapper = document.getElementById('customInputWrapper');
+  const input = document.getElementById('guestCount');
+  
+  wrapper.style.display = 'flex';
+  input.value = "";
+  input.focus();
+}
+
+//Slayder Foto 
+
+let currentSlide = 0;
+let sliderInitialized = false;
+
+// Elementləri seçirik
+const slides = document.querySelectorAll('.slide');
+const dotsContainer = document.getElementById('sliderDots');
+
+function createDots() {
+    if (!dotsContainer) return;
+    dotsContainer.innerHTML = "";
+    slides.forEach((_, index) => {
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+        if (index === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => goToSlide(index));
+        dotsContainer.appendChild(dot);
+    });
+}
+
+function updateSlider() {
+    const dots = document.querySelectorAll('.dot');
+    slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlide);
+        if (dots[index]) {
+            dots[index].classList.toggle('active', index === currentSlide);
+        }
+    });
+}
+
+function initSlider() {
+    if (sliderInitialized) return;
+    sliderInitialized = true;
+    
+    currentSlide = 0;
+    createDots();
+    updateSlider(); // İlk şəkli dərhal aktiv edir
+}
+
+function changeSlide(direction) {
+    if (slides.length === 0) return;
+    currentSlide = (currentSlide + direction + slides.length) % slides.length;
+    updateSlider();
+}
+
+function goToSlide(index) {
+    currentSlide = index;
+    updateSlider();
+}
+
+// Avtomatik sürüşmə
+setInterval(() => {
+    if (sliderInitialized) {
+        changeSlide(1);
+    }
+}, 5000);
+
+
+function openBolt() {
+  const lat = 40.3727;
+  const lng = 49.8303;
+  
+  const boltAppUrl = `bolt://ride?destination_lat=${lat}&destination_lng=${lng}`;
+  
+  const iosStore = "https://apps.apple.com/app/bolt-fast-affordable-rides/id1031912796";
+  const androidStore = "https://play.google.com/store/apps/details?id=ee.mtakso.client";
+
+  const startTime = Date.now();
+  
+  window.location.href = boltAppUrl;
+
+  setTimeout(function() {
+    if (Date.now() - startTime < 2000) {
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      
+      if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        window.location.href = iosStore;
+      } else {
+        window.location.href = androidStore;
+      }
+    }
+  }, 1500);
+}
+
+</script>
+
+</body>
+</html>
