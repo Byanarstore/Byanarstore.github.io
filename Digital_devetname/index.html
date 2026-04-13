@@ -2200,57 +2200,27 @@ setInterval(() => {
 
 
 function openBolt() {
-  const lat = 40.36319;
-  const lng = 49.82797;
-
+  const lat = 40.3727;
+  const lng = 49.8303;
+  
+  const boltAppUrl = `bolt://ride?destination_lat=${lat}&destination_lng=${lng}`;
+  
   const iosStore = "https://apps.apple.com/app/bolt-fast-affordable-rides/id1031912796";
   const androidStore = "https://play.google.com/store/apps/details?id=ee.mtakso.client";
 
   const startTime = Date.now();
+  
+  window.location.href = boltAppUrl;
 
-  // 1. Cari məkanı al (istifadəçi icazə versə)
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const pickupLat = position.coords.latitude;
-        const pickupLng = position.coords.longitude;
-
-        // Ən işlək format (pickup + destination)
-        const boltUrl = `bolt://ride?pickup_lat=${pickupLat}&pickup_lng=${pickupLng}&destination_lat=${destinationLat}&destination_lng=${destinationLng}`;
-
-        window.location.href = boltUrl;
-
-        // Əgər tətbiq quraşdırılmayıbsa → mağazaya yönləndir
-        setTimeout(() => {
-          if (Date.now() - startTime < 1800) {
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-            window.location.href = isIOS ? iosStore : androidStore;
-          }
-        }, 1500);
-      },
-      (error) => {
-        // İcazə verilməyibsə → yalnız destination ilə aç
-        fallbackToDestinationOnly(destinationLat, destinationLng, iosStore, androidStore, startTime);
+  setTimeout(function() {
+    if (Date.now() - startTime < 2000) {
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      
+      if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        window.location.href = iosStore;
+      } else {
+        window.location.href = androidStore;
       }
-    );
-  } else {
-    // Geolocation dəstəklənmirsə
-    fallbackToDestinationOnly(destinationLat, destinationLng, iosStore, androidStore, startTime);
-  }
-}
-
-// Yalnız destination ilə fallback (köhnə üsul)
-function fallbackToDestinationOnly(lat, lng, iosStore, androidStore, startTime) {
-  const boltUrl = `bolt://ride?destination_lat=${lat}&destination_lng=${lng}`;
-  // Alternativ formatlar (əgər yuxarıdakı işləməsə)
-  // const boltUrl = `bolt://ride?lat=${lat}&lng=${lng}`;
-
-  window.location.href = boltUrl;
-
-  setTimeout(() => {
-    if (Date.now() - startTime < 1800) {
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-      window.location.href = isIOS ? iosStore : androidStore;
     }
   }, 1500);
 }
