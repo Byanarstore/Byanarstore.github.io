@@ -2200,9 +2200,20 @@ setInterval(() => {
 
 
 function openBolt() {
-  const destLat = 40.3632;     // Şəlalə Parkı düzgün latitude
-  const destLng = 49.8280;     // Şəlalə Parkı düzgün longitude
-  const destName = "Şəlalə Parkı";
+  const destLat = 40.3632;   // Şəlalə Parkı
+  const destLng = 49.8280;
+  const destName = "Şəlalə Parkı, Bakı";
+
+  // Google Maps deep link (ən stabil yol)
+  const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}&destination_place_id&travelmode=driving&dir_action=navigate`;
+
+  window.open(mapsUrl, '_blank');
+
+  // İstifadəçiyə kiçik izahat
+  setTimeout(() => {
+    alert("Google Maps açıldı.\n\nŞəlalə Parkına istiqamət quruldu.\n\nAşağıdakı seçimlərdən \"Bolt\" və ya \"Yango\" düyməsini basın.");
+  }, 700);
+}
 
   const iosStore = "https://apps.apple.com/app/bolt-fast-affordable-rides/id1031912796";
   const androidStore = "https://play.google.com/store/apps/details?id=ee.mtakso.client";
