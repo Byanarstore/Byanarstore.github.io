@@ -1751,11 +1751,11 @@
 
 <!--Bolt tetbiq-->
 
-<button onclick="openBolt()" class="bolt-button">
+<button onclick="openYango()" class="bolt-button">
   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
     <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
   </svg>
-  Bolt ilə gəlin / Cari məkandan
+  Yango ilə gəlin (cari məkandan)
 </button>
         </div>
       </div>
@@ -2199,57 +2199,53 @@ setInterval(() => {
 }, 5000);
 
 
-function openBolt() {
-  const destLat = 40.3727;   // Sevgili Palace
-  const destLng = 49.8303;
-
-  const iosStore = "https://apps.apple.com/app/bolt-fast-affordable-rides/id1031912796";
-  const androidStore = "https://play.google.com/store/apps/details?id=ee.mtakso.client";
+function openYango() {
+  const destLat = 40.3727;   // Sevgili Palace latitude
+  const destLng = 49.8303;   // Sevgili Palace longitude
+  const destName = "Sevgili Palace, Bakı";
 
   const startTime = Date.now();
 
-  // 1. Əvvəlcə geolocation icazəsi alırıq
+  // 1. Cari məkanı al (ən yaxşı nəticə üçün)
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const userLat = position.coords.latitude.toFixed(6);
         const userLng = position.coords.longitude.toFixed(6);
 
-        // Ən çox işləyən formatlardan biri (pickup + destination)
-        const deepLink = `bolt://ride?pickup_lat=${userLat}&pickup_lng=${userLng}&destination_lat=${destLat}&destination_lng=${destLng}`;
+        // Yango-nun ən işləyən link formatı
+        const yangoUrl = `https://yango.go.link/route?start-lat=${userLat}&start-lon=${userLng}&end-lat=${destLat}&end-lon=${destLng}&ref=toy-invitation&lang=az`;
 
-        window.location.href = deepLink;
+        window.location.href = yangoUrl;
 
-        // Tətbiq açılmadısa (timeout) → mağazaya yönləndir
+        // Əgər Yango quraşdırılmayıbsa → fallback
         setTimeout(() => {
           if (Date.now() - startTime < 2000) {
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent || navigator.vendor || window.opera);
-            window.location.href = isIOS ? iosStore : androidStore;
+            const fallbackUrl = `https://yango.com/en_az/order/?gfrom=${userLng},${userLat}&gto=${destLng},${destLat}`;
+            window.location.href = fallbackUrl;
           }
-        }, 1600);
+        }, 1500);
       },
       (error) => {
-        // İcazə verilməyibsə və ya xəta varsa → yalnız destination ilə sadə link
-        fallbackBolt(destLat, destLng, iosStore, androidStore, startTime);
+        // İcazə verilməyibsə → yalnız destination ilə
+        fallbackYango(destLat, destLng, destName);
       }
     );
   } else {
-    fallbackBolt(destLat, destLng, iosStore, androidStore, startTime);
+    fallbackYango(destLat, destLng, destName);
   }
 }
 
-// Yalnız destination ilə fallback funksiyası
-function fallbackBolt(lat, lng, iosStore, androidStore, startTime) {
-  const deepLink = `bolt://ride?destination_lat=${lat}&destination_lng=${lng}`;
-
-  window.location.href = deepLink;
+// Fallback (yalnız destination)
+function fallbackYango(lat, lng, name) {
+  const yangoUrl = `https://yango.go.link/route?end-lat=${lat}&end-lon=${lng}&ref=toy-invitation&lang=az`;
+  
+  window.location.href = yangoUrl;
 
   setTimeout(() => {
-    if (Date.now() - startTime < 2000) {
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent || navigator.vendor || window.opera);
-      window.location.href = isIOS ? iosStore : androidStore;
-    }
-  }, 1600);
+    const fallbackUrl = `https://yango.com/en_az/order/?gto=${lng},${lat}`;
+    window.location.href = fallbackUrl;
+  }, 1500);
 }
 
 </script>
