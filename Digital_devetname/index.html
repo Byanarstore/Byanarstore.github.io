@@ -2200,29 +2200,56 @@ setInterval(() => {
 
 
 function openBolt() {
-  const lat = 40.3727;
-  const lng = 49.8303;
-  
-  const boltAppUrl = `bolt://ride?destination_lat=${lat}&destination_lng=${lng}`;
-  
+  const destLat = 40.3727;   // Sevgili Palace
+  const destLng = 49.8303;
+
   const iosStore = "https://apps.apple.com/app/bolt-fast-affordable-rides/id1031912796";
   const androidStore = "https://play.google.com/store/apps/details?id=ee.mtakso.client";
 
   const startTime = Date.now();
-  
-  window.location.href = boltAppUrl;
 
-  setTimeout(function() {
-    if (Date.now() - startTime < 2000) {
-      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-      
-      if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-        window.location.href = iosStore;
-      } else {
-        window.location.href = androidStore;
+  // 1. Əvvəlcə geolocation icazəsi alırıq
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userLat = position.coords.latitude.toFixed(6);
+        const userLng = position.coords.longitude.toFixed(6);
+
+        // Ən çox işləyən formatlardan biri (pickup + destination)
+        const deepLink = `bolt://ride?pickup_lat=${userLat}&pickup_lng=${userLng}&destination_lat=${destLat}&destination_lng=${destLng}`;
+
+        window.location.href = deepLink;
+
+        // Tətbiq açılmadısa (timeout) → mağazaya yönləndir
+        setTimeout(() => {
+          if (Date.now() - startTime < 2000) {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent || navigator.vendor || window.opera);
+            window.location.href = isIOS ? iosStore : androidStore;
+          }
+        }, 1600);
+      },
+      (error) => {
+        // İcazə verilməyibsə və ya xəta varsa → yalnız destination ilə sadə link
+        fallbackBolt(destLat, destLng, iosStore, androidStore, startTime);
       }
+    );
+  } else {
+    fallbackBolt(destLat, destLng, iosStore, androidStore, startTime);
+  }
+}
+
+// Yalnız destination ilə fallback funksiyası
+function fallbackBolt(lat, lng, iosStore, androidStore, startTime) {
+  const deepLink = `bolt://ride?destination_lat=${lat}&destination_lng=${lng}`;
+
+  window.location.href = deepLink;
+
+  setTimeout(() => {
+    if (Date.now() - startTime < 2000) {
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent || navigator.vendor || window.opera);
+      window.location.href = isIOS ? iosStore : androidStore;
     }
-  }, 1500);
+  }, 1600);
 }
 
 </script>
