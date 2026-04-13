@@ -1751,11 +1751,11 @@
 
 <!--Yango tetbiq-->
 
-<button onclick="openYango()" class="bolt-button">
+<button onclick="openYango()" class="bolt-button" style="background: #00A651; box-shadow: 0 4px 12px rgba(0, 166, 81, 0.4);">
   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
     <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
   </svg>
-  Yango ilə gəlin / Cari məkandan
+  Yango ilə gəlin (Şəlalə Parkına)
 </button>
         </div>
       </div>
@@ -2199,53 +2199,70 @@ setInterval(() => {
 }, 5000);
 
 
+// ==================== YANGO İLƏ GEDİŞ (Mobil + Desktop uyğun) ====================
 function openYango() {
-  const destLat = 40.3727;   // Sevgili Palace latitude
-  const destLng = 49.8303;   // Sevgili Palace longitude
-  const destName = "Sevgili Palace, Bakı";
+  const destLat = 40.3632;     // Şəlalə Parkı
+  const destLng = 49.8280;
 
   const startTime = Date.now();
 
-  // 1. Cari məkanı al (ən yaxşı nəticə üçün)
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const userLat = position.coords.latitude.toFixed(6);
         const userLng = position.coords.longitude.toFixed(6);
 
-        // Yango-nun ən işləyən link formatı
-        const yangoUrl = `https://yango.go.link/route?start-lat=${userLat}&start-lon=${userLng}&end-lat=${destLat}&end-lon=${destLng}&ref=toy-invitation&lang=az`;
+        const yangoUrl = `https://yango.go.link/route?` +
+          `start-lat=${userLat}&start-lon=${userLng}&` +
+          `end-lat=${destLat}&end-lon=${destLng}&` +
+          `ref=toy-dəvətnamə&lang=az`;
 
         window.location.href = yangoUrl;
 
-        // Əgər Yango quraşdırılmayıbsa → fallback
+        // Əgər tətbiq açılmadısa marketə yönləndir
         setTimeout(() => {
-          if (Date.now() - startTime < 2000) {
-            const fallbackUrl = `https://yango.com/en_az/order/?gfrom=${userLng},${userLat}&gto=${destLng},${destLat}`;
-            window.location.href = fallbackUrl;
+          if (Date.now() - startTime < 1800) {
+            redirectToYangoStore();
           }
-        }, 1500);
+        }, 1600);
       },
-      (error) => {
-        // İcazə verilməyibsə → yalnız destination ilə
-        fallbackYango(destLat, destLng, destName);
+      () => {
+        fallbackYango();
       }
     );
   } else {
-    fallbackYango(destLat, destLng, destName);
+    fallbackYango();
   }
 }
 
-// Fallback (yalnız destination)
-function fallbackYango(lat, lng, name) {
-  const yangoUrl = `https://yango.go.link/route?end-lat=${lat}&end-lon=${lng}&ref=toy-invitation&lang=az`;
-  
+function fallbackYango() {
+  const destLat = 40.3632;
+  const destLng = 49.8280;
+
+  const yangoUrl = `https://yango.go.link/route?end-lat=${destLat}&end-lon=${destLng}&ref=toy-dəvətnamə&lang=az`;
   window.location.href = yangoUrl;
 
   setTimeout(() => {
-    const fallbackUrl = `https://yango.com/en_az/order/?gto=${lng},${lat}`;
-    window.location.href = fallbackUrl;
+    redirectToYangoStore();
   }, 1500);
+}
+
+// Dəqiq cihaz aşkarlaması
+function redirectToYangoStore() {
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
+
+  // iPhone və iPad → App Store
+  if (/iPhone|iPad/i.test(ua)) {
+    window.location.href = "https://apps.apple.com/app/yango-taxi-food-delivery/id1437157286";
+  } 
+  // MacBook (MacOS) → App Store
+  else if (/Macintosh/i.test(ua)) {
+    window.location.href = "https://apps.apple.com/app/yango-taxi-food-delivery/id1437157286";
+  } 
+  // Android, Windows, Linux və digər → Google Play
+  else {
+    window.location.href = "https://play.google.com/store/apps/details?id=com.yandex.yango";
+  }
 }
 
 </script>
