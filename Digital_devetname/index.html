@@ -1729,7 +1729,7 @@
             </div>
             <div>
               <p class="detail-label">Məkan</p>
-              <p class="detail-value">Restoran Sevgili Palace<br>Bakı, Azərbaycan</p>
+              <p class="detail-value">Restoran Şəlalə parkı<br>Bakı, Azərbaycan</p>
             </div>
           </div>
         </div>
@@ -1749,14 +1749,13 @@
 </a>
 
 
-<!--Yango tetbiq-->
+<!--Bolt tetbiq-->
 
-<!-- Yango düyməsi -->
-<button onclick="openYango()" class="bolt-button" style="background: #00A651; box-shadow: 0 4px 12px rgba(0, 166, 81, 0.4);">
+<button onclick="openBolt()" class="bolt-button">
   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
     <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
   </svg>
-  Yango ilə gəlin 
+  Bolt ilə gəlin
 </button>
         </div>
       </div>
@@ -2200,35 +2199,34 @@ setInterval(() => {
 }, 5000);
 
 
-// ==================== YANGO İLƏ GEDİŞ – STABİL VERSİYA (Windows + Mobil) ====================
-function openYango() {
-  const destLat = 40.3632;   // Şəlalə Parkı
-  const destLng = 49.8280;
+function openBolt() {
+  const lat = 40.3727;
+  const lng = 49.8303;
 
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const userLat = position.coords.latitude.toFixed(6);
-        const userLng = position.coords.longitude.toFixed(6);
+  //const destLat = 40.3632;    const destLng = 49.8280;    // Şəlalə Parkı
+ 
+  
+  
+  const boltAppUrl = `bolt://ride?destination_lat=${lat}&destination_lng=${lng}`;
+  
+  const iosStore = "https://apps.apple.com/app/bolt-fast-affordable-rides/id1031912796";
+  const androidStore = "https://play.google.com/store/apps/details?id=ee.mtakso.client";
 
-        // Ən stabil link (Windows-da da işləyir)
-        const yangoUrl = `https://yango.com/en_az/order/?` +
-          `gfrom=${userLng},${userLat}&` +
-          `gto=${destLng},${destLat}&` +
-          `ref=toy-dəvətnamə`;
+  const startTime = Date.now();
+  
+  window.location.href = boltAppUrl;
 
-        window.location.href = yangoUrl;
-      },
-      () => {
-        // Geolocation icazəsi verilməyibsə yalnız destination
-        const fallbackUrl = `https://yango.com/en_az/order/?gto=${destLng},${destLat}&ref=toy-dəvətnamə`;
-        window.location.href = fallbackUrl;
+  setTimeout(function() {
+    if (Date.now() - startTime < 2000) {
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      
+      if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        window.location.href = iosStore;
+      } else {
+        window.location.href = androidStore;
       }
-    );
-  } else {
-    const fallbackUrl = `https://yango.com/en_az/order/?gto=${destLng},${destLat}&ref=toy-dəvətnamə`;
-    window.location.href = fallbackUrl;
-  }
+    }
+  }, 1500);
 }
 
 </script>
