@@ -1751,11 +1751,12 @@
 
 <!--Yango tetbiq-->
 
+<!-- Yango düyməsi -->
 <button onclick="openYango()" class="bolt-button" style="background: #00A651; box-shadow: 0 4px 12px rgba(0, 166, 81, 0.4);">
   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
     <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
   </svg>
-  Yango ilə gəlin (Şəlalə Parkına)
+  Yango ilə gəlin 
 </button>
         </div>
       </div>
@@ -2199,12 +2200,10 @@ setInterval(() => {
 }, 5000);
 
 
-// ==================== YANGO İLƏ GEDİŞ (Mobil + Desktop uyğun) ====================
+// ==================== YANGO İLƏ GEDİŞ – STABİL VERSİYA (Windows + Mobil) ====================
 function openYango() {
-  const destLat = 40.3632;     // Şəlalə Parkı
+  const destLat = 40.3632;   // Şəlalə Parkı
   const destLng = 49.8280;
-
-  const startTime = Date.now();
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -2212,56 +2211,23 @@ function openYango() {
         const userLat = position.coords.latitude.toFixed(6);
         const userLng = position.coords.longitude.toFixed(6);
 
-        const yangoUrl = `https://yango.go.link/route?` +
-          `start-lat=${userLat}&start-lon=${userLng}&` +
-          `end-lat=${destLat}&end-lon=${destLng}&` +
-          `ref=toy-dəvətnamə&lang=az`;
+        // Ən stabil link (Windows-da da işləyir)
+        const yangoUrl = `https://yango.com/en_az/order/?` +
+          `gfrom=${userLng},${userLat}&` +
+          `gto=${destLng},${destLat}&` +
+          `ref=toy-dəvətnamə`;
 
         window.location.href = yangoUrl;
-
-        // Əgər tətbiq açılmadısa marketə yönləndir
-        setTimeout(() => {
-          if (Date.now() - startTime < 1800) {
-            redirectToYangoStore();
-          }
-        }, 1600);
       },
       () => {
-        fallbackYango();
+        // Geolocation icazəsi verilməyibsə yalnız destination
+        const fallbackUrl = `https://yango.com/en_az/order/?gto=${destLng},${destLat}&ref=toy-dəvətnamə`;
+        window.location.href = fallbackUrl;
       }
     );
   } else {
-    fallbackYango();
-  }
-}
-
-function fallbackYango() {
-  const destLat = 40.3632;
-  const destLng = 49.8280;
-
-  const yangoUrl = `https://yango.go.link/route?end-lat=${destLat}&end-lon=${destLng}&ref=toy-dəvətnamə&lang=az`;
-  window.location.href = yangoUrl;
-
-  setTimeout(() => {
-    redirectToYangoStore();
-  }, 1500);
-}
-
-// Dəqiq cihaz aşkarlaması
-function redirectToYangoStore() {
-  const ua = navigator.userAgent || navigator.vendor || window.opera;
-
-  // iPhone və iPad → App Store
-  if (/iPhone|iPad/i.test(ua)) {
-    window.location.href = "https://apps.apple.com/app/yango-taxi-food-delivery/id1437157286";
-  } 
-  // MacBook (MacOS) → App Store
-  else if (/Macintosh/i.test(ua)) {
-    window.location.href = "https://apps.apple.com/app/yango-taxi-food-delivery/id1437157286";
-  } 
-  // Android, Windows, Linux və digər → Google Play
-  else {
-    window.location.href = "https://play.google.com/store/apps/details?id=com.yandex.yango";
+    const fallbackUrl = `https://yango.com/en_az/order/?gto=${destLng},${destLat}&ref=toy-dəvətnamə`;
+    window.location.href = fallbackUrl;
   }
 }
 
