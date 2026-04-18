@@ -18,6 +18,9 @@
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: var(--dark-bg); color: #fff; font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
 
+        /* Səbət açıq olduqda scrollu bağlayan sinif */
+        .no-scroll { overflow: hidden; }
+
         /* --- PRELOADER --- */
         #preloader {
             position: fixed; inset: 0; background: var(--dark-bg);
@@ -163,7 +166,6 @@
         }
     }
 
-    // Məhsullar - Hər birinə unikal "id_code" əlavə edildi
     const products = [
         { 
             id: 1, 
@@ -280,13 +282,23 @@
         if (cart.length === 0) { showPopup("Səbətinizdə məhsul mövcud deyil."); return; }
         if (name === "") { showPopup("Zəhmət olmasa sifarişi təsdiqləmək üçün Adınızı qeyd edin."); return; }
 
-        // Mesaja ID kodları əlavə edildi
         const items = cart.map(i => `• [${i.id_code}] ${i.name} (x${i.qty})`).join('\n');
         const msg = `✨ *LUMIERE SİFARİŞ* ✨\n\n👤 *Müştəri:* ${name}\n🛍️ *Səbət:*\n${items}\n\n💰 *Total: ${document.getElementById('total-price').innerText}*`;
         window.open(`https://wa.me/994552929502?text=${encodeURIComponent(msg)}`);
     }
 
-    function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); }
+    // Yenilənmiş toggleCart funksiyası
+    function toggleCart() { 
+        const sidebar = document.getElementById('cart-sidebar');
+        sidebar.classList.toggle('active');
+        
+        // Əgər səbət aktivdirsə, body-yə no-scroll sinfini əlavə edir, deyilsə silir
+        if (sidebar.classList.contains('active')) {
+            document.body.classList.add('no-scroll');
+        } else {
+            document.body.classList.remove('no-scroll');
+        }
+    }
 
     initSite();
 </script>
