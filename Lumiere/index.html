@@ -400,6 +400,12 @@
     </style>
 </head>
 <body>
+    <div style="background: #0a0a0a; padding: 10px; text-align: center; border-bottom: 1px solid rgba(212, 175, 55, 0.1); border-top: 1px solid rgba(212, 175, 55, 0.1);">
+    <span style="font-size: 10px; color: #888; font-family: 'Montserrat';分组 letter-spacing: 2px; text-transform: uppercase;">
+        🟢 Canlı: <b id="online-count" style="color: #d4af37;">1</b> nəfər | 
+        👁️ Son 24 saat: <b id="daily-views" style="color: #d4af37;">0</b> baxış
+    </span>
+</div>
 
 <div id="preloader">
     <div class="loader-logo">
@@ -436,6 +442,8 @@
             Sizin özəl gününüzün işığı
         </div>
     </div>
+
+    
     <div onclick="toggleCart()" style="cursor:pointer; position:relative;">
         🛒 
         <span id="cart-count" style="position:absolute; top:-10px; right:-10px; background:var(--gold); color:#000; font-size:10px; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold;">
@@ -497,8 +505,57 @@
         </button>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
+
+    // Supabase bağlantısı
+    const _supabase = supabase.createClient(
+        'https://pgnshyibgprjqvyzuisu.supabase.co', 
+        'pgnshyibgprjqvyzuisu'
+    );
+
+    async function handleStats() {
+        // Sayfa görüntülendiğinde kayıt at
+        await _supabase.from('page_views').insert([{}]);
+
+        // 24 saatlik veriyi çek
+        const last24 = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+        const { count } = await _supabase
+            .from('page_views')
+            .select('*', { count: 'exact', head: true })
+            .gt('viewed_at', last24);
+
+        if (document.getElementById('daily-views')) {
+            document.getElementById('daily-views').innerText = count || 0;
+        }
+    }
+
+    function trackOnline() {
+        const channel = _supabase.channel('lumiere_online');
+
+        channel
+            .on('presence', { event: 'sync' }, () => {
+                const userCount = Object.keys(channel.presenceState()).length;
+                if (document.getElementById('online-count')) {
+                    document.getElementById('online-count').innerText = userCount;
+                }
+            })
+            .subscribe(async (status) => {
+                if (status === 'SUBSCRIBED') {
+                    await channel.track({ online_at: new Date().toISOString() });
+                }
+            });
+    }
+
+    // Site yüklendiğinde çalıştır
+    handleStats();
+    trackOnline();
+
+
+
+
+
     /* --- SİSTEMİN BAŞLADILMASI --- */
     function initSite() {
         if (!navigator.onLine) {
@@ -658,7 +715,7 @@
         document.getElementById('total-price').innerText = `Cəmi: ${total} AZN`;
     }
 
-    /* --- WHATSAPP-A SİFARİŞİN GÖNDƏRİLMƏSİ (ÇEK FORMATI) --- */
+    /* --- WHATSAPP-A SİFARİŞİN GÖNDƏRİLMƏSİ (CƏMİ SÖZÜ ÇIXARILDI) --- */
     function validateAndSend() {
         const name = document.getElementById('cust-name').value.trim();
         const msg_body = document.getElementById('cust-msg').value.trim();
@@ -672,29 +729,21 @@
             return; 
         }
 
+        const items = cart.map(i => `• [${i.id_code}] ${i.name} (x${i.qty})`).join('\n');
+        
+        /* Cəmi hesablanır və sadəcə rəqəm + AZN olaraq formatlanır */
         const totalAmount = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-        const date = new Date().toLocaleString('az-AZ');
         
-        /* Çek formatında məhsul siyahısı */
-        const items = cart.map(i => `${i.name}\n[${i.id_code}] ${i.qty} ədəd x ${i.price} AZN`).join('\n\n');
-        
-        /* WhatsApp üçün Çek Dizaynı */
-        let msg = `*LUMIERE*\n`;
-        msg += `_Sizin özəl gününüzün işığı_\n`;
-        msg += `\n\n`;
+        let msg = `✨ *LUMIERE SİFARİŞ* ✨\n\n`;
         msg += `👤 *Müştəri:* ${name}\n`;
-        msg += `🕓 *Tarix:* ${date}\n`;
-        msg += `\n`;
-        msg += `🛍️ *Səbət:* ${items}\n\n`;
-        msg += `\n`;
+        msg += `🛍️ *Səbət:*${items}\n\n`;
         
         if(msg_body !== "") {
-            msg += `📝 *Qeyd:* ${msg_body}\n`;
-            msg += `\n`;
+            msg += `📝 *Qeyd:* ${msg_body}\n\n`;
         }
         
-        msg += `💰 *TOPLAM: ${totalAmount} AZN*\n`;
-        
+        /* "Cəmi" sözü çıxarıldı, sadəcə məbləğ yazıldı */
+        msg += `💰 *Cəmi: ${totalAmount} AZN*`;
         
         window.open(`https://wa.me/994552929502?text=${encodeURIComponent(msg)}`);
     }
