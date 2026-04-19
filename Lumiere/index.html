@@ -532,36 +532,22 @@
     }
 
     function trackOnline() {
-    // Hər cihaz üçün fərqli bir ID yaradırıq ki, sayğac artsın
-    const uniqueKey = 'user_' + Math.random().toString(36).substring(2, 12);
-    
-    // Kanal adını dəyişirik ki, köhnə keşlənmiş bağlantılar mane olmasın
-    const channel = _supabase.channel('lumiere_realtime_count', {
-        config: {
-            presence: {
-                key: uniqueKey,
-            },
-        },
-    });
+        const channel = _supabase.channel('lumiere_online');
 
-    channel
-        .on('presence', { event: 'sync' }, () => {
-            const state = channel.presenceState();
-            // Fərqli unikal key-lərin sayını hesablayırıq
-            const totalOnline = Object.keys(state).length;
-            
-            const el = document.getElementById('online-count');
-            if (el) {
-                el.innerText = totalOnline;
-            }
-        })
-        .subscribe(async (status) => {
-            if (status === 'SUBSCRIBED') {
-                // Bu cihazı otağa izlənilən olaraq əlavə edirik
-                await channel.track({ online_at: new Date().toISOString() });
-            }
-        });
-}
+        channel
+            .on('presence', { event: 'sync' }, () => {
+                const userCount = Object.keys(channel.presenceState()).length;
+                if (document.getElementById('online-count')) {
+                    document.getElementById('online-count').innerText = userCount;
+                }
+            })
+            .subscribe(async (status) => {
+                if (status === 'SUBSCRIBED') {
+                    await channel.track({ online_at: new Date().toISOString() });
+                }
+            });
+    }
+
     // Site yüklendiğinde çalıştır
     handleStats();
     trackOnline();
