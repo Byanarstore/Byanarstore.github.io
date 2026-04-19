@@ -658,9 +658,11 @@
         document.getElementById('total-price').innerText = `Cəmi: ${total} AZN`;
     }
 
-    /* --- WHATSAPP-A SİFARİŞİN GÖNDƏRİLMƏSİ --- */
+    /* --- WHATSAPP-A SİFARİŞİN GÖNDƏRİLMƏSİ (CƏMİ SÖZÜ ÇIXARILDI) --- */
     function validateAndSend() {
         const name = document.getElementById('cust-name').value.trim();
+        const msg_body = document.getElementById('cust-msg').value.trim();
+        
         if (cart.length === 0) { 
             showPopup("Səbətinizdə məhsul mövcud deyil."); 
             return; 
@@ -671,7 +673,21 @@
         }
 
         const items = cart.map(i => `• [${i.id_code}] ${i.name} (x${i.qty})`).join('\n');
-        const msg = `✨ *LUMIERE SİFARİŞ* ✨\n\n👤 *Müştəri:* ${name}\n🛍️ *Səbət:*${items}\n\n💰 *Total: ${document.getElementById('total-price').innerText}*`;
+        
+        /* Cəmi hesablanır və sadəcə rəqəm + AZN olaraq formatlanır */
+        const totalAmount = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+        
+        let msg = `✨ *LUMIERE SİFARİŞ* ✨\n\n`;
+        msg += `👤 *Müştəri:* ${name}\n`;
+        msg += `🛍️ *Səbət:*${items}\n\n`;
+        
+        if(msg_body !== "") {
+            msg += `📝 *Qeyd:* ${msg_body}\n\n`;
+        }
+        
+        /* "Cəmi" sözü çıxarıldı, sadəcə məbləğ yazıldı */
+        msg += `💰 *Cəmi: ${totalAmount} AZN*`;
+        
         window.open(`https://wa.me/994552929502?text=${encodeURIComponent(msg)}`);
     }
 
