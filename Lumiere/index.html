@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LUMIERE — Sizin Özəl Gününüzün İşığı</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    
     <style>
+        /* --- CSS DƏYİŞƏNLƏRİ --- */
         :root {
             --gold: #d4af37;
             --promo-red: #ff4d4d;
@@ -15,22 +18,45 @@
             --transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--dark-bg); color: #fff; font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
+        /* --- ÜMUMİ RESET VƏ BODY STİLLƏRİ --- */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+        }
 
-        /* Səbət açıq olduqda scrollu bağlayan sinif */
-        .no-scroll { overflow: hidden; }
+        body { 
+            background: var(--dark-bg); 
+            color: #fff; 
+            font-family: 'Montserrat', sans-serif; 
+            overflow-x: hidden; 
+        }
 
-        /* --- PRELOADER --- */
+        /* Səbət açıq olduqda arxa fonun sürüşməsini dayandıran sinif */
+        .no-scroll { 
+            overflow: hidden; 
+        }
+
+        /* --- PRELOADER (YÜKLƏNMƏ EKRANI) --- */
         #preloader {
-            position: fixed; inset: 0; background: var(--dark-bg);
-            z-index: 10000; display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
+            position: fixed; 
+            inset: 0; 
+            background: var(--dark-bg);
+            z-index: 10000; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center;
             transition: opacity 1.2s var(--transition);
         }
+
         .loader-logo { 
-            font-family: 'Cinzel', serif; font-size: 32px; color: var(--gold); 
-            letter-spacing: 15px; margin-bottom: 5px;
+            font-family: 'Cinzel', serif; 
+            font-size: 32px; 
+            color: var(--gold); 
+            letter-spacing: 15px; 
+            margin-bottom: 5px;
             background: linear-gradient(to right, #d4af37 20%, #fff 40%, #fff 60%, #d4af37 80%);
             background-size: 200% auto;
             background-clip: text;
@@ -38,99 +64,383 @@
             -webkit-text-fill-color: transparent;
             animation: shineText 3s linear infinite;
         }
-        .loader-line { width: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin-top: 20px; animation: lineGrow 2.5s ease-in-out infinite; opacity: 0.6; }
-        @keyframes lineGrow { 0% { width: 0; opacity: 0; } 50% { width: 150px; opacity: 0.8; } 100% { width: 0; opacity: 0; } }
-        @keyframes shineText { to { background-position: 200% center; } }
 
-        /* --- POP-UP BİLDİRİŞ --- */
-        #custom-popup {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
-            background: #111; border: 1px solid var(--gold); padding: 30px;
-            z-index: 5000; display: none; flex-direction: column; align-items: center;
-            text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.8);
-            min-width: 300px; transition: var(--transition); opacity: 0;
+        .loader-line { 
+            width: 0; 
+            height: 1px; 
+            background: linear-gradient(90deg, transparent, var(--gold), transparent); 
+            margin-top: 20px; 
+            animation: lineGrow 2.5s ease-in-out infinite; 
+            opacity: 0.6; 
         }
-        #custom-popup.active { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        .popup-msg { font-size: 14px; margin-bottom: 20px; color: #ccc; line-height: 1.6; }
-        .popup-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 8px 25px; cursor: pointer; font-family: 'Cinzel'; text-transform: uppercase; font-size: 11px; }
 
-        /* --- OFFLINE SCREEN --- */
-        #offline-screen { position: fixed; inset: 0; background: var(--dark-bg); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        @keyframes lineGrow { 
+            0% { 
+                width: 0; 
+                opacity: 0; 
+            } 
+            50% { 
+                width: 150px; 
+                opacity: 0.8; 
+            } 
+            100% { 
+                width: 0; 
+                opacity: 0; 
+            } 
+        }
+
+        @keyframes shineText { 
+            to { 
+                background-position: 200% center; 
+            } 
+        }
+
+        /* --- XÜSUSİ BİLDİRİŞ PƏNCƏRƏSİ (POP-UP) --- */
+        #custom-popup {
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%) scale(0.9);
+            background: #111; 
+            border: 1px solid var(--gold); 
+            padding: 30px;
+            z-index: 5000; 
+            display: none; 
+            flex-direction: column; 
+            align-items: center;
+            text-align: center; 
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            min-width: 300px; 
+            transition: var(--transition); 
+            opacity: 0;
+        }
+
+        #custom-popup.active { 
+            display: flex; 
+            opacity: 1; 
+            transform: translate(-50%, -50%) scale(1); 
+        }
+
+        .popup-msg { 
+            font-size: 14px; 
+            margin-bottom: 20px; 
+            color: #ccc; 
+            line-height: 1.6; 
+        }
+
+        .popup-btn { 
+            background: transparent; 
+            border: 1px solid var(--gold); 
+            color: var(--gold); 
+            padding: 8px 25px; 
+            cursor: pointer; 
+            font-family: 'Montserrat'; 
+            text-transform: uppercase; 
+            font-size: 11px; 
+        }
+
+        /* --- OFFLINE EKRANI --- */
+        #offline-screen { 
+            position: fixed; 
+            inset: 0; 
+            background: var(--dark-bg); 
+            z-index: 9999; 
+            display: none; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center; 
+            padding: 20px; 
+        }
         
-        /* --- HEADER --- */
-        header { padding: 25px 6%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; background: rgba(5,5,5,0.95); backdrop-filter: blur(10px); }
-        .logo { font-family: 'Cinzel', serif; font-size: 24px; color: var(--gold); letter-spacing: 5px; }
-        .slogan { font-size: 9px; letter-spacing: 3px; color: #666; text-transform: uppercase; margin-top: 5px; }
+        /* --- BAŞLIQ (HEADER) --- */
+        header { 
+            padding: 25px 6%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid var(--border); 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            background: rgba(5,5,5,0.95); 
+            backdrop-filter: blur(10px); 
+        }
+
+        .logo { 
+            font-family: 'Cinzel', serif; 
+            font-size: 24px; 
+            color: var(--gold); 
+            letter-spacing: 5px; 
+        }
+
+        .slogan { 
+            font-size: 9px; 
+            letter-spacing: 3px; 
+            color: #666; 
+            text-transform: uppercase; 
+            margin-top: 5px; 
+        }
         
-        /* --- CART SIDEBAR --- */
-        #cart-sidebar { position: fixed; right: -100%; top: 0; width: 400px; height: 100%; background: #0a0a0a; border-left: 1px solid var(--border); z-index: 3000; padding: 40px; transition: var(--transition); display: flex; flex-direction: column; }
-        #cart-sidebar.active { right: 0; }
+        /* --- SƏBƏT PANELİ --- */
+        #cart-sidebar { 
+            position: fixed; 
+            right: -100%; 
+            top: 0; 
+            width: 400px; 
+            height: 100%; 
+            background: #0a0a0a; 
+            border-left: 1px solid var(--border); 
+            z-index: 3000; 
+            padding: 40px; 
+            transition: var(--transition); 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        #cart-sidebar.active { 
+            right: 0; 
+        }
         
-        /* --- CART ITEMS --- */
-        .cart-item { display: flex; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #1a1a1a; }
-        .cart-item img { width: 60px; height: 60px; object-fit: cover; border: 1px solid var(--border); margin-right: 15px; }
-        .cart-item-info { flex: 1; }
-        .cart-item-info h4 { font-family: 'Cinzel'; font-size: 12px; margin-bottom: 5px; color: var(--gold); }
-        .cart-controls { display: flex; align-items: center; gap: 15px; margin-top: 8px; }
-        .qty-btn { background: #1a1a1a; border: none; color: #fff; width: 24px; height: 24px; cursor: pointer; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
-        .qty-btn:hover { background: var(--gold); color: #000; }
-        .remove-btn { background: none; border: none; color: #555; cursor: pointer; transition: 0.3s; margin-left: auto; }
-        .remove-btn:hover { color: var(--promo-red); }
+        /* --- SƏBƏTDƏKİ MƏHSULLAR --- */
+        .cart-item { 
+            display: flex; 
+            align-items: center; 
+            margin-bottom: 20px; 
+            padding-bottom: 15px; 
+            border-bottom: 1px solid #1a1a1a; 
+        }
 
-        /* --- FORM --- */
-        .f-input { width: 100%; background: #111; border: 1px solid #222; color: #fff; padding: 12px; margin-bottom: 12px; outline: none; transition: 0.3s; font-family: 'Montserrat'; }
-        .f-input:focus { border-color: var(--gold); }
-        .checkout-btn { width: 100%; background: var(--gold); color: #000; border: none; padding: 18px; font-weight: bold; cursor: pointer; font-family: 'Cinzel'; text-transform: uppercase; letter-spacing: 2px; }
+        .cart-item img { 
+            width: 60px; 
+            height: 60px; 
+            object-fit: cover; 
+            border: 1px solid var(--border); 
+            margin-right: 15px; 
+        }
 
-        /* --- SHOP GRID --- */
-        .container { padding: 40px 6%; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
-        .p-card { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; transition: var(--transition); }
-        .p-card:hover { border-color: var(--gold); transform: translateY(-5px); }
-        .img-box { height: 350px; overflow: hidden; margin-bottom: 15px; }
-        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.8s; }
-        .p-card:hover img { transform: scale(1.05); }
+        .cart-item-info { 
+            flex: 1; 
+        }
 
-        /* Yan-yana düymələr üçün struktur */
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .cart-item-info h4 { 
+            font-family: 'Montserrat';
+            font-weight: 600;
+            font-size: 13px; 
+            margin-bottom: 5px; 
+            color: var(--gold); 
+        }
+
+        .cart-controls { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            margin-top: 8px; 
+        }
+
+        .qty-btn { 
+            background: #1a1a1a; 
+            border: none; 
+            color: #fff; 
+            width: 24px; 
+            height: 24px; 
+            cursor: pointer; 
+            border-radius: 4px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: 0.3s; 
+        }
+
+        .qty-btn:hover { 
+            background: var(--gold); 
+            color: #000; 
+        }
+
+        .remove-btn { 
+            background: none; 
+            border: none; 
+            color: #555; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            margin-left: auto; 
+        }
+
+        .remove-btn:hover { 
+            color: var(--promo-red); 
+        }
+
+        /* --- SİFARİŞ FORMU --- */
+        .f-input { 
+            width: 100%; 
+            background: #111; 
+            border: 1px solid #222; 
+            color: #fff; 
+            padding: 12px; 
+            margin-bottom: 12px; 
+            outline: none; 
+            transition: 0.3s; 
+            font-family: 'Montserrat'; 
+        }
+
+        .f-input:focus { 
+            border-color: var(--gold); 
+        }
+
+        .checkout-btn { 
+            width: 100%; 
+            background: var(--gold); 
+            color: #000; 
+            border: none; 
+            padding: 18px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-family: 'Montserrat'; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+        }
+
+        /* --- MƏHSUL KARTLARI --- */
+        .container { 
+            padding: 40px 6%; 
+        }
+
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 30px; 
+        }
+
+        .p-card { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border); 
+            padding: 15px; 
+            transition: var(--transition); 
+        }
+
+        .p-card:hover { 
+            border-color: var(--gold); 
+            transform: translateY(-5px); 
+        }
+
+        .img-box { 
+            height: 350px; 
+            overflow: hidden; 
+            margin-bottom: 15px; 
+        }
+
+        .img-box img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transition: 0.8s; 
+        }
+
+        .p-card:hover img { 
+            transform: scale(1.05); 
+        }
+
+        .btn-group { 
+            display: flex; 
+            gap: 10px; 
+            margin-top: 15px; 
+        }
         
-        .btn-add { flex: 1; background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 12px; cursor: pointer; font-family: 'Cinzel'; font-size: 11px; transition: 0.3s; text-transform: uppercase; }
-        .btn-add:hover { background: var(--gold); color: #000; }
+        .btn-add { 
+            flex: 1; 
+            background: transparent; 
+            border: 1px solid var(--gold); 
+            color: var(--gold); 
+            padding: 12px; 
+            cursor: pointer; 
+            font-family: 'Montserrat'; 
+            font-size: 11px; 
+            transition: 0.3s; 
+            text-transform: uppercase; 
+        }
 
-        .demo-btn { flex: 1; text-decoration: none; text-align: center; background: #fff; color: #000; border: 1px solid #fff; padding: 12px; font-family: 'Cinzel'; font-size: 11px; transition: 0.3s; text-transform: uppercase; }
-        .demo-btn:hover { background: transparent; color: #fff; }
+        .btn-add:hover { 
+            background: var(--gold); 
+            color: #000; 
+        }
 
-        /* ID Badge */
-        .p-id { font-size: 10px; color: #666; letter-spacing: 1px; margin-bottom: 5px; display: block; }
+        .demo-btn { 
+            flex: 1; 
+            text-decoration: none; 
+            text-align: center; 
+            background: #fff; 
+            color: #000; 
+            border: 1px solid #fff; 
+            padding: 12px; 
+            font-family: 'Montserrat'; 
+            font-size: 11px; 
+            transition: 0.3s; 
+            text-transform: uppercase; 
+        }
 
-        @media (max-width: 500px) { #cart-sidebar { width: 100%; } }
+        .demo-btn:hover { 
+            background: transparent; 
+            color: #fff; 
+        }
+
+        .p-id { 
+            font-size: 10px; 
+            color: #666; 
+            letter-spacing: 1px; 
+            margin-bottom: 5px; 
+            display: block; 
+        }
+
+        /* --- MOBİL UYĞUNLUQ --- */
+        @media (max-width: 500px) { 
+            #cart-sidebar { 
+                width: 100%; 
+            } 
+        }
     </style>
 </head>
 <body>
 
 <div id="preloader">
-    <div class="loader-logo">LUMIERE</div>
-    <div class="loader-slogan">Sizin özəl gününüzün işığı</div>
+    <div class="loader-logo">
+        LUMIERE
+    </div>
+    <div class="loader-slogan">
+        Sizin özəl gününüzün işığı
+    </div>
     <div class="loader-line"></div>
 </div>
 
 <div id="custom-popup">
     <div id="popup-content" class="popup-msg"></div>
-    <button class="popup-btn" onclick="closePopup()">Bağla</button>
+    <button class="popup-btn" onclick="closePopup()">
+        Bağla
+    </button>
 </div>
 
 <div id="offline-screen">
-    <div class="logo">LUMIERE</div>
-    <div style="margin-top:20px; color:#666;">İnternet bağlantısı yoxdur.</div>
+    <div class="logo">
+        LUMIERE
+    </div>
+    <div style="margin-top:20px; color:#666;">
+        İnternet bağlantısı yoxdur.
+    </div>
 </div>
 
 <header>
     <div>
-        <div class="logo">LUMIERE</div>
-        <div class="slogan">Sizin özəl gününüzün işığı</div>
+        <div class="logo">
+            LUMIERE
+        </div>
+        <div class="slogan">
+            Sizin özəl gününüzün işığı
+        </div>
     </div>
     <div onclick="toggleCart()" style="cursor:pointer; position:relative;">
-        🛒 <span id="cart-count" style="position:absolute; top:-10px; right:-10px; background:var(--gold); color:#000; font-size:10px; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold;">0</span>
+        🛒 
+        <span id="cart-count" style="position:absolute; top:-10px; right:-10px; background:var(--gold); color:#000; font-size:10px; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold;">
+            0
+        </span>
     </div>
 </header>
 
@@ -140,19 +450,56 @@
 
 <div id="cart-sidebar">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-        <h2 style="font-family:'Cinzel'; color:var(--gold); font-size:18px;">Səbətiniz</h2>
-        <span onclick="toggleCart()" style="cursor:pointer; font-size:24px;">&times;</span>
+        <h2 style="font-family:'Montserrat'; color:var(--gold); font-size:18px; font-weight:600;">
+            Səbətiniz
+        </h2>
+        <span onclick="toggleCart()" style="cursor:pointer; font-size:24px;">
+            &times;
+        </span>
     </div>
-    <div id="cart-list" style="flex:1; overflow-y:auto;"></div>
+    
+    <div id="cart-list" style="flex:1; overflow-y:auto;">
+        <div style="text-align:center; color:#444; margin-top:80px; display:flex; flex-direction:column; align-items:center; gap:15px;">
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <span style="font-size:12px; font-family:'Montserrat'; letter-spacing:1px;">
+                Səbətiniz boşdur
+            </span>
+        </div>
+    </div>
+
     <div style="padding-top:20px; border-top:1px solid #1a1a1a;">
-        <h3 id="total-price" style="font-family:'Cinzel'; margin-bottom:20px;">Cəmi: 0 AZN</h3>
-        <input type="text" id="cust-name" class="f-input" placeholder="Adınız Soyadınız *">
-        <textarea id="cust-msg" class="f-input" style="height:80px;" placeholder="Qeydləriniz..."></textarea>
-        <button class="checkout-btn" onclick="validateAndSend()">Sifarişi Tamamla</button>
+        <h3 id="total-price" style="font-family:'Montserrat'; margin-bottom:20px; font-weight:600;">
+            Cəmi: 0 AZN
+        </h3>
+        
+        <input 
+            type="text" 
+            id="cust-name" 
+            class="f-input" 
+            placeholder="Adınız Soyadınız *" 
+            autocomplete="off"
+        >
+        
+        <textarea 
+            id="cust-msg" 
+            class="f-input" 
+            style="height:80px;" 
+            placeholder="Qeydləriniz..." 
+            autocomplete="off"
+        ></textarea>
+        
+        <button class="checkout-btn" onclick="validateAndSend()">
+            Sifarişi Tamamla
+        </button>
     </div>
 </div>
 
 <script>
+    /* --- SİSTEMİN BAŞLADILMASI --- */
     function initSite() {
         if (!navigator.onLine) {
             document.getElementById('preloader').style.display = 'none';
@@ -160,12 +507,15 @@
         } else {
             setTimeout(() => {
                 document.getElementById('preloader').style.opacity = '0';
-                setTimeout(() => document.getElementById('preloader').style.display = 'none', 1200);
+                setTimeout(() => {
+                    document.getElementById('preloader').style.display = 'none';
+                }, 1200);
                 render();
             }, 2500);
         }
     }
 
+    /* --- MƏHSUL DATA SİYAHISI --- */
     const products = [
         { 
             id: 1, 
@@ -195,27 +545,39 @@
 
     let cart = [];
 
+    /* --- POP-UP İDARƏETMƏSİ --- */
     function showPopup(msg) {
         const popup = document.getElementById('custom-popup');
         document.getElementById('popup-content').innerText = msg;
         popup.style.display = 'flex';
-        setTimeout(() => popup.classList.add('active'), 10);
+        setTimeout(() => {
+            popup.classList.add('active');
+        }, 10);
     }
 
     function closePopup() {
         const popup = document.getElementById('custom-popup');
         popup.classList.remove('active');
-        setTimeout(() => popup.style.display = 'none', 400);
+        setTimeout(() => {
+            popup.style.display = 'none';
+        }, 400);
     }
 
+    /* --- MƏHSULLARIN EKRANA ÇIXARILMASI --- */
     function render() {
         const grid = document.getElementById('product-grid');
         grid.innerHTML = products.map(p => `
             <div class="p-card">
-                <div class="img-box"><img src="${p.img}"></div>
+                <div class="img-box">
+                    <img src="${p.img}">
+                </div>
                 <span class="p-id">KOD: ${p.id_code}</span>
-                <h3 style="font-family:'Cinzel'; font-size:15px; margin-bottom:10px;">${p.name}</h3>
-                <p style="color:var(--gold); font-weight:600;">${p.price} AZN</p>
+                <h3 style="font-family:'Montserrat'; font-weight:600; font-size:15px; margin-bottom:10px;">
+                    ${p.name}
+                </h3>
+                <p style="color:var(--gold); font-weight:600;">
+                    ${p.price} AZN
+                </p>
                 <div class="btn-group">
                     <a href="${p.demo}" target="_blank" class="demo-btn">Demo İzlə</a>
                     <button class="btn-add" onclick="addToCart(${p.id})">Səbətə At</button>
@@ -224,11 +586,15 @@
         `).join('');
     }
 
+    /* --- SƏBƏT MƏNTİQİ --- */
     function addToCart(id) {
         const product = products.find(p => p.id === id);
         const exists = cart.find(item => item.id === id);
-        if(exists) exists.qty++;
-        else cart.push({...product, qty: 1});
+        if(exists) {
+            exists.qty++;
+        } else {
+            cart.push({...product, qty: 1});
+        }
         updateUI();
     }
 
@@ -236,8 +602,11 @@
         const item = cart.find(i => i.id === id);
         if(item) {
             item.qty += delta;
-            if(item.qty < 1) removeFromCart(id);
-            else updateUI();
+            if(item.qty < 1) {
+                removeFromCart(id);
+            } else {
+                updateUI();
+            }
         }
     }
 
@@ -246,19 +615,28 @@
         updateUI();
     }
 
+    /* --- İNTERFEYSİN VİSİUAL YENİLƏNMƏSİ --- */
     function updateUI() {
         const list = document.getElementById('cart-list');
         document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
         
         if(cart.length === 0) {
-            list.innerHTML = `<div style="text-align:center; color:#444; margin-top:50px; font-size:12px;">Səbətiniz boşdur</div>`;
+            list.innerHTML = `
+                <div style="text-align:center; color:#444; margin-top:80px; display:flex; flex-direction:column; align-items:center; gap:15px;">
+                    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span style="font-size:12px; font-family:'Montserrat'; letter-spacing:1px;">Səbətiniz boşdur</span>
+                </div>`;
         } else {
             list.innerHTML = cart.map(item => `
                 <div class="cart-item">
                     <img src="${item.img}">
                     <div class="cart-item-info">
                         <span style="font-size:9px; color:#666;">KOD: ${item.id_code}</span>
-                        <h4>${item.name}</h4>
+                        <h4 style="font-family:'Montserrat'; font-weight:600;">${item.name}</h4>
                         <p style="font-size:11px; color:#666;">${item.price} AZN</p>
                         <div class="cart-controls">
                             <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
@@ -267,7 +645,10 @@
                         </div>
                     </div>
                     <button class="remove-btn" onclick="removeFromCart(${item.id})">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
                     </button>
                 </div>
             `).join('');
@@ -277,22 +658,27 @@
         document.getElementById('total-price').innerText = `Cəmi: ${total} AZN`;
     }
 
+    /* --- WHATSAPP-A SİFARİŞİN GÖNDƏRİLMƏSİ --- */
     function validateAndSend() {
         const name = document.getElementById('cust-name').value.trim();
-        if (cart.length === 0) { showPopup("Səbətinizdə məhsul mövcud deyil."); return; }
-        if (name === "") { showPopup("Zəhmət olmasa sifarişi təsdiqləmək üçün Adınızı qeyd edin."); return; }
+        if (cart.length === 0) { 
+            showPopup("Səbətinizdə məhsul mövcud deyil."); 
+            return; 
+        }
+        if (name === "") { 
+            showPopup("Zəhmət olmasa sifarişi təsdiqləmək üçün Adınızı qeyd edin."); 
+            return; 
+        }
 
         const items = cart.map(i => `• [${i.id_code}] ${i.name} (x${i.qty})`).join('\n');
-        const msg = `✨ *LUMIERE SİFARİŞ* ✨\n\n👤 *Müştəri:* ${name}\n🛍️ *Səbət:*\n${items}\n\n💰 *Total: ${document.getElementById('total-price').innerText}*`;
+        const msg = `✨ *LUMIERE SİFARİŞ* ✨\n\n👤 *Müştəri:* ${name}\n🛍️ *Səbət:*${items}\n\n💰 *Total: ${document.getElementById('total-price').innerText}*`;
         window.open(`https://wa.me/994552929502?text=${encodeURIComponent(msg)}`);
     }
 
-    // Yenilənmiş toggleCart funksiyası
+    /* --- SƏBƏTİ AÇIB-BAĞLAMAQ --- */
     function toggleCart() { 
         const sidebar = document.getElementById('cart-sidebar');
         sidebar.classList.toggle('active');
-        
-        // Əgər səbət aktivdirsə, body-yə no-scroll sinfini əlavə edir, deyilsə silir
         if (sidebar.classList.contains('active')) {
             document.body.classList.add('no-scroll');
         } else {
@@ -300,6 +686,7 @@
         }
     }
 
+    /* Saytın işə salınması */
     initSite();
 </script>
 
