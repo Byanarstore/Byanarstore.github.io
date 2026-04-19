@@ -658,7 +658,7 @@
         document.getElementById('total-price').innerText = `Cəmi: ${total} AZN`;
     }
 
-    /* --- WHATSAPP-A SİFARİŞİN GÖNDƏRİLMƏSİ (CƏMİ SÖZÜ ÇIXARILDI) --- */
+    /* --- WHATSAPP-A SİFARİŞİN GÖNDƏRİLMƏSİ (ÇEK FORMATI) --- */
     function validateAndSend() {
         const name = document.getElementById('cust-name').value.trim();
         const msg_body = document.getElementById('cust-msg').value.trim();
@@ -672,21 +672,30 @@
             return; 
         }
 
-        const items = cart.map(i => `• [${i.id_code}] ${i.name} (x${i.qty})`).join('\n');
-        
-        /* Cəmi hesablanır və sadəcə rəqəm + AZN olaraq formatlanır */
         const totalAmount = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+        const date = new Date().toLocaleString('az-AZ');
         
-        let msg = `✨ *LUMIERE SİFARİŞ* ✨\n\n`;
-        msg += `👤 *Müştəri:* ${name}\n`;
-        msg += `🛍️ *Səbət:*${items}\n\n`;
+        /* Çek formatında məhsul siyahısı */
+        const items = cart.map(i => `${i.name}\n[${i.id_code}] ${i.qty} ədəd x ${i.price} AZN`).join('\n\n');
+        
+        /* WhatsApp üçün Çek Dizaynı */
+        let msg = `*LUMIERE*\n`;
+        msg += `_Sizin özəl gününüzün işığı_\n`;
+        msg += `------------------------------------------\n`;
+        msg += `*Müştəri:* ${name}\n`;
+        msg += `*Tarix:* ${date}\n`;
+        msg += `------------------------------------------\n\n`;
+        msg += `${items}\n\n`;
+        msg += `------------------------------------------\n`;
         
         if(msg_body !== "") {
-            msg += `📝 *Qeyd:* ${msg_body}\n\n`;
+            msg += `*Qeyd:* ${msg_body}\n`;
+            msg += `------------------------------------------\n`;
         }
         
-        /* "Cəmi" sözü çıxarıldı, sadəcə məbləğ yazıldı */
-        msg += `💰 *Cəmi: ${totalAmount} AZN*`;
+        msg += `*TOPLAM: ${totalAmount} AZN*\n`;
+        msg += `------------------------------------------\n`;
+        msg += `_Bizi seçdiyiniz üçün təşəkkür edirik!_`;
         
         window.open(`https://wa.me/994552929502?text=${encodeURIComponent(msg)}`);
     }
