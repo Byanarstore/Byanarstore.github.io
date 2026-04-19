@@ -681,21 +681,20 @@
         /* WhatsApp üçün Çek Dizaynı */
         let msg = `*LUMIERE*\n`;
         msg += `_Sizin özəl gününüzün işığı_\n`;
-        msg += `------------------------------------------\n`;
-        msg += `*Müştəri:* ${name}\n`;
-        msg += `*Tarix:* ${date}\n`;
-        msg += `------------------------------------------\n\n`;
-        msg += `${items}\n\n`;
-        msg += `------------------------------------------\n`;
+        msg += `\n\n`;
+        msg += `👤 *Müştəri:* ${name}\n`;
+        msg += `🕑 *Tarix:* ${date}\n`;
+        msg += `\n`;
+        msg += `🛍️ *Səbət:* ${items}\n\n`;
+        msg += `\n`;
         
         if(msg_body !== "") {
-            msg += `*Qeyd:* ${msg_body}\n`;
-            msg += `------------------------------------------\n`;
+            msg += `📝 *Qeyd:* ${msg_body}\n`;
+            msg += `\n`;
         }
         
-        msg += `*TOPLAM: ${totalAmount} AZN*\n`;
-        msg += `------------------------------------------\n`;
-        msg += `_Bizi seçdiyiniz üçün təşəkkür edirik!_`;
+        msg += `💰 *TOPLAM: ${totalAmount} AZN*\n`;
+        
         
         window.open(`https://wa.me/994552929502?text=${encodeURIComponent(msg)}`);
     }
