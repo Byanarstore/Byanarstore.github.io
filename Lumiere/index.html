@@ -744,25 +744,27 @@
             return; 
         }
 
-        const items = cart.map(i => `• [${i.id_code}] ${i.name} (x${i.qty})`).join('\n');
+        /* Çek formatında məhsul siyahısı */
+        const items = cart.map(i => `${i.name}\n[${i.id_code}] ${i.qty} ədəd x ${i.price} AZN`).join('\n\n');
         
-        /* Cəmi hesablanır və sadəcə rəqəm + AZN olaraq formatlanır */
-        const totalAmount = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-        
-        let msg = `✨ *LUMIERE SİFARİŞ* ✨\n\n`;
+        /* WhatsApp üçün Çek Dizaynı */
+        let msg = `*LUMIERE*\n`;
+        msg += `_Sizin özəl gününüzün işığı_\n`;
+        msg += `\n`;
         msg += `👤 *Müştəri:* ${name}\n`;
+        msg += `🕓 *Tarix:* ${date}\n`;
+        msg += `\n\n`;
         msg += `🛍️ *Səbət:*${items}\n\n`;
         
         if(msg_body !== "") {
-            msg += `📝 *Qeyd:* ${msg_body}\n\n`;
+            msg += `📝 *Qeyd:* ${msg_body}\n`;
+            msg += `------------------------------------------\n`;
         }
         
-        /* "Cəmi" sözü çıxarıldı, sadəcə məbləğ yazıldı */
-        msg += `💰 *Cəmi: ${totalAmount} AZN*`;
+        msg += `💰 *TOPLAM: ${totalAmount} AZN*`;
         
         window.open(`https://wa.me/994552929502?text=${encodeURIComponent(msg)}`);
     }
-
     /* --- SƏBƏTİ AÇIB-BAĞLAMAQ --- */
     function toggleCart() { 
         const sidebar = document.getElementById('cart-sidebar');
