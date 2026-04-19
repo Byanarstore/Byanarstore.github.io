@@ -524,6 +524,20 @@ const _supabase = supabase.createClient(
     'sb_publishable_YNpATpBsxVkT4HKUDWCdng_pwhBpb4U'
 );
 
+// Hər dəfə səhifə açılanda bu kod işləməlidir
+async function logPageView() {
+    const { data, error } = await _supabase
+        .from('page_views')
+        .insert([
+            { viewed_at: new Date().toISOString() }
+        ]);
+        
+    if (error) console.error("Məlumat yazıla bilmədi:", error);
+    else console.log("Giriş qeydə alındı!");
+}
+
+logPageView();
+
 // Statistika və Baxış sayı (Arxa fonda işləyir)
 async function handleStats() {
     // Bazaya vaxtı JS vasitəsilə göndəririk
