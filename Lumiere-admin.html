@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMIERE — Admin Panel</title>
+    
+    <!-- Tailwind CSS CDN (v4+) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        
+        .glass {
+            background: rgba(15, 15, 15, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .number {
+            font-feature-settings: "tnum";
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: #d4af37;
+            box-shadow: 0 10px 15px -3px rgb(212 175 55 / 0.1);
+        }
+        
+        .loading {
+            animation: pulse 1.5s infinite;
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen">
+    <div class="max-w-7xl mx-auto px-6 py-12">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-12">
+            <div>
+                <h1 class="text-5xl font-semibold tracking-tight">LUMIERE</h1>
+                <p class="text-zinc-400 mt-2 text-lg">Canlı Monitorinq Paneli</p>
+            </div>
+            
+            <div class="flex items-center gap-3 text-sm text-zinc-400">
+                <div class="px-4 py-2 bg-zinc-900 rounded-full border border-zinc-800 flex items-center gap-2">
+                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                    <span>Realtime bağlı</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Hazırda Saytda -->
+            <div class="stat-card glass rounded-3xl p-10 transition-all duration-300">
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="text-zinc-400 text-lg font-medium">Hazırda saytda</h3>
+                    <span class="text-emerald-400 text-2xl">●</span>
+                </div>
+                
+                <div id="admin-online" class="number text-7xl font-semibold text-amber-400 tabular-nums">
+                    0
+                </div>
+                <p class="text-zinc-500 mt-2">aktiv istifadəçi</p>
+            </div>
+
+            <!-- Son 24 Saat -->
+            <div class="stat-card glass rounded-3xl p-10 transition-all duration-300">
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="text-zinc-400 text-lg font-medium">Son 24 saat</h3>
+                    <span class="text-amber-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </span>
+                </div>
+                
+                <div id="admin-daily" class="number text-7xl font-semibold text-amber-400 tabular-nums">
+                    0
+                </div>
+                <p class="text-zinc-500 mt-2">cəmi baxış</p>
+            </div>
+        </div>
+
+        <!-- Footer / Info -->
+        <div class="mt-16 text-center text-zinc-500 text-sm">
+            LUMIERE Admin • Real-time Supabase ilə işləyir
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Tailwind script
+        function initTailwind() {
+            // Əgər lazım olsa əlavə konfiqurasiya
+        }
+
+        const _supabase = supabase.createClient(
+            'https://pgnshyibgprjqvyzuisu.supabase.co', 
+            'sb_publishable_YNpATpBsxVkT4HKUDWCdng_pwhBpb4U'
+        );
+
+        // Son 24 saat statistikası
+        async function getDailyStats() {
+            const dailyEl = document.getElementById('admin-daily');
+            dailyEl.classList.add('loading');
+            
+            try {
+                const last24 = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+                
+                const { count, error } = await _supabase
+                    .from('page_views')
+                    .select('*', { count: 'exact', head: true })
+                    .gt('viewed_at', last24);
+                
+                if (error) throw error;
+                
+                dailyEl.innerText = count?.toLocaleString('az-AZ') || '0';
+            } catch (err) {
+                console.error('Daily stats error:', err);
+                dailyEl.innerText = '—';
+            } finally {
+                dailyEl.classList.remove('loading');
+            }
+        }
+
+        // Canlı online sayğacı (Presence)
+        function trackAdminOnline() {
+            const channel = _supabase.channel('lumiere_realtime_count');
+
+            channel
+                .on('presence', { event: 'sync' }, () => {
+                    const state = channel.presenceState();
+                    const count = Object.keys(state).length;
+                    document.getElementById('admin-online').innerText = count;
+                })
+                .subscribe();
+        }
+
+        // Başlanğıc
+        document.addEventListener('DOMContentLoaded', () => {
+            initTailwind();
+            getDailyStats();
+            trackAdminOnline();
+            
+            // Hər 30 saniyədən bir yenilə
+            setInterval(getDailyStats, 30000);
+        });
+    </script>
+</body>
+</html>
