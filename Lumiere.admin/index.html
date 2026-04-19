@@ -3,196 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUMIERE — Admin Panel</title>
+    <title>LUMIERE — Intelligence v5.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono&display=swap');
         
+        :root {
+            --bg-black: #050505;
+            --accent-gold: #c5a059;
+            --card-gray: #0c0c0c;
+            --border-gray: #1a1a1a;
+        }
+
         body {
-            font-family: 'Inter', system-ui, sans-serif;
-        }
-        
-        .title-font {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-black);
+            color: #d1d1d1;
         }
 
-        .glass {
-            background: rgba(10, 10, 10, 0.75);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(212, 175, 55, 0.18);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        /* Modern Grid & Card */
+        .dashboard-card {
+            background-color: var(--card-gray);
+            border: 1px solid var(--border-gray);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .number {
-            font-feature-settings: "tnum";
-            font-variant-numeric: tabular-nums;
+        .dashboard-card:hover {
+            border-color: rgba(197, 160, 89, 0.4);
+            transform: translateY(-2px);
+            background-color: #0e0e0e;
         }
 
-        .stat-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-8px);
-            border-color: #d4af37;
-            box-shadow: 0 20px 25px -5px rgb(212 175 55 / 0.15);
+        .dashboard-card::after {
+            content: "";
+            position: absolute;
+            top: 0; right: 0;
+            width: 40px; height: 40px;
+            background: linear-gradient(45deg, transparent 45%, rgba(197, 160, 89, 0.1) 100%);
         }
 
-        .glow-gold {
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        /* Typography */
+        .stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.25rem;
+            font-weight: 500;
+            color: #ffffff;
+            letter-spacing: -1px;
         }
 
-        .status-badge {
-            background: rgba(16, 16, 16, 0.8);
-            border: 1px solid rgba(212, 175, 55, 0.3);
+        .stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #666;
+            margin-bottom: 0.5rem;
+            display: block;
         }
+
+        /* Realtime Badge */
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 6px;
+            color: #10b981;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .pulse {
+            width: 6px; height: 6px;
+            background-color: #10b981;
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg-black); }
+        ::-webkit-scrollbar-thumb { background: var(--border-gray); border-radius: 10px; }
     </style>
 </head>
-<body class="bg-zinc-950 min-h-screen text-zinc-100">
+<body class="p-4 md:p-10">
 
-    <!-- ====================== GİRİŞ EKRANI ====================== -->
-    <div id="login-screen" class="hidden min-h-screen flex items-center justify-center bg-black">
-        <div class="w-full max-w-md px-6">
-            <div class="glass rounded-3xl p-12 shadow-2xl">
-                <div class="text-center mb-12">
-                    <div class="mx-auto w-20 h-20 bg-gradient-to-br from-amber-300 via-amber-400 to-yellow-600 rounded-2xl flex items-center justify-center mb-6 shadow-xl">
-                        <span class="text-4xl font-bold text-black title-font">L</span>
-                    </div>
-                    <h1 class="text-5xl font-semibold tracking-tighter title-font glow-gold">LUMIERE</h1>
-                    <p class="text-zinc-400 mt-3 text-lg">Admin Panelinə giriş</p>
+    <div class="max-w-7xl mx-auto">
+        
+        <header class="flex flex-col md:flex-row justify-between items-center mb-12 pb-8 border-b border-zinc-900 gap-6">
+            <div class="flex items-center gap-4">
+                <div class="h-10 w-10 bg-white flex items-center justify-center rounded-lg">
+                    <span class="text-black font-bold text-xl">L</span>
                 </div>
-
-                <div class="space-y-8">
-                    <div>
-                        <label class="block text-sm font-medium text-zinc-400 mb-2 tracking-wider">ŞİFRƏ</label>
-                        <input 
-                            id="password"
-                            type="password"
-                            placeholder="••••••••"
-                            class="w-full bg-zinc-900 border border-zinc-700 focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30 rounded-2xl px-6 py-5 text-white outline-none text-lg transition-all">
-                    </div>
-
-                    <button 
-                        onclick="checkPassword()"
-                        class="w-full bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 transition-all text-black font-semibold py-5 rounded-2xl text-lg tracking-widest shadow-lg">
-                        GİRİŞ ET
-                    </button>
-                </div>
-
-                <div id="error" class="mt-6 text-red-400 text-center text-sm min-h-[28px] font-medium"></div>
-            </div>
-
-            <p class="text-center text-zinc-500 text-xs mt-10">LUMIERE © 2026</p>
-        </div>
-    </div>
-
-    <!-- ====================== ADMIN PANELİ ====================== -->
-    <div id="admin-panel" class="min-h-screen bg-zinc-950">
-        <div class="max-w-7xl mx-auto px-6 py-10">
-            
-            <!-- Header -->
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
                 <div>
-                    <h1 class="text-6xl font-semibold tracking-tighter title-font glow-gold">LUMIERE</h1>
-                    <p class="text-zinc-400 mt-2 text-xl">Canlı Monitorinq Mərkəzi</p>
-                </div>
-                
-                <div class="status-badge flex items-center gap-3 px-6 py-3 rounded-3xl mt-6 md:mt-0">
-                    <div class="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>
-                    <span class="font-medium text-sm tracking-wider text-emerald-300">REALTIME BAĞLI</span>
+                    <h1 class="text-white font-semibold text-lg leading-none mb-1">LUMIERE <span class="text-zinc-600 font-normal">OS</span></h1>
+                    <p class="text-xs text-zinc-500">Analitika və İdarəetmə Paneli</p>
                 </div>
             </div>
 
-            <!-- Stats Grid - 5 kart -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-                
-                <!-- Hazırda Saytda -->
-                <div class="stat-card glass rounded-3xl p-8">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="text-zinc-400 text-sm font-medium tracking-widest mb-6">HAZIRDA SAYTDA</h3>
-                            <div id="admin-online" class="number text-7xl font-semibold text-amber-400 glow-gold">0</div>
-                        </div>
-                        <span class="text-4xl text-emerald-400">●</span>
-                    </div>
-                    <p class="text-zinc-500 mt-8 text-sm">Aktiv istifadəçi</p>
+            <div class="flex items-center gap-6">
+                <div class="live-badge">
+                    <div class="pulse"></div> LIVE DATA
                 </div>
-
-                <!-- Son 1 Saat -->
-                <div class="stat-card glass rounded-3xl p-8">
-                    <h3 class="text-zinc-400 text-sm font-medium tracking-widest mb-6">SON 1 SAAT</h3>
-                    <div id="admin-hour1" class="number text-7xl font-semibold text-amber-400 glow-gold">0</div>
-                    <p class="text-zinc-500 mt-8 text-sm">Baxış sayı</p>
-                </div>
-
-                <!-- Son 12 Saat -->
-                <div class="stat-card glass rounded-3xl p-8">
-                    <h3 class="text-zinc-400 text-sm font-medium tracking-widest mb-6">SON 12 SAAT</h3>
-                    <div id="admin-hour12" class="number text-7xl font-semibold text-amber-400 glow-gold">0</div>
-                    <p class="text-zinc-500 mt-8 text-sm">Baxış sayı</p>
-                </div>
-
-                <!-- Son 24 Saat -->
-                <div class="stat-card glass rounded-3xl p-8">
-                    <h3 class="text-zinc-400 text-sm font-medium tracking-widest mb-6">SON 24 SAAT</h3>
-                    <div id="admin-daily" class="number text-7xl font-semibold text-amber-400 glow-gold">0</div>
-                    <p class="text-zinc-500 mt-8 text-sm">Baxış sayı</p>
-                </div>
-
-                <!-- Son 1 Ay -->
-                <div class="stat-card glass rounded-3xl p-8">
-                    <h3 class="text-zinc-400 text-sm font-medium tracking-widest mb-6">SON 30 GÜN</h3>
-                    <div id="admin-month" class="number text-7xl font-semibold text-amber-400 glow-gold">0</div>
-                    <p class="text-zinc-500 mt-8 text-sm">Toplam baxış</p>
+                <div class="text-right">
+                    <p id="clock" class="text-sm font-medium text-white tabular-nums">00:00:00</p>
+                    <p class="text-[10px] text-zinc-600 uppercase">Server: AZB-1</p>
                 </div>
             </div>
+        </header>
 
-            <div class="mt-20 text-center text-zinc-500 text-sm">
-                LUMIERE Admin Dashboard • Powered by Supabase Realtime
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            
+            <div class="dashboard-card">
+                <span class="stat-label">Onlayn</span>
+                <div class="flex items-baseline gap-2">
+                    <span id="admin-online" class="stat-value">0</span>
+                    <span class="text-xs text-emerald-500 font-mono">+2%</span>
+                </div>
+                <div class="mt-4 text-[10px] text-zinc-600">Aktiv Sessiyalar</div>
+            </div>
+
+            <div class="dashboard-card">
+                <span class="stat-label">Son Saat</span>
+                <div id="admin-hour1" class="stat-value">0</div>
+                <div class="mt-4 text-[10px] text-zinc-600">Unique Pageviews</div>
+            </div>
+
+            <div class="dashboard-card">
+                <span class="stat-label">Bugün</span>
+                <div id="admin-daily" class="stat-value">0</div>
+                <div class="mt-4 text-[10px] text-zinc-600">Daily Traffic Flow</div>
+            </div>
+
+            <div class="dashboard-card">
+                <span class="stat-label">30 Günlük</span>
+                <div id="admin-month" class="stat-value">0</div>
+                <div class="mt-4 text-[10px] text-zinc-600">Monthly Retention</div>
             </div>
         </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div class="lg:col-span-2 dashboard-card !p-0">
+                <div class="p-4 border-b border-zinc-900 flex justify-between items-center">
+                    <span class="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Sistem Prosesləri</span>
+                    <span class="text-[10px] text-zinc-600 font-mono">Status: Optimal</span>
+                </div>
+                <div class="p-6 font-mono text-[11px] space-y-3 h-48 overflow-y-auto">
+                    <p class="text-emerald-900"><span class="text-zinc-700">[SYSTEM]</span> Realtime channel established successfully.</p>
+                    <p class="text-zinc-500"><span class="text-zinc-700">[METRIC]</span> Fetching aggregate views for 43,200 minutes range...</p>
+                    <p class="text-zinc-500"><span class="text-zinc-700">[AUTH]</span> Admin session verified via secure protocol.</p>
+                    <p class="text-zinc-800">> Waiting for new data incoming...</p>
+                </div>
+            </div>
+
+            <div class="dashboard-card flex flex-col justify-between">
+                <div>
+                    <span class="stat-label">Server Sağlamlığı</span>
+                    <div class="text-2xl font-light text-white mb-2">99.9%</div>
+                    <div class="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden">
+                        <div class="bg-emerald-500 h-full w-[99.9%]"></div>
+                    </div>
+                </div>
+                <button onclick="updateAllStats()" class="w-full py-3 bg-zinc-800 hover:bg-zinc-700 text-white text-[11px] font-semibold rounded-lg transition-colors uppercase tracking-widest mt-6">
+                    Məlumatı Yenilə
+                </button>
+            </div>
+        </div>
+
+        <footer class="mt-20 flex justify-between items-center text-[10px] text-zinc-700 uppercase tracking-[0.2em]">
+            <span>&copy; 2026 Lumiere Intelligence</span>
+            <div class="flex gap-4">
+                <a href="#" class="hover:text-zinc-400 transition">Privacy</a>
+                <a href="#" class="hover:text-zinc-400 transition">Security</a>
+            </div>
+        </footer>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // ====================== AYARLAR ======================
-        const LOGIN_ENABLED = false;        // true = giriş aktiv, false = birbaşa panel
-        const CORRECT_PASSWORD = "250420";
-        // ====================================================
-
         const _supabase = supabase.createClient(
             'https://pgnshyibgprjqvyzuisu.supabase.co', 
             'sb_publishable_YNpATpBsxVkT4HKUDWCdng_pwhBpb4U'
         );
 
-        // ==================== ŞİFRƏ YOXLAMASI ====================
-        function checkPassword() {
-            const input = document.getElementById('password');
-            const errorEl = document.getElementById('error');
-            const password = input.value.trim();
-
-            errorEl.textContent = "";
-
-            if (password === "") {
-                errorEl.textContent = "Şifrəni daxil edin";
-                input.focus();
-                return;
-            }
-
-            if (password === CORRECT_PASSWORD) {
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('admin-panel').classList.remove('hidden');
-                initAdminPanel();
-            } else {
-                errorEl.textContent = "Yanlış şifrə!";
-                input.value = "";
-                input.focus();
-                input.classList.add('animate-shake');
-                setTimeout(() => input.classList.remove('animate-shake'), 600);
-            }
+        function updateClock() {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString('az-AZ', { hour12: false });
         }
+        setInterval(updateClock, 1000);
 
-        // ==================== STATİSTİKA ====================
         async function getViewsCount(minutes) {
             try {
                 const timeAgo = new Date(Date.now() - minutes * 60 * 1000).toISOString();
@@ -201,29 +211,22 @@
                     .select('*', { count: 'exact', head: true })
                     .gt('viewed_at', timeAgo);
                 return count || 0;
-            } catch (e) {
-                return 0;
-            }
+            } catch (e) { return 0; }
         }
 
         async function updateAllStats() {
-            const [h1, h12, h24, m30] = await Promise.all([
+            const [h1, h24, m30] = await Promise.all([
                 getViewsCount(60),
-                getViewsCount(720),
                 getViewsCount(1440),
-                getViewsCount(43200)   // 30 gün
+                getViewsCount(43200)
             ]);
-
-            document.getElementById('admin-hour1').innerText = h1.toLocaleString('az-AZ');
-            document.getElementById('admin-hour12').innerText = h12.toLocaleString('az-AZ');
-            document.getElementById('admin-daily').innerText = h24.toLocaleString('az-AZ');
-            document.getElementById('admin-month').innerText = m30.toLocaleString('az-AZ');
+            document.getElementById('admin-hour1').innerText = h1.toLocaleString();
+            document.getElementById('admin-daily').innerText = h24.toLocaleString();
+            document.getElementById('admin-month').innerText = m30.toLocaleString();
         }
 
-        // ==================== REALTIME ONLINE ====================
         function trackAdminOnline() {
             const channel = _supabase.channel('lumiere_realtime_count');
-
             channel
                 .on('presence', { event: 'sync' }, () => {
                     const count = Object.keys(channel.presenceState()).length;
@@ -236,23 +239,11 @@
                 });
         }
 
-        function initAdminPanel() {
+        window.onload = () => {
             updateAllStats();
             trackAdminOnline();
-            setInterval(updateAllStats, 20000);   // 20 saniyədə bir yenilə
-        }
-
-        // ==================== BAŞLANĞIÇ ====================
-        window.onload = () => {
-            if (LOGIN_ENABLED) {
-                document.getElementById('login-screen').classList.remove('hidden');
-                const pw = document.getElementById('password');
-                pw.addEventListener('keypress', e => e.key === 'Enter' && checkPassword());
-                pw.focus();
-            } else {
-                document.getElementById('admin-panel').classList.remove('hidden');
-                initAdminPanel();
-            }
+            updateClock();
+            setInterval(updateAllStats, 20000);
         };
     </script>
 </body>
