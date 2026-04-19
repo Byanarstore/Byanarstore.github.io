@@ -560,6 +560,19 @@ function trackOnline() {
     });
 }
 
+async function sendView() {
+    const { error } = await _supabase
+        .from('page_views')
+        .insert([{ viewed_at: new Date().toISOString() }]);
+
+    if (error) {
+        console.error("Xəta baş verdi:", error.message);
+    } else {
+        console.log("Məlumat uğurla bazaya göndərildi!");
+    }
+}
+// Səhifə yüklənəndə funksiyanı çağırın
+sendView();
 
 // Funksiyaları çağırırıq
 handleStats();
