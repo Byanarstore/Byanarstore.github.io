@@ -518,6 +518,39 @@
 
 <script>
 
+    async function handleStats() {
+    // Bazaya yeni sətir əlavə edərkən vaxtı JS tərəfindən göndəririk
+    await _supabase.from('page_views').insert([
+        { viewed_at: new Date().toISOString() }
+    ]);
+    
+    // Əsas saytda sayğac göstərmədiyimiz üçün digər filtr kodlarını silə bilərsən
+}
+
+// Bu hissə mütləq qalmalıdır ki, Admin səhifədəkiləri görə bilsin
+function trackOnline() {
+    const uniqueKey = 'user_' + Math.random().toString(36).substring(2, 12);
+    
+    const channel = _supabase.channel('lumiere_realtime_count', {
+        config: {
+            presence: { key: uniqueKey },
+        },
+    });
+
+    channel.subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+            // İstifadəçi sayta girən kimi özünü "online" olaraq qeyd edir
+            await channel.track({ online_at: new Date().toISOString() });
+        }
+    });
+}
+
+// Funksiyaları çağırırıq
+handleStats();
+trackOnline();
+
+
+
     /* --- SİSTEMİN BAŞLADILMASI --- */
     function initSite() {
         if (!navigator.onLine) {
