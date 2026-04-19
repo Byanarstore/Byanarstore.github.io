@@ -408,13 +408,7 @@
     </style>
 </head>
 <body>
-    <div style="background: #0a0a0a; padding: 10px; text-align: center; border-bottom: 1px solid rgba(212, 175, 55, 0.1); border-top: 1px solid rgba(212, 175, 55, 0.1);">
-    <span style="font-size: 10px; color: #888; font-family: 'Montserrat'; letter-spacing: 2px; text-transform: uppercase;">
-        🟢 Canlı: <b id="online-count" style="color: #d4af37;">1</b> nəfər | 
-        👁️ Son 24 saat: <b id="daily-views" style="color: #d4af37;">0</b> baxış
-    </span>
-</div>
-
+    
 <div id="preloader">
     <div class="loader-logo">
         LUMIERE
@@ -523,68 +517,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-
-    // Supabase bağlantısı
-    const _supabase = supabase.createClient(
-        'https://pgnshyibgprjqvyzuisu.supabase.co', 
-        'sb_publishable_YNpATpBsxVkT4HKUDWCdng_pwhBpb4U'
-    );
-
-    async function handleStats() {
-        // Sayfa görüntülendiğinde kayıt at
-        await _supabase.from('page_views').insert([{}]);
-
-        // 24 saatlik veriyi çek
-        const last24 = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-        const { count } = await _supabase
-            .from('page_views')
-            .select('*', { count: 'exact', head: true })
-            .gt('viewed_at', last24);
-
-        if (document.getElementById('daily-views')) {
-            document.getElementById('daily-views').innerText = count || 0;
-        }
-    }
-
-    function trackOnline() {
-    // Hər cihaz üçün fərqli bir ID yaradırıq ki, sayğac artsın
-    const uniqueKey = 'user_' + Math.random().toString(36).substring(2, 12);
-    
-    // Kanal adını dəyişirik ki, köhnə keşlənmiş bağlantılar mane olmasın
-    const channel = _supabase.channel('lumiere_realtime_count', {
-        config: {
-            presence: {
-                key: uniqueKey,
-            },
-        },
-    });
-
-    channel
-        .on('presence', { event: 'sync' }, () => {
-            const state = channel.presenceState();
-            // Fərqli unikal key-lərin sayını hesablayırıq
-            const totalOnline = Object.keys(state).length;
-            
-            const el = document.getElementById('online-count');
-            if (el) {
-                el.innerText = totalOnline;
-            }
-        })
-        .subscribe(async (status) => {
-            if (status === 'SUBSCRIBED') {
-                // Bu cihazı otağa izlənilən olaraq əlavə edirik
-                await channel.track({ online_at: new Date().toISOString() });
-            }
-        });
-}
-
-    // Site yüklendiğinde çalıştır
-    handleStats();
-    trackOnline();
-
-
-
-
 
     /* --- SİSTEMİN BAŞLADILMASI --- */
     function initSite() {
