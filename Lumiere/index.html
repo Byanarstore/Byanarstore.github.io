@@ -526,6 +526,7 @@ const _supabase = supabase.createClient(
 
 // Statistika və Baxış sayı (Arxa fonda işləyir)
 async function handleStats() {
+    // Bazaya vaxtı JS vasitəsilə göndəririk
     await _supabase.from('page_views').insert([
         { viewed_at: new Date().toISOString() }
     ]);
@@ -716,6 +717,8 @@ trackOnline();
         const name = document.getElementById('cust-name').value.trim();
         const msg_body = document.getElementById('cust-msg').value.trim();
         
+        const date = new Date().toLocaleString('az-AZ'); // Tarixi burada təyin edirik
+        const totalAmount = cart.reduce((a, b) => a + (b.price * b.qty), 0); // Toplam məbləğ
         if (cart.length === 0) { 
             showPopup("Səbətinizdə məhsul mövcud deyil."); 
             return; 
