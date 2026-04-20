@@ -36,10 +36,10 @@
 
         .stat-value {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 2.25rem;
+            font-size: 2.4rem;
             font-weight: 500;
             color: #ffffff;
-            letter-spacing: -1px;
+            letter-spacing: -1.5px;
         }
 
         .stat-label {
@@ -105,7 +105,6 @@
         </header>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-            
             <div class="dashboard-card">
                 <span class="stat-label">Onlayn</span>
                 <div class="flex items-baseline gap-2">
@@ -137,6 +136,12 @@
                 <div id="admin-month" class="stat-value">0</div>
                 <div class="mt-4 text-[10px] text-zinc-600">Monthly Retention</div>
             </div>
+        </div>
+
+        <!-- ÖLKƏ + ŞƏHƏR BREAKDOWN -->
+        <div class="dashboard-card mb-8">
+            <span class="stat-label">Lokasyon Breakdown (Son 30 Gün)</span>
+            <div id="location-list" class="mt-6 space-y-3"></div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -205,10 +210,52 @@
                 getViewsCount(43200)
             ]);
 
-            document.getElementById('admin-hour1').innerText = h1.toLocaleString();
-            document.getElementById('admin-hour12').innerText = h12.toLocaleString();
-            document.getElementById('admin-daily').innerText = h24.toLocaleString();
-            document.getElementById('admin-month').innerText = m30.toLocaleString();
+            document.getElementById('admin-hour1').innerText = h1.toLocaleString('az-AZ');
+            document.getElementById('admin-hour12').innerText = h12.toLocaleString('az-AZ');
+            document.getElementById('admin-daily').innerText = h24.toLocaleString('az-AZ');
+            document.getElementById('admin-month').innerText = m30.toLocaleString('az-AZ');
+
+            updateLocationStats();
+        }
+
+        async function updateLocationStats() {
+            const container = document.getElementById('location-list');
+            try {
+                const timeAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+                const { data, error } = await _supabase
+                    .from('page_views')
+                    .select('city, country_code')
+                    .gt('viewed_at', timeAgo);
+
+                if (error || !data || data.length === 0) {
+                    container.innerHTML = '<p class="text-zinc-500 text-center py-8">Hələ lokasyon məlumatı yoxdur</p>';
+                    return;
+                }
+
+                const counts = {};
+                data.forEach(row => {
+                    const city = row.city || 'Bilinmir';
+                    const country = row.country_code || 'XX';
+                    const key = `${city} (${country})`;
+                    counts[key] = (counts[key] || 0) + 1;
+                });
+
+                const sorted = Object.entries(counts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 15);
+
+                let html = '';
+                sorted.forEach(([loc, count]) => {
+                    html += `
+                        <div class="flex justify-between items-center bg-zinc-900/50 rounded-lg px-4 py-3">
+                            <span class="font-medium">${loc}</span>
+                            <span class="font-mono text-emerald-400 text-lg">${count}</span>
+                        </div>`;
+                });
+                container.innerHTML = html;
+            } catch (e) {
+                container.innerHTML = `<p class="text-red-400">Xəta: ${e.message}</p>`;
+            }
         }
 
         function trackAdminOnline() {
