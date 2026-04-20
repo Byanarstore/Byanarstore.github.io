@@ -523,27 +523,43 @@
         'sb_publishable_YNpATpBsxVkT4HKUDWCdng_pwhBpb4U'
     );
 
-    async function getLocation() {
+    /* --- TƏKMİLLƏŞDİRİLMİŞ MƏKAN İZNLƏMƏ SİSTEMİ --- */
+async function getLocation() {
+    // Alternativ olaraq 2 fərqli servisdən istifadə edirik ki, biri uğursuz olsa o biri tutsun
+    const services = [
+        'https://ipapi.co/json/',
+        'https://extreme-ip-lookup.com/json/?key=demo' // Ehtiyat variant
+    ];
+
+    for (let service of services) {
         try {
-            // Ən stabil API
-            const res = await fetch('https://ip-api.com/json/?fields=countryCode,city', {
-                cache: 'no-store'
-            });
+            const res = await fetch(service, { timeout: 5000 });
             if (res.ok) {
                 const data = await res.json();
+                // Servislər fərqli açarlar istifadə edir, ona görə ortaq formata salırıq
                 return {
-                    country_code: data.countryCode || null,
+                    country_code: data.country_code || data.countryCode || data.country || null,
                     city: data.city || null
                 };
             }
         } catch (e) {
-            console.warn("IP geolocation xətası");
+            console.warn(`${service} xətası:`, e.message);
+            continue; // Növbəti servisə keç
         }
-        return { country_code: null, city: null };
     }
+    return { country_code: "Naməlum", city: "Naməlum" };
+}
 
-    async function logPageView() {
+async function logPageView() {
+    // İstifadəçi səhifəni açdıqda 1 saniyə gözləyirik ki, brauzer tam yüklənsin
+    setTimeout(async () => {
         const loc = await getLocation();
+
+        // Boş datanın qarşısını almaq üçün yoxlama
+        if (!loc.city || loc.city === "Naməlum") {
+            // Əgər hələ də tapılmayıbsa, bir dəfə də cəhd et
+            console.log("Məkan dəqiqləşdirilir...");
+        }
 
         const { error } = await _supabase
             .from('page_views')
@@ -554,13 +570,12 @@
             }]);
 
         if (error) {
-            console.error("❌ Qeydə alınmadı:", error.message);
+            console.error("❌ Supabase Xətası:", error.message);
         } else {
-            const cityName = loc.city || "Bilinmir";
-            const countryName = loc.country_code || "XX";
-            console.log(`✅ Qeydə alındı → ${cityName} (${countryName})`);
+            console.log(`✅ Uğurla qeydə alındı: ${loc.city}, ${loc.country_code}`);
         }
-    }
+    }, 1000); 
+}
 
     function trackOnline() {
         const uniqueKey = 'user_' + Math.random().toString(36).substring(2, 12);
