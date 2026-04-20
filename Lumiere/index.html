@@ -523,17 +523,42 @@
         'sb_publishable_YNpATpBsxVkT4HKUDWCdng_pwhBpb4U'
     );
 
+    async function getLocation() {
+        try {
+            // Ən stabil API
+            const res = await fetch('https://ip-api.com/json/?fields=countryCode,city', {
+                cache: 'no-store'
+            });
+            if (res.ok) {
+                const data = await res.json();
+                return {
+                    country_code: data.countryCode || null,
+                    city: data.city || null
+                };
+            }
+        } catch (e) {
+            console.warn("IP geolocation xətası");
+        }
+        return { country_code: null, city: null };
+    }
+
     async function logPageView() {
+        const loc = await getLocation();
+
         const { error } = await _supabase
             .from('page_views')
-            .insert([{ 
-                viewed_at: new Date().toISOString() 
+            .insert([{
+                viewed_at: new Date().toISOString(),
+                country_code: loc.country_code,
+                city: loc.city
             }]);
 
         if (error) {
-            console.error("Giriş qeydə alınmadı:", error.message);
+            console.error("❌ Qeydə alınmadı:", error.message);
         } else {
-            console.log("✅ Giriş uğurla qeydə alındı");
+            const cityName = loc.city || "Bilinmir";
+            const countryName = loc.country_code || "XX";
+            console.log(`✅ Qeydə alındı → ${cityName} (${countryName})`);
         }
     }
 
@@ -542,7 +567,6 @@
         const channel = _supabase.channel('lumiere_realtime_count', {
             config: { presence: { key: uniqueKey } }
         });
-
         channel.subscribe(async (status) => {
             if (status === 'SUBSCRIBED') {
                 await channel.track({ online_at: new Date().toISOString() });
