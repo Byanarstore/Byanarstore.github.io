@@ -219,44 +219,40 @@
         }
 
         async function updateLocationStats() {
-            const container = document.getElementById('location-list');
-            try {
-                const timeAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-                const { data, error } = await _supabase
-                    .from('page_views')
-                    .select('city, country_code')
-                    .gt('viewed_at', timeAgo);
+    const container = document.getElementById('location-list');
+    try {
+        const timeAgo = new Date(Date.now() - 30*24*60*60*1000).toISOString();
+        const { data } = await _supabase
+            .from('page_views')
+            .select('city, country_code')
+            .gt('viewed_at', timeAgo);
 
-                if (error || !data || data.length === 0) {
-                    container.innerHTML = '<p class="text-zinc-500 text-center py-8">Hələ lokasyon məlumatı yoxdur</p>';
-                    return;
-                }
+        const counts = {};
+        (data || []).forEach(row => {
+            const city = row.city || 'Bilinmir';
+            const country = row.country_code || 'XX';
+            const key = `${city} (${country})`;
+            counts[key] = (counts[key] || 0) + 1;
+        });
 
-                const counts = {};
-                data.forEach(row => {
-                    const city = row.city || 'Bilinmir';
-                    const country = row.country_code || 'XX';
-                    const key = `${city} (${country})`;
-                    counts[key] = (counts[key] || 0) + 1;
-                });
+        const sorted = Object.entries(counts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 15);
 
-                const sorted = Object.entries(counts)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 15);
+        let html = '';
+        sorted.forEach(([loc, count]) => {
+            html += `
+                <div class="flex justify-between bg-zinc-900/50 rounded-lg px-4 py-3">
+                    <span class="font-medium">${loc}</span>
+                    <span class="font-mono text-emerald-400">${count}</span>
+                </div>`;
+        });
 
-                let html = '';
-                sorted.forEach(([loc, count]) => {
-                    html += `
-                        <div class="flex justify-between items-center bg-zinc-900/50 rounded-lg px-4 py-3">
-                            <span class="font-medium">${loc}</span>
-                            <span class="font-mono text-emerald-400 text-lg">${count}</span>
-                        </div>`;
-                });
-                container.innerHTML = html;
-            } catch (e) {
-                container.innerHTML = `<p class="text-red-400">Xəta: ${e.message}</p>`;
-            }
-        }
+        container.innerHTML = html || '<p class="text-zinc-500">Hələ məlumat yoxdur</p>';
+    } catch (e) {
+        container.innerHTML = '<p class="text-red-400">Xəta baş verdi</p>';
+    }
+}
 
         function trackAdminOnline() {
             const channel = _supabase.channel('lumiere_realtime_count');
