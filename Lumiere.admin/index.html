@@ -138,10 +138,10 @@
             </div>
         </div>
 
-        <!-- ÖLKƏ + ŞƏHƏR BREAKDOWN -->
+        <!-- Lokasyon Breakdown -->
         <div class="dashboard-card mb-8">
             <span class="stat-label">Lokasyon Breakdown (Son 30 Gün)</span>
-            <div id="location-list" class="mt-6 space-y-3"></div>
+            <div id="location-list" class="mt-6 space-y-3 min-h-[200px]"></div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -219,40 +219,43 @@
         }
 
         async function updateLocationStats() {
-    const container = document.getElementById('location-list');
-    try {
-        const timeAgo = new Date(Date.now() - 30*24*60*60*1000).toISOString();
-        const { data } = await _supabase
-            .from('page_views')
-            .select('city, country_code')
-            .gt('viewed_at', timeAgo);
+            const container = document.getElementById('location-list');
+            try {
+                const timeAgo = new Date(Date.now() - 30*24*60*60*1000).toISOString();
+                const { data } = await _supabase
+                    .from('page_views')
+                    .select('city, country_code')
+                    .gt('viewed_at', timeAgo);
 
-        const counts = {};
-        (data || []).forEach(row => {
-            const city = row.city || 'Bilinmir';
-            const country = row.country_code || 'XX';
-            const key = `${city} (${country})`;
-            counts[key] = (counts[key] || 0) + 1;
-        });
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<p class="text-zinc-500 text-center py-12">Hələ lokasyon məlumatı yoxdur.<br><span class="text-xs">Səhifəni bir neçə dəfə yeniləyin</span></p>';
+                    return;
+                }
 
-        const sorted = Object.entries(counts)
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 15);
+                const counts = {};
+                data.forEach(row => {
+                    const city = (row.city || 'Bilinmir').trim();
+                    const country = (row.country_code || 'XX').trim();
+                    const key = `${city} (${country})`;
+                    counts[key] = (counts[key] || 0) + 1;
+                });
 
-        let html = '';
-        sorted.forEach(([loc, count]) => {
-            html += `
-                <div class="flex justify-between bg-zinc-900/50 rounded-lg px-4 py-3">
-                    <span class="font-medium">${loc}</span>
-                    <span class="font-mono text-emerald-400">${count}</span>
-                </div>`;
-        });
+                const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 12);
 
-        container.innerHTML = html || '<p class="text-zinc-500">Hələ məlumat yoxdur</p>';
-    } catch (e) {
-        container.innerHTML = '<p class="text-red-400">Xəta baş verdi</p>';
-    }
-}
+                let html = '';
+                sorted.forEach(([loc, count]) => {
+                    html += `
+                        <div class="flex justify-between items-center bg-zinc-900/60 px-5 py-3.5 rounded-xl">
+                            <span class="font-medium text-white">${loc}</span>
+                            <span class="font-mono text-emerald-400 font-semibold">${count}</span>
+                        </div>`;
+                });
+
+                container.innerHTML = html;
+            } catch (e) {
+                container.innerHTML = `<p class="text-red-400 text-center">Xəta: ${e.message}</p>`;
+            }
+        }
 
         function trackAdminOnline() {
             const channel = _supabase.channel('lumiere_realtime_count');
