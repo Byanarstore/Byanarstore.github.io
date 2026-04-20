@@ -105,6 +105,7 @@
         </header>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+            
             <div class="dashboard-card">
                 <span class="stat-label">Onlayn</span>
                 <div class="flex items-baseline gap-2">
@@ -147,7 +148,7 @@
                 <div class="p-6 font-mono text-[11px] space-y-3 h-48 overflow-y-auto">
                     <p class="text-emerald-900"><span class="text-zinc-700">[SYSTEM]</span> Realtime channel established successfully.</p>
                     <p class="text-zinc-500"><span class="text-zinc-700">[METRIC]</span> Fetching aggregate views...</p>
-                    <p class="text-zinc-500"><span class="text-zinc-700">[AUTH]</span> Admin session verified via secure protocol.</p>
+                    <p class="text-zinc-500"><span class="text-zinc-700">[AUTH]</span> Admin session verified.</p>
                     <p class="text-zinc-800">> Waiting for new data incoming...</p>
                 </div>
             </div>
@@ -192,7 +193,6 @@
                     .gt('viewed_at', timeAgo);
                 return count || 0;
             } catch (e) {
-                console.error("Statistika xətası:", e);
                 return 0;
             }
         }
