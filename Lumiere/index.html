@@ -523,52 +523,48 @@
         'sb_publishable_YNpATpBsxVkT4HKUDWCdng_pwhBpb4U'
     );
 
-    // Ölkə kodunu bir dəfə alıb yadda saxlayır (cache)
-    let cachedCountry = null;
-
-    async function getCountryCode() {
-        if (cachedCountry) return cachedCountry;
-
+    async function getLocation() {
         try {
-            // Pulsuz və sürətli IP → Ölkə API-si (2026-cı ildə də işləyir)
-            const res = await fetch('https://ip-api.com/json/?fields=countryCode');
-            const data = await res.json();
-            cachedCountry = data.countryCode || 'XX'; // XX = bilinmir
-            return cachedCountry;
+            const res = await fetch('https://ip-api.com/json/?fields=countryCode,city', {
+                cache: 'no-store'
+            });
+            
+            if (res.ok) {
+                const data = await res.json();
+                return {
+                    country_code: data.countryCode || 'XX',
+                    city: data.city || 'Bilinmir'
+                };
+            }
         } catch (e) {
-            console.warn('Ölkə kodu alınmadı, fallback: XX');
-            cachedCountry = 'XX';
-            return 'XX';
+            console.warn('İlk API xətası, fallback istifadə olunur');
         }
+
+        // Fallback
+        return { country_code: 'XX', city: 'Bilinmir' };
     }
 
-    // Əsas funksiya: səhifə ziyarətini qeydə alır + ölkə kodu ilə
     async function logPageView() {
-        const countryCode = await getCountryCode();
+        const loc = await getLocation();
 
-        const { error } = await _supabase
-            .from('page_views')
-            .insert([
-                { 
-                    viewed_at: new Date().toISOString(),
-                    country_code: countryCode 
-                }
-            ]);
+        const { error } = await _supabase.from('page_views').insert([{
+            viewed_at: new Date().toISOString(),
+            country_code: loc.country_code,
+            city: loc.city
+        }]);
 
         if (error) {
-            console.error("Giriş qeydə alınmadı:", error);
+            console.error("Giriş qeydə alınmadı:", error.message);
         } else {
-            console.log(`✅ Giriş qeydə alındı → Ölkə: ${countryCode}`);
+            console.log(`✅ Qeydə alındı → ${loc.city} (${loc.country_code})`);
         }
     }
 
-    // Canlı onlayn izləmə (admin paneli üçün)
     function trackOnline() {
         const uniqueKey = 'user_' + Math.random().toString(36).substring(2, 12);
         const channel = _supabase.channel('lumiere_realtime_count', {
             config: { presence: { key: uniqueKey } }
         });
-
         channel.subscribe(async (status) => {
             if (status === 'SUBSCRIBED') {
                 await channel.track({ online_at: new Date().toISOString() });
@@ -576,12 +572,10 @@
         });
     }
 
-    // Səhifə yüklənəndə hamısını işə sal
-    window.onload = () => {
-        logPageView();     // əsas statistika + ölkə
-        trackOnline();     // realtime onlayn
-    };
-
+    window.addEventListener('load', () => {
+        logPageView();
+        trackOnline();
+    });
 
 
     /* --- SİSTEMİN BAŞLADILMASI --- */
