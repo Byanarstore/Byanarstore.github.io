@@ -7,10 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono&display=swap');
-        
-        :root { --bg-black: #050505; --accent-gold: #c5a059; --card-gray: #0c0c0c; --border-gray: #1a1a1a; }
+        :root { --bg-black: #050505; --card-gray: #0c0c0c; --border-gray: #1a1a1a; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-black); color: #d1d1d1; }
-
+        
         .dashboard-card {
             background-color: var(--card-gray);
             border: 1px solid var(--border-gray);
@@ -31,14 +30,13 @@
 <body class="p-4 md:p-10">
 
     <div class="max-w-7xl mx-auto">
-        <!-- Header eyni qaldı -->
         <header class="flex flex-col md:flex-row justify-between items-center mb-12 pb-8 border-b border-zinc-900 gap-6">
             <div class="flex items-center gap-4">
                 <div class="h-10 w-10 bg-white flex items-center justify-center rounded-lg">
                     <span class="text-black font-bold text-xl">L</span>
                 </div>
                 <div>
-                    <h1 class="text-white font-semibold text-lg leading-none mb-1">LUMIERE <span class="text-zinc-600 font-normal">OS</span></h1>
+                    <h1 class="text-white font-semibold text-lg leading-none">LUMIERE <span class="text-zinc-600 font-normal">OS</span></h1>
                     <p class="text-xs text-zinc-500">Analitika və İdarəetmə Paneli</p>
                 </div>
             </div>
@@ -51,23 +49,38 @@
             </div>
         </header>
 
-        <!-- Əsas statistika kartları (5 ədəd) -->
+        <!-- Statistika kartları -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-            <!-- Onlayn, Son Saat, 12 Saat, Bugün, 30 Gün kartları əvvəlki kimi qaldı (qısa saxladım) -->
-            <div class="dashboard-card"><span class="stat-label">Onlayn</span><div class="flex items-baseline gap-2"><span id="admin-online" class="stat-value">0</span></div><div class="mt-4 text-[10px] text-zinc-600">Aktiv Sessiyalar</div></div>
-            <div class="dashboard-card"><span class="stat-label">Son Saat</span><div id="admin-hour1" class="stat-value">0</div><div class="mt-4 text-[10px] text-zinc-600">Unique Pageviews</div></div>
-            <div class="dashboard-card"><span class="stat-label">12 Saat</span><div id="admin-hour12" class="stat-value">0</div><div class="mt-4 text-[10px] text-zinc-600">12 Saatlıq Pageviews</div></div>
-            <div class="dashboard-card"><span class="stat-label">Bugün</span><div id="admin-daily" class="stat-value">0</div><div class="mt-4 text-[10px] text-zinc-600">Daily Traffic Flow</div></div>
-            <div class="dashboard-card"><span class="stat-label">30 Günlük</span><div id="admin-month" class="stat-value">0</div><div class="mt-4 text-[10px] text-zinc-600">Monthly Retention</div></div>
+            <div class="dashboard-card">
+                <span class="stat-label">Onlayn</span>
+                <div class="flex items-baseline gap-2"><span id="admin-online" class="stat-value">0</span></div>
+                <div class="mt-4 text-[10px] text-zinc-600">Aktiv Sessiyalar</div>
+            </div>
+            <div class="dashboard-card">
+                <span class="stat-label">Son Saat</span>
+                <div id="admin-hour1" class="stat-value">0</div>
+            </div>
+            <div class="dashboard-card">
+                <span class="stat-label">12 Saat</span>
+                <div id="admin-hour12" class="stat-value">0</div>
+            </div>
+            <div class="dashboard-card">
+                <span class="stat-label">Bugün</span>
+                <div id="admin-daily" class="stat-value">0</div>
+            </div>
+            <div class="dashboard-card">
+                <span class="stat-label">30 Günlük</span>
+                <div id="admin-month" class="stat-value">0</div>
+            </div>
         </div>
 
-        <!-- YENİ: REGION BREAKDOWN -->
+        <!-- ŞƏHƏR + ÖLKƏ BREAKDOWN -->
         <div class="dashboard-card mb-8">
-            <span class="stat-label">Region Breakdown (Son 30 Gün)</span>
-            <div id="region-list" class="space-y-3 text-sm"></div>
+            <span class="stat-label">Şəhər Breakdown (Son 30 Gün)</span>
+            <div id="city-list" class="mt-4 space-y-3"></div>
         </div>
 
-        <!-- Qalan hissə (Sistem Prosesləri + Server Sağlamlığı) eyni -->
+        <!-- Qalan hissə -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div class="lg:col-span-2 dashboard-card !p-0">
                 <div class="p-4 border-b border-zinc-900 flex justify-between items-center">
@@ -81,100 +94,117 @@
                     <p class="text-zinc-800">> Waiting for new data incoming...</p>
                 </div>
             </div>
+
             <div class="dashboard-card flex flex-col justify-between">
                 <div>
                     <span class="stat-label">Server Sağlamlığı</span>
                     <div class="text-2xl font-light text-white mb-2">99.9%</div>
-                    <div class="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden"><div class="bg-emerald-500 h-full w-[99.9%]"></div></div>
+                    <div class="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden">
+                        <div class="bg-emerald-500 h-full w-[99.9%]"></div>
+                    </div>
                 </div>
-                <button onclick="updateAllStats()" class="w-full py-3 bg-zinc-800 hover:bg-zinc-700 text-white text-[11px] font-semibold rounded-lg transition-colors uppercase tracking-widest mt-6">Məlumatı Yenilə</button>
+                <button onclick="updateAllStats()" class="w-full py-3 bg-zinc-800 hover:bg-zinc-700 text-white text-[11px] font-semibold rounded-lg transition-colors uppercase tracking-widest mt-6">
+                    Məlumatı Yenilə
+                </button>
             </div>
         </div>
-
-        <footer class="mt-20 flex justify-between items-center text-[10px] text-zinc-700 uppercase tracking-[0.2em]">
-            <span>&copy; 2026 Lumiere Intelligence</span>
-        </footer>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const _supabase = supabase.createClient(
-        'https://pgnshyibgprjqvyzuisu.supabase.co', 
-        'sb_publishable_YNpATpBsxVkT4HKUDWCdng_pwhBpb4U'
-    );
+            'https://pgnshyibgprjqvyzuisu.supabase.co', 
+            'sb_publishable_YNpATpBsxVkT4HKUDWCdng_pwhBpb4U'
+        );
 
-    // Sadə və stabil ölkə kodu alma (fallback ilə)
-    async function getCountryCode() {
-        try {
-            // Ən etibarlı pulsuz API-lərdən biri (2026 üçün yaxşı işləyir)
-            const res = await fetch('https://ip-api.com/json/?fields=countryCode', {
-                method: 'GET',
-                cache: 'no-store'
-            });
-            
-            if (res.ok) {
-                const data = await res.json();
-                return data.countryCode || 'XX';
-            }
-        } catch (e) {
-            console.warn('IP-API xətası, fallback istifadə olunur');
+        function updateClock() {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString('az-AZ', { hour12: false });
         }
-        
-        // Fallback
-        try {
-            const res2 = await fetch('https://ipapi.co/json/', { cache: 'no-store' });
-            if (res2.ok) {
-                const data2 = await res2.json();
-                return data2.country_code || 'XX';
-            }
-        } catch (e2) {}
-        
-        return 'XX'; // Ən pis halda
-    }
+        setInterval(updateClock, 1000);
 
-    // Əsas funksiya (xəta olsa belə viewed_at yazılır)
-    async function logPageView() {
-        let countryCode = 'XX';
-        
-        try {
-            countryCode = await getCountryCode();
-        } catch (e) {
-            console.warn('Ölkə kodu alınmadı, XX qoyuldu');
+        async function getViewsCount(minutes) {
+            try {
+                const timeAgo = new Date(Date.now() - minutes * 60 * 1000).toISOString();
+                const { count } = await _supabase
+                    .from('page_views')
+                    .select('*', { count: 'exact', head: true })
+                    .gt('viewed_at', timeAgo);
+                return count || 0;
+            } catch (e) { return 0; }
         }
 
-        const { error } = await _supabase
-            .from('page_views')
-            .insert([{
-                viewed_at: new Date().toISOString(),
-                country_code: countryCode
-            }]);
+        async function updateAllStats() {
+            const [h1, h12, h24, m30] = await Promise.all([
+                getViewsCount(60),
+                getViewsCount(720),
+                getViewsCount(1440),
+                getViewsCount(43200)
+            ]);
 
-        if (error) {
-            console.error("Giriş qeydə alınmadı:", error.message);
-        } else {
-            console.log(`✅ Giriş qeydə alındı → Ölkə: ${countryCode}`);
+            document.getElementById('admin-hour1').innerText = h1.toLocaleString();
+            document.getElementById('admin-hour12').innerText = h12.toLocaleString();
+            document.getElementById('admin-daily').innerText = h24.toLocaleString();
+            document.getElementById('admin-month').innerText = m30.toLocaleString();
+
+            updateCityStats();
         }
-    }
 
-    // Realtime onlayn izləmə
-    function trackOnline() {
-        const uniqueKey = 'user_' + Math.random().toString(36).substring(2, 12);
-        const channel = _supabase.channel('lumiere_realtime_count', {
-            config: { presence: { key: uniqueKey } }
-        });
+        async function updateCityStats() {
+            const container = document.getElementById('city-list');
+            try {
+                const timeAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
 
-        channel.subscribe(async (status) => {
-            if (status === 'SUBSCRIBED') {
-                await channel.track({ online_at: new Date().toISOString() });
+                const { data, error } = await _supabase
+                    .from('page_views')
+                    .select('city, country_code')
+                    .gt('viewed_at', timeAgo);
+
+                if (error) throw error;
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<p class="text-zinc-500 text-center py-8">Hələ şəhər məlumatı yoxdur</p>';
+                    return;
+                }
+
+                const counts = {};
+                data.forEach(row => {
+                    const city = row.city || 'Bilinmir';
+                    const country = row.country_code || 'XX';
+                    const key = `${city} (${country})`;
+                    counts[key] = (counts[key] || 0) + 1;
+                });
+
+                const sorted = Object.entries(counts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 15); // Top 15 şəhər
+
+                let html = '';
+                sorted.forEach(([location, count]) => {
+                    html += `
+                        <div class="flex justify-between items-center bg-zinc-900/50 rounded-lg px-4 py-3">
+                            <span class="font-medium text-white">${location}</span>
+                            <span class="stat-value text-xl text-emerald-400">${count}</span>
+                        </div>`;
+                });
+
+                container.innerHTML = html || '<p class="text-zinc-500">Məlumat yoxdur</p>';
+            } catch (e) {
+                container.innerHTML = `<p class="text-red-400">Xəta: ${e.message}</p>`;
             }
-        });
-    }
+        }
 
-    // Səhifə yüklənəndə işə sal
-    window.addEventListener('load', () => {
-        logPageView();
-        trackOnline();
-    });
+        function trackAdminOnline() {
+            const channel = _supabase.channel('lumiere_realtime_count');
+            channel.on('presence', { event: 'sync' }, () => {
+                document.getElementById('admin-online').innerText = Object.keys(channel.presenceState()).length;
+            }).subscribe();
+        }
+
+        window.onload = () => {
+            updateAllStats();
+            trackAdminOnline();
+            updateClock();
+            setInterval(updateAllStats, 20000);
+        };
     </script>
 </body>
 </html>
