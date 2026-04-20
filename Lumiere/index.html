@@ -518,65 +518,69 @@
 
 <script>
 
-    // Supabase bağlantısı
-const _supabase = supabase.createClient(
-    'https://pgnshyibgprjqvyzuisu.supabase.co', 
-    'sb_publishable_YNpATpBsxVkT4HKUDWCdng_pwhBpb4U'
-);
+    const _supabase = supabase.createClient(
+        'https://pgnshyibgprjqvyzuisu.supabase.co', 
+        'sb_publishable_YNpATpBsxVkT4HKUDWCdng_pwhBpb4U'
+    );
 
-// Hər dəfə səhifə açılanda bu kod işləməlidir
-async function logPageView() {
-    const { data, error } = await _supabase
-        .from('page_views')
-        .insert([
-            { viewed_at: new Date().toISOString() }
-        ]);
-        
-    if (error) console.error("Məlumat yazıla bilmədi:", error);
-    else console.log("Giriş qeydə alındı!");
-}
+    // Ölkə kodunu bir dəfə alıb yadda saxlayır (cache)
+    let cachedCountry = null;
 
-logPageView();
+    async function getCountryCode() {
+        if (cachedCountry) return cachedCountry;
 
-// Statistika və Baxış sayı (Arxa fonda işləyir)
-async function handleStats() {
-    // Bazaya vaxtı JS vasitəsilə göndəririk
-    await _supabase.from('page_views').insert([
-        { viewed_at: new Date().toISOString() }
-    ]);
-}
-
-// Canlı izləmə kanalı (Admin paneli üçün siqnal göndərir)
-function trackOnline() {
-    const uniqueKey = 'user_' + Math.random().toString(36).substring(2, 12);
-    const channel = _supabase.channel('lumiere_realtime_count', {
-        config: { presence: { key: uniqueKey } },
-    });
-
-    channel.subscribe(async (status) => {
-        if (status === 'SUBSCRIBED') {
-            await channel.track({ online_at: new Date().toISOString() });
+        try {
+            // Pulsuz və sürətli IP → Ölkə API-si (2026-cı ildə də işləyir)
+            const res = await fetch('https://ip-api.com/json/?fields=countryCode');
+            const data = await res.json();
+            cachedCountry = data.countryCode || 'XX'; // XX = bilinmir
+            return cachedCountry;
+        } catch (e) {
+            console.warn('Ölkə kodu alınmadı, fallback: XX');
+            cachedCountry = 'XX';
+            return 'XX';
         }
-    });
-}
-
-async function sendView() {
-    const { error } = await _supabase
-        .from('page_views')
-        .insert([{ viewed_at: new Date().toISOString() }]);
-
-    if (error) {
-        console.error("Xəta baş verdi:", error.message);
-    } else {
-        console.log("Məlumat uğurla bazaya göndərildi!");
     }
-}
-// Səhifə yüklənəndə funksiyanı çağırın
-sendView();
 
-// Funksiyaları çağırırıq
-handleStats();
-trackOnline();
+    // Əsas funksiya: səhifə ziyarətini qeydə alır + ölkə kodu ilə
+    async function logPageView() {
+        const countryCode = await getCountryCode();
+
+        const { error } = await _supabase
+            .from('page_views')
+            .insert([
+                { 
+                    viewed_at: new Date().toISOString(),
+                    country_code: countryCode 
+                }
+            ]);
+
+        if (error) {
+            console.error("Giriş qeydə alınmadı:", error);
+        } else {
+            console.log(`✅ Giriş qeydə alındı → Ölkə: ${countryCode}`);
+        }
+    }
+
+    // Canlı onlayn izləmə (admin paneli üçün)
+    function trackOnline() {
+        const uniqueKey = 'user_' + Math.random().toString(36).substring(2, 12);
+        const channel = _supabase.channel('lumiere_realtime_count', {
+            config: { presence: { key: uniqueKey } }
+        });
+
+        channel.subscribe(async (status) => {
+            if (status === 'SUBSCRIBED') {
+                await channel.track({ online_at: new Date().toISOString() });
+            }
+        });
+    }
+
+    // Səhifə yüklənəndə hamısını işə sal
+    window.onload = () => {
+        logPageView();     // əsas statistika + ölkə
+        trackOnline();     // realtime onlayn
+    };
 
 
 
