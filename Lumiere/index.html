@@ -526,10 +526,15 @@
     async function logPageView() {
         const { error } = await _supabase
             .from('page_views')
-            .insert([{ viewed_at: new Date().toISOString() }]);
+            .insert([{ 
+                viewed_at: new Date().toISOString() 
+            }]);
 
-        if (error) console.error("Xəta:", error.message);
-        else console.log("✅ Giriş qeydə alındı");
+        if (error) {
+            console.error("Giriş qeydə alınmadı:", error.message);
+        } else {
+            console.log("✅ Giriş uğurla qeydə alındı");
+        }
     }
 
     function trackOnline() {
@@ -537,6 +542,7 @@
         const channel = _supabase.channel('lumiere_realtime_count', {
             config: { presence: { key: uniqueKey } }
         });
+
         channel.subscribe(async (status) => {
             if (status === 'SUBSCRIBED') {
                 await channel.track({ online_at: new Date().toISOString() });
