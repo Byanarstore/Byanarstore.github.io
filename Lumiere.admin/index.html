@@ -98,78 +98,80 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const _supabase = supabase.createClient('https://pgnshyibgprjqvyzuisu.supabase.co', 'sb_publishable_YNpATpBsxVkT4HKUDWCdng_pwhBpb4U');
+        const _supabase = supabase.createClient(
+        'https://pgnshyibgprjqvyzuisu.supabase.co', 
+        'sb_publishable_YNpATpBsxVkT4HKUDWCdng_pwhBpb4U'
+    );
 
-        // ... (clock, getViewsCount, updateAllStats funksiyaları əvvəlki kimi qaldı) ...
-        function updateClock() { document.getElementById('clock').innerText = new Date().toLocaleTimeString('az-AZ', { hour12: false }); }
-        setInterval(updateClock, 1000);
+    let cachedCountry = null;
 
-        async function getViewsCount(minutes) {
+    // Daha etibarlı və stabil IP → Country API
+    async function getCountryCode() {
+        if (cachedCountry) return cachedCountry;
+
+        try {
+            // Ən yaxşı pulsuz variantlardan biri (2026-da stabil işləyir)
+            const res = await fetch('https://ipapi.co/json/', {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' }
+            });
+            
+            if (!res.ok) throw new Error('Rate limit or error');
+
+            const data = await res.json();
+            cachedCountry = data.country_code || data.countryCode || 'XX';
+            return cachedCountry;
+        } catch (e) {
+            console.warn('Birinci API uğursuz oldu, ikinciyə keçirəm...');
+            
+            // Fallback (ikinci ehtiyat API)
             try {
-                const timeAgo = new Date(Date.now() - minutes * 60 * 1000).toISOString();
-                const { count } = await _supabase.from('page_views').select('*', { count: 'exact', head: true }).gt('viewed_at', timeAgo);
-                return count || 0;
-            } catch (e) { return 0; }
-        }
-
-        async function updateAllStats() {
-            const [h1, h12, h24, m30] = await Promise.all([getViewsCount(60), getViewsCount(720), getViewsCount(1440), getViewsCount(43200)]);
-            document.getElementById('admin-hour1').innerText = h1.toLocaleString();
-            document.getElementById('admin-hour12').innerText = h12.toLocaleString();
-            document.getElementById('admin-daily').innerText = h24.toLocaleString();
-            document.getElementById('admin-month').innerText = m30.toLocaleString();
-
-            updateRegionStats();   // ← YENİ region statistikası
-        }
-
-        // YENİ: Region Breakdown funksiyası
-        async function updateRegionStats() {
-            const container = document.getElementById('region-list');
-            try {
-                const timeAgo = new Date(Date.now() - 43200 * 60 * 1000).toISOString(); // 30 gün
-                const { data, error } = await _supabase
-                    .from('page_views')
-                    .select('country_code')
-                    .gt('viewed_at', timeAgo);
-
-                if (error || !data || data.length === 0) {
-                    container.innerHTML = `<p class="text-zinc-500 text-center py-8">Hələ region məlumatı yoxdur<br><span class="text-xs">Əvvəlcə tracking kodunu yeniləyin</span></p>`;
-                    return;
-                }
-
-                const counts = {};
-                data.forEach(row => {
-                    const code = row.country_code || 'Bilinmir';
-                    counts[code] = (counts[code] || 0) + 1;
-                });
-
-                const sorted = Object.entries(counts)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 10);
-
-                let html = '';
-                for (let [code, count] of sorted) {
-                    html += `
-                        <div class="flex justify-between items-center bg-zinc-900/50 rounded-lg px-4 py-2">
-                            <span class="font-medium">${code}</span>
-                            <span class="stat-value text-xl">${count}</span>
-                        </div>`;
-                }
-                container.innerHTML = html;
-            } catch (e) {
-                container.innerHTML = `<p class="text-red-400">Xəta: ${e.message}</p>`;
+                const res2 = await fetch('https://api.country.is/');
+                const data2 = await res2.json();
+                cachedCountry = data2.country || 'XX';
+                return cachedCountry;
+            } catch (e2) {
+                console.warn('Ölkə kodu alınmadı → XX');
+                cachedCountry = 'XX';
+                return 'XX';
             }
         }
+    }
 
-        // Online tracking (əvvəlki kimi)
-        function trackAdminOnline() { /* ... eyni qaldı ... */ }
+    async function logPageView() {
+        const countryCode = await getCountryCode();
 
-        window.onload = () => {
-            updateAllStats();
-            trackAdminOnline();
-            updateClock();
-            setInterval(updateAllStats, 20000);
-        };
+        const { error } = await _supabase
+            .from('page_views')
+            .insert([{
+                viewed_at: new Date().toISOString(),
+                country_code: countryCode
+            }]);
+
+        if (error) {
+            console.error("Giriş qeydə alınmadı:", error.message);
+        } else {
+            console.log(`✅ Giriş qeydə alındı → Ölkə: ${countryCode}`);
+        }
+    }
+
+    function trackOnline() {
+        const uniqueKey = 'user_' + Math.random().toString(36).substring(2, 12);
+        const channel = _supabase.channel('lumiere_realtime_count', {
+            config: { presence: { key: uniqueKey } }
+        });
+
+        channel.subscribe(async (status) => {
+            if (status === 'SUBSCRIBED') {
+                await channel.track({ online_at: new Date().toISOString() });
+            }
+        });
+    }
+
+    window.onload = () => {
+        logPageView();
+        trackOnline();
+    };
     </script>
 </body>
 </html>
