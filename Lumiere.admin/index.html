@@ -103,43 +103,44 @@
         'sb_publishable_YNpATpBsxVkT4HKUDWCdng_pwhBpb4U'
     );
 
-    let cachedCountry = null;
-
-    // Daha etibarlı və stabil IP → Country API
+    // Sadə və stabil ölkə kodu alma (fallback ilə)
     async function getCountryCode() {
-        if (cachedCountry) return cachedCountry;
-
         try {
-            // Ən yaxşı pulsuz variantlardan biri (2026-da stabil işləyir)
-            const res = await fetch('https://ipapi.co/json/', {
+            // Ən etibarlı pulsuz API-lərdən biri (2026 üçün yaxşı işləyir)
+            const res = await fetch('https://ip-api.com/json/?fields=countryCode', {
                 method: 'GET',
-                headers: { 'Accept': 'application/json' }
+                cache: 'no-store'
             });
             
-            if (!res.ok) throw new Error('Rate limit or error');
-
-            const data = await res.json();
-            cachedCountry = data.country_code || data.countryCode || 'XX';
-            return cachedCountry;
-        } catch (e) {
-            console.warn('Birinci API uğursuz oldu, ikinciyə keçirəm...');
-            
-            // Fallback (ikinci ehtiyat API)
-            try {
-                const res2 = await fetch('https://api.country.is/');
-                const data2 = await res2.json();
-                cachedCountry = data2.country || 'XX';
-                return cachedCountry;
-            } catch (e2) {
-                console.warn('Ölkə kodu alınmadı → XX');
-                cachedCountry = 'XX';
-                return 'XX';
+            if (res.ok) {
+                const data = await res.json();
+                return data.countryCode || 'XX';
             }
+        } catch (e) {
+            console.warn('IP-API xətası, fallback istifadə olunur');
         }
+        
+        // Fallback
+        try {
+            const res2 = await fetch('https://ipapi.co/json/', { cache: 'no-store' });
+            if (res2.ok) {
+                const data2 = await res2.json();
+                return data2.country_code || 'XX';
+            }
+        } catch (e2) {}
+        
+        return 'XX'; // Ən pis halda
     }
 
+    // Əsas funksiya (xəta olsa belə viewed_at yazılır)
     async function logPageView() {
-        const countryCode = await getCountryCode();
+        let countryCode = 'XX';
+        
+        try {
+            countryCode = await getCountryCode();
+        } catch (e) {
+            console.warn('Ölkə kodu alınmadı, XX qoyuldu');
+        }
 
         const { error } = await _supabase
             .from('page_views')
@@ -155,6 +156,7 @@
         }
     }
 
+    // Realtime onlayn izləmə
     function trackOnline() {
         const uniqueKey = 'user_' + Math.random().toString(36).substring(2, 12);
         const channel = _supabase.channel('lumiere_realtime_count', {
@@ -168,10 +170,11 @@
         });
     }
 
-    window.onload = () => {
+    // Səhifə yüklənəndə işə sal
+    window.addEventListener('load', () => {
         logPageView();
         trackOnline();
-    };
+    });
     </script>
 </body>
 </html>
