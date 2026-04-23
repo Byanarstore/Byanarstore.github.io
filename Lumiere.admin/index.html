@@ -7,19 +7,16 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono&display=swap');
-        
         :root {
             --bg-black: #050505;
             --card-gray: #0c0c0c;
             --border-gray: #1a1a1a;
         }
-
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-black);
             color: #d1d1d1;
         }
-
         .dashboard-card {
             background-color: var(--card-gray);
             border: 1px solid var(--border-gray);
@@ -27,13 +24,11 @@
             padding: 1.5rem;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         .dashboard-card:hover {
             border-color: rgba(197, 160, 89, 0.4);
             transform: translateY(-2px);
             background-color: #0e0e0e;
         }
-
         .stat-value {
             font-family: 'JetBrains Mono', monospace;
             font-size: 2.4rem;
@@ -41,7 +36,6 @@
             color: #ffffff;
             letter-spacing: -1.5px;
         }
-
         .stat-label {
             font-size: 11px;
             text-transform: uppercase;
@@ -50,7 +44,6 @@
             margin-bottom: 0.5rem;
             display: block;
         }
-
         .live-badge {
             display: inline-flex;
             align-items: center;
@@ -64,58 +57,48 @@
             font-weight: 600;
             letter-spacing: 0.05em;
         }
-
         .pulse {
-            width: 6px; height: 6px;
+            width: 6px;
+            height: 6px;
             background-color: #10b981;
             border-radius: 50%;
             animation: blink 1.5s infinite;
         }
-
         @keyframes blink {
             0%, 100% { opacity: 0.4; }
             50% { opacity: 1; }
         }
-
-        /*TİCKET HİSSƏSİ*/
-        /* Bütün çat qutuları üçün ümumi scroll tənzimləməsi */
-#chat-box, #admin-chat-box, #admin-ticket-list, #ticket-content {
-    scrollbar-width: thin; /* Firefox üçün incə scroll */
-    scrollbar-color: #d4af37 transparent; /* Firefox üçün rəng */
-}
-
-/* Chrome, Safari və Edge üçün */
-#chat-box::-webkit-scrollbar, 
-#admin-chat-box::-webkit-scrollbar, 
-#admin-ticket-list::-webkit-scrollbar, 
-#ticket-content::-webkit-scrollbar {
-    width: 5px; /* Scroll-un eni (çox incə) */
-}
-
-#chat-box::-webkit-scrollbar-track, 
-#admin-chat-box::-webkit-scrollbar-track, 
-#admin-ticket-list::-webkit-scrollbar-track, 
-#ticket-content::-webkit-scrollbar-track {
-    background: transparent; /* Arxa fon şəffaf */
-}
-
-#chat-box::-webkit-scrollbar-thumb, 
-#admin-chat-box::-webkit-scrollbar-thumb, 
-#admin-ticket-list::-webkit-scrollbar-thumb, 
-#ticket-content::-webkit-scrollbar-thumb {
-    background-color: #d4af37; /* Qızılı rəng */
-    border-radius: 20px; /* Tam yuvarlaq kənarlar */
-    border: 1px solid transparent; /* İncəlik hissi üçün */
-}
-
-#chat-box::-webkit-scrollbar-thumb:hover, 
-#admin-chat-box::-webkit-scrollbar-thumb:hover, 
-#admin-ticket-list::-webkit-scrollbar-thumb:hover {
-    background-color: #f1c40f; /* Üstünə gələndə daha parlaq qızılı */
-}
-
-
-/* Mobil üçün Ticket Layout */
+        /* Scroll bar */
+        #chat-box, #admin-chat-box, #admin-ticket-list, #ticket-content {
+            scrollbar-width: thin;
+            scrollbar-color: #d4af37 transparent;
+        }
+        #chat-box::-webkit-scrollbar,
+        #admin-chat-box::-webkit-scrollbar,
+        #admin-ticket-list::-webkit-scrollbar,
+        #ticket-content::-webkit-scrollbar {
+            width: 5px;
+        }
+        #chat-box::-webkit-scrollbar-track,
+        #admin-chat-box::-webkit-scrollbar-track,
+        #admin-ticket-list::-webkit-scrollbar-track,
+        #ticket-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #chat-box::-webkit-scrollbar-thumb,
+        #admin-chat-box::-webkit-scrollbar-thumb,
+        #admin-ticket-list::-webkit-scrollbar-thumb,
+        #ticket-content::-webkit-scrollbar-thumb {
+            background-color: #d4af37;
+            border-radius: 20px;
+            border: 1px solid transparent;
+        }
+        #chat-box::-webkit-scrollbar-thumb:hover,
+        #admin-chat-box::-webkit-scrollbar-thumb:hover,
+        #admin-ticket-list::-webkit-scrollbar-thumb:hover {
+            background-color: #f1c40f;
+        }
+        /* Mobil ticket layout */
         @media (max-width: 768px) {
             .ticket-container {
                 height: 500px !important;
@@ -138,32 +121,23 @@
                 transform: translateX(0);
             }
         }
-
-        .pulse {
-            width: 6px; height: 6px;
-            background-color: #10b981;
-            border-radius: 50%;
-            animation: blink 1.5s infinite;
-        }
-
-        @keyframes blink { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
     </style>
 </head>
 <body class="p-4 md:p-10">
-
     <div class="max-w-7xl mx-auto">
-        
+        <!-- HEADER -->
         <header class="flex flex-col md:flex-row justify-between items-center mb-12 pb-8 border-b border-zinc-900 gap-6">
             <div class="flex items-center gap-4">
                 <div class="h-10 w-10 bg-white flex items-center justify-center rounded-lg">
                     <span class="text-black font-bold text-xl">L</span>
                 </div>
                 <div>
-                    <h1 class="text-white font-semibold text-lg leading-none mb-1">LUMIERE <span class="text-zinc-600 font-normal">OS</span></h1>
+                    <h1 class="text-white font-semibold text-lg leading-none mb-1">
+                        LUMIERE <span class="text-zinc-600 font-normal">OS</span>
+                    </h1>
                     <p class="text-xs text-zinc-500">Analitika və İdarəetmə Paneli</p>
                 </div>
             </div>
-
             <div class="flex items-center gap-6">
                 <div class="live-badge">
                     <div class="pulse"></div> LIVE DATA
@@ -174,14 +148,7 @@
                 </div>
             </div>
         </header>
-
-
-        
-
-
-
-
-
+        <!-- STAT KARTLARI -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
             <div class="dashboard-card">
                 <span class="stat-label">Onlayn</span>
@@ -190,44 +157,42 @@
                 </div>
                 <div class="mt-4 text-[10px] text-zinc-600">Aktiv Sessiyalar</div>
             </div>
-
             <div class="dashboard-card">
                 <span class="stat-label">Son Saat</span>
                 <div id="admin-hour1" class="stat-value">0</div>
                 <div class="mt-4 text-[10px] text-zinc-600">Unique Pageviews</div>
             </div>
-
             <div class="dashboard-card">
                 <span class="stat-label">12 Saat</span>
                 <div id="admin-hour12" class="stat-value">0</div>
                 <div class="mt-4 text-[10px] text-zinc-600">12 Saatlıq Pageviews</div>
             </div>
-
             <div class="dashboard-card">
                 <span class="stat-label">Bugün</span>
                 <div id="admin-daily" class="stat-value">0</div>
                 <div class="mt-4 text-[10px] text-zinc-600">Daily Traffic Flow</div>
             </div>
-
             <div class="dashboard-card">
                 <span class="stat-label">30 Günlük</span>
                 <div id="admin-month" class="stat-value">0</div>
                 <div class="mt-4 text-[10px] text-zinc-600">Monthly Retention</div>
             </div>
         </div>
-
-
-
-
-        <!-- TİCKET HİSSƏSİ  -->
-<div class="ticket-container flex h-[600px] bg-zinc-900/30 rounded-2xl border border-zinc-800/50 overflow-hidden mt-8 mb-8 backdrop-blur-md">            <div id="admin-ticket-list-container" class="w-full md:w-1/3 border-r border-zinc-800 flex flex-col bg-black/40">
+        <!-- TİCKET HİSSƏSİ -->
+        <div class="ticket-container flex h-[600px] bg-zinc-900/30 rounded-2xl border border-zinc-800/50 overflow-hidden mt-8 mb-8 backdrop-blur-md">
+            <div id="admin-ticket-list-container" class="w-full md:w-1/3 border-r border-zinc-800 flex flex-col bg-black/40">
                 <div class="p-4 border-b border-zinc-800 flex justify-between items-center">
                     <span class="text-[10px] text-zinc-500 uppercase tracking-tighter font-bold">Aktiv Sorğular</span>
-                    <div id="t-count" class="bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded text-[10px] font-bold">0</div>
+                    <div class="flex items-center gap-2">
+                        <div id="admin-status-dot" class="flex items-center gap-1.5">
+                            <span id="admin-status-indicator" class="w-2 h-2 rounded-full bg-emerald-400" style="box-shadow:0 0 6px #10b981;"></span>
+                            <span id="admin-status-label" class="text-[9px] text-emerald-400 font-bold uppercase tracking-wide">Online</span>
+                        </div>
+                        <div id="t-count" class="bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded text-[10px] font-bold">0</div>
+                    </div>
                 </div>
                 <div id="admin-ticket-list" class="flex-1 overflow-y-auto"></div>
             </div>
-
             <div id="chat-viewport" class="w-full md:w-2/3 flex flex-col">
                 <div id="chat-header" class="p-4 border-b border-zinc-800 flex justify-between items-center bg-black/60 hidden">
                     <div class="flex items-center gap-3">
@@ -239,19 +204,24 @@
                             <span id="active-ticket-id" class="text-[9px] text-zinc-600 font-mono">ID: ----</span>
                         </div>
                     </div>
-                    <button id="close-btn" class="text-[9px] text-red-500 font-bold hover:bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/20 transition-all">BAĞLA</button>
+                    <div class="flex items-center gap-2">
+                        <button id="notify-client-btn" onclick="notifyClientOnlineFromHeader()"
+                            class="text-[8px] text-blue-400 font-bold hover:bg-blue-500/10 px-2 py-1.5 rounded-lg border border-blue-500/20 transition-all flex items-center gap-1 uppercase tracking-wide">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.5 12.91a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.41 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.72 6.72l1.06-1.06a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            Müştəriyə Bildiriş Göndər
+                        </button>
+                        <button id="close-btn" class="text-[9px] text-red-500 font-bold hover:bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/20 transition-all">BAĞLA</button>
+                    </div>
                 </div>
-
                 <div id="admin-chat-box" class="flex-1 p-5 overflow-y-auto space-y-4 bg-zinc-950/20">
                     <div class="h-full flex flex-col items-center justify-center text-zinc-700 space-y-3">
                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="opacity-20"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                         <span class="text-[10px] uppercase tracking-widest">Söhbət seçilməyib</span>
                     </div>
                 </div>
-
                 <div id="chat-input-area" class="p-3 bg-black border-t border-zinc-800 hidden">
-                    <div class="flex gap-2 items-center bg-zinc-900/50 p-1 rounded-2xl border border-zinc-800 focus-within:border-accent-gold/50 transition-all">
-                        <input id="admin-reply-input" type="text" placeholder="Mesajınızı bura yazın..." 
+                    <div class="flex gap-2 items-center bg-zinc-900/50 p-1 rounded-2xl border border-zinc-800 transition-all">
+                        <input id="admin-reply-input" type="text" placeholder="Mesajınızı bura yazın..."
                                class="flex-1 bg-transparent text-sm px-3 py-2 text-white outline-none placeholder:text-zinc-600">
                         <button id="send-btn" class="bg-white text-black h-10 w-10 flex items-center justify-center rounded-xl hover:scale-95 active:scale-90 transition-all shadow-lg shadow-white/5">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
@@ -260,27 +230,23 @@
                 </div>
             </div>
         </div>
-
-
-        <!-- TİCKET BAĞLA -->
+        <!-- TİCKET BAĞLAMA MODALI -->
         <div id="modern-confirm" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
-    <div class="bg-zinc-950 border border-zinc-800 p-8 rounded-2xl max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
-        <div class="text-center">
-            <div class="w-16 h-16 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-            </div>
-            <h3 class="text-white text-lg font-semibold mb-2">Sorğunu bağla?</h3>
-            <p class="text-zinc-500 text-sm mb-8">Bu söhbət arxivlənəcək və müştəri artıq mesaj yaza bilməyəcək.</p>
-            
-            <div class="flex gap-3">
-                <button id="confirm-cancel" class="flex-1 px-4 py-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 text-xs font-bold rounded-xl transition-all uppercase tracking-widest">Ləğv et</button>
-                <button id="confirm-yes" class="flex-1 px-4 py-3 bg-white hover:bg-zinc-200 text-black text-xs font-bold rounded-xl transition-all uppercase tracking-widest">Bəli, bağla</button>
+            <div class="bg-zinc-950 border border-zinc-800 p-8 rounded-2xl max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                    </div>
+                    <h3 class="text-white text-lg font-semibold mb-2">Sorğunu bağla?</h3>
+                    <p class="text-zinc-500 text-sm mb-8">Bu söhbət arxivlənəcək və müştəri artıq mesaj yaza bilməyəcək.</p>
+                    <div class="flex gap-3">
+                        <button id="confirm-cancel" class="flex-1 px-4 py-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 text-xs font-bold rounded-xl transition-all uppercase tracking-widest">Ləğv et</button>
+                        <button id="confirm-yes" class="flex-1 px-4 py-3 bg-white hover:bg-zinc-200 text-black text-xs font-bold rounded-xl transition-all uppercase tracking-widest">Bəli, bağla</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-        
-
+        <!-- SİSTEM PROSESLƏRİ + SAĞLAMLIQ -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div class="lg:col-span-2 dashboard-card !p-0">
                 <div class="p-4 border-b border-zinc-900 flex justify-between items-center">
@@ -294,7 +260,6 @@
                     <p class="text-zinc-800">> Waiting for new data incoming...</p>
                 </div>
             </div>
-
             <div class="dashboard-card flex flex-col justify-between">
                 <div>
                     <span class="stat-label">Server Sağlamlığı</span>
@@ -308,260 +273,273 @@
                 </button>
             </div>
         </div>
-
         <footer class="mt-20 flex justify-between items-center text-[10px] text-zinc-700 uppercase tracking-[0.2em]">
             <span>&copy; 2026 Lumiere Intelligence</span>
         </footer>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const emptyChatTemplate = `
-    <div class="h-full flex flex-col items-center justify-center text-zinc-700 space-y-4 animate-pulse">
-        <div class="p-6 rounded-full bg-zinc-900/20 border border-zinc-800/50">
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="opacity-20 text-gold">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-            </svg>
-        </div>
-        <div class="text-center">
-            <span class="text-[10px] uppercase tracking-[0.3em] font-medium text-zinc-500">Növbəti Sorğunu Gözləyir</span>
-            <p class="text-[9px] text-zinc-600 mt-2 italic font-mono">Lumiere OS Dəstək Sistemi Aktivdir</p>
-        </div>
-    </div>
-`;
-        const _supabase = supabase.createClient(
-    'https://pgnshyibgprjqvyzuisu.supabase.co', 
-    'sb_publishable_YNpATpBsxVkT4HKUDWCdng_pwhBpb4U'
-);
-
-let selectedTicketID = null;
-
-// --- 1. ANALİTİKA VƏ SAAT SİSTEMİ ---
-function updateClock() {
-    const clockEl = document.getElementById('clock');
-    if(clockEl) clockEl.innerText = new Date().toLocaleTimeString('az-AZ', { hour12: false });
-}
-
-async function getViewsCount(minutes) {
-    try {
-        const timeAgo = new Date(Date.now() - minutes * 60 * 1000).toISOString();
-        const { count, error } = await _supabase
-            .from('page_views')
-            .select('*', { count: 'exact', head: true })
-            .gt('viewed_at', timeAgo);
-        if (error) throw error;
-        return count || 0;
-    } catch (e) {
-        console.error("Metrik xətası:", e);
-        return 0;
-    }
-}
-
-async function updateAllStats() {
-    const [h1, h12, h24, m30] = await Promise.all([
-        getViewsCount(60),
-        getViewsCount(720),
-        getViewsCount(1440),
-        getViewsCount(43200)
-    ]);
-
-    if(document.getElementById('admin-hour1')) document.getElementById('admin-hour1').innerText = h1.toLocaleString('az-AZ');
-    if(document.getElementById('admin-hour12')) document.getElementById('admin-hour12').innerText = h12.toLocaleString('az-AZ');
-    if(document.getElementById('admin-daily')) document.getElementById('admin-daily').innerText = h24.toLocaleString('az-AZ');
-    if(document.getElementById('admin-month')) document.getElementById('admin-month').innerText = m30.toLocaleString('az-AZ');
-
-}
-
-
-function trackAdminOnline() {
-    const channel = _supabase.channel('lumiere_realtime_count');
-    channel
-        .on('presence', { event: 'sync' }, () => {
-            const count = Object.keys(channel.presenceState()).length;
-            const onlineEl = document.getElementById('admin-online');
-            if(onlineEl) onlineEl.innerText = count;
-        })
-        .subscribe(async (status) => {
-            if (status === 'SUBSCRIBED') {
-                await channel.track({ online_at: new Date().toISOString() });
-            }
-        });
-}
-
-// --- 2. TİCKET SİSTEMİ ---
-async function syncTickets() {
-    const { data, error } = await _supabase.from('tickets').select('*').eq('status', 'open').order('created_at', { ascending: false });
-    if (error) return;
-
-    const tCountEl = document.getElementById('t-count');
-    if(tCountEl) tCountEl.innerText = data.length;
-    
-    const listContainer = document.getElementById('admin-ticket-list');
-    if(!listContainer) return;
-
-    listContainer.innerHTML = data.map(t => `
-        <div onclick="selectTicket('${t.ticket_id}', '${t.customer_name}', ${t.id})" 
-             class="p-4 border-b border-zinc-800/30 cursor-pointer hover:bg-zinc-800/20 transition-all ${selectedTicketID === t.ticket_id ? 'bg-zinc-800/40 border-l-2 border-l-white' : ''}">
-            <div class="flex justify-between items-start mb-1">
-                <span class="text-[11px] font-bold text-white uppercase">${t.customer_name}</span>
-                <span class="text-[8px] text-zinc-600 font-mono">${new Date(t.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-            </div>
-            <p class="text-[10px] text-zinc-500 truncate">${t.message || 'Mesaj yoxdur'}</p>
-        </div>
-    `).join('');
-// Əgər heç bir ticket seçilməyibsə VƏ siyahıda ticket varsa, birincini avtomatik seç
-    if (!selectedTicketID && data.length > 0) {
-        const first = data[0];
-        // Kiçik gecikmə ilə keçid et ki, vizual olaraq xoş görünsün
-        setTimeout(() => selectTicket(first.ticket_id, first.customer_name, first.id), 500);
-    }
-    
-}
-
-
-
-function selectTicket(tid, name, dbId) {
-    selectedTicketID = tid;
-    document.getElementById('chat-viewport').classList.add('active');
-    document.getElementById('chat-header').classList.remove('hidden');
-    document.getElementById('chat-input-area').classList.remove('hidden');
-    document.getElementById('active-customer-name').innerText = name;
-    document.getElementById('active-ticket-id').innerText = `ID: ${tid}`;
-    
-    document.getElementById('close-btn').onclick = () => closeT(dbId);
-    document.getElementById('send-btn').onclick = () => adminSendMessage(tid);
-    document.getElementById('admin-reply-input').onkeypress = (e) => { if(e.key === 'Enter') adminSendMessage(tid); };
-
-    loadAdminChatMessages(tid);
-    syncTickets();
-}
-
-async function loadAdminChatMessages(tid) {
-    if (!tid || selectedTicketID !== tid) return;
-    const { data, error } = await _supabase.from('ticket_messages').select('*').eq('ticket_id', tid).order('created_at', { ascending: true });
-    if (error) return;
-
-    const chatBox = document.getElementById('admin-chat-box');
-    chatBox.innerHTML = data.map(m => `
-        <div class="flex ${m.sender === 'admin' ? 'justify-end' : 'justify-start'} mb-3 px-2">
-            <div class="flex flex-col ${m.sender === 'admin' ? 'items-end' : 'items-start'} max-w-[85%]">
-                <div class="px-4 py-2 rounded-2xl text-[12px] ${
-                    m.sender === 'admin' 
-                    ? 'bg-white text-black font-semibold rounded-tr-none' 
-                    : 'bg-zinc-800 text-zinc-200 rounded-tl-none border border-zinc-700/50'
-                }">
-                    ${m.content}
+            <div class="h-full flex flex-col items-center justify-center text-zinc-700 space-y-4 animate-pulse">
+                <div class="p-6 rounded-full bg-zinc-900/20 border border-zinc-800/50">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="opacity-20">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
                 </div>
-                <span class="text-[7px] text-zinc-600 mt-1 uppercase">
-                    ${new Date(m.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                </span>
+                <div class="text-center">
+                    <span class="text-[10px] uppercase tracking-[0.3em] font-medium text-zinc-500">Növbəti Sorğunu Gözləyir</span>
+                    <p class="text-[9px] text-zinc-600 mt-2 italic font-mono">Lumiere OS Dəstək Sistemi Aktivdir</p>
+                </div>
             </div>
-        </div>
-    `).join('');
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-async function adminSendMessage(tid) {
-    const input = document.getElementById('admin-reply-input');
-    const msg = input.value.trim();
-    if (!msg) return;
-
-    input.value = '';
-    const { error } = await _supabase.from('ticket_messages').insert([{ ticket_id: tid, sender: 'admin', content: msg }]);
-    if (error) {
-        alert("Mesaj göndərilmədi!");
-    } else {
-        loadAdminChatMessages(tid);
-    }
-}
-
-async function closeT(dbId) {
-    const modal = document.getElementById('modern-confirm');
-    const modalContent = modal.querySelector('div');
-    const yesBtn = document.getElementById('confirm-yes');
-    const cancelBtn = document.getElementById('confirm-cancel');
-
-    // 1. Modalı göstər
-    modal.classList.remove('hidden');
-    // Kiçik bir gecikmə ilə animasiyanı başlat (CSS transition üçün)
-    setTimeout(() => {
-        modal.classList.add('opacity-100');
-        modalContent.classList.replace('scale-95', 'scale-100');
-    }, 10);
-
-    // 2. Modalı bağlamaq üçün daxili funksiya
-    const hideModal = () => {
-        modal.classList.remove('opacity-100');
-        modalContent.classList.replace('scale-100', 'scale-95');
-        // Animasiya bitdikdən sonra tamamilə gizlət (300ms)
-        setTimeout(() => {
-            modal.classList.add('hidden');
-        }, 300);
-    };
-
-    // 3. Ləğv etmə düyməsi
-    cancelBtn.onclick = () => hideModal();
-
-    // 4. Təsdiqləmə düyməsi
-    yesBtn.onclick = async () => {
-        try {
+        `;
+        const _supabase = supabase.createClient(
+            'https://pgnshyibgprjqvyzuisu.supabase.co',
+            'sb_publishable_YNpATpBsxVkT4HKUDWCdng_pwhBpb4U'
+        );
+        let selectedTicketID = null;
+        // --- 1. ANALİTİKA VƏ SAAT ---
+        function updateClock() {
+            const clockEl = document.getElementById('clock');
+            if (clockEl) clockEl.innerText = new Date().toLocaleTimeString('az-AZ', { hour12: false });
+        }
+        async function getViewsCount(minutes) {
+            try {
+                const timeAgo = new Date(Date.now() - minutes * 60 * 1000).toISOString();
+                const { count, error } = await _supabase
+                    .from('page_views')
+                    .select('*', { count: 'exact', head: true })
+                    .gt('viewed_at', timeAgo);
+                if (error) throw error;
+                return count || 0;
+            } catch (e) {
+                console.error("Metrik xətası:", e);
+                return 0;
+            }
+        }
+        async function updateAllStats() {
+            const [h1, h12, h24, m30] = await Promise.all([
+                getViewsCount(60),
+                getViewsCount(720),
+                getViewsCount(1440),
+                getViewsCount(43200)
+            ]);
+            if (document.getElementById('admin-hour1')) document.getElementById('admin-hour1').innerText = h1.toLocaleString('az-AZ');
+            if (document.getElementById('admin-hour12')) document.getElementById('admin-hour12').innerText = h12.toLocaleString('az-AZ');
+            if (document.getElementById('admin-daily')) document.getElementById('admin-daily').innerText = h24.toLocaleString('az-AZ');
+            if (document.getElementById('admin-month')) document.getElementById('admin-month').innerText = m30.toLocaleString('az-AZ');
+        }
+        function trackAdminOnline() {
+            const channel = _supabase.channel('lumiere_realtime_count');
+            channel
+                .on('presence', { event: 'sync' }, () => {
+                    const count = Object.keys(channel.presenceState()).length;
+                    const onlineEl = document.getElementById('admin-online');
+                    if (onlineEl) onlineEl.innerText = count;
+                })
+                .subscribe(async (status) => {
+                    if (status === 'SUBSCRIBED') {
+                        await channel.track({ online_at: new Date().toISOString() });
+                    }
+                });
+        }
+        // --- 2. TİCKET SİSTEMİ ---
+        async function syncTickets() {
+            const { data, error } = await _supabase.from('tickets').select('*').eq('status', 'open').order('created_at', { ascending: false });
+            if (error) return;
+            const tCountEl = document.getElementById('t-count');
+            if (tCountEl) tCountEl.innerText = data.length;
+            const listContainer = document.getElementById('admin-ticket-list');
+            if (!listContainer) return;
+            listContainer.innerHTML = data.map(t => `
+                <div onclick="selectTicket('${t.ticket_id}', '${t.customer_name}', ${t.id})"
+                     class="p-4 border-b border-zinc-800/30 cursor-pointer hover:bg-zinc-800/20 transition-all ${selectedTicketID === t.ticket_id ? 'bg-zinc-800/40 border-l-2 border-l-white' : ''}">
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="text-[11px] font-bold text-white uppercase">${t.customer_name}</span>
+                        <span class="text-[8px] text-zinc-600 font-mono">${new Date(t.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                    </div>
+                    <p class="text-[10px] text-zinc-500 truncate">${t.message || 'Mesaj yoxdur'}</p>
+                    ${t.notification_requested ? `
+                    <div class="mt-2 flex items-center gap-1.5">
+                        <span class="inline-flex items-center gap-1 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">
+                            <svg width="7" height="7" viewBox="0 0 24 24" fill="currentColor"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                            Bildiriş İstənildi
+                        </span>
+                    </div>` : ''}
+                </div>
+            `).join('');
+            // Avtomatik birinci ticket seçimi
+            if (!selectedTicketID && data.length > 0) {
+                const first = data[0];
+                setTimeout(() => selectTicket(first.ticket_id, first.customer_name, first.id), 500);
+            }
+        }
+        function selectTicket(tid, name, dbId) {
+            selectedTicketID = tid;
+            document.getElementById('chat-viewport').classList.add('active');
+            document.getElementById('chat-header').classList.remove('hidden');
+            document.getElementById('chat-input-area').classList.remove('hidden');
+            document.getElementById('active-customer-name').innerText = name;
+            document.getElementById('active-ticket-id').innerText = `ID: ${tid}`;
+            const notifyBtn = document.getElementById('notify-client-btn');
+            if (notifyBtn) {
+                notifyBtn.dataset.ticketId = tid;
+                notifyBtn.innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.5 12.91a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.41 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.72 6.72l1.06-1.06a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Müştəriyə Bildiriş Göndər`;
+                notifyBtn.disabled = false;
+                notifyBtn.className = 'text-[8px] text-blue-400 font-bold hover:bg-blue-500/10 px-2 py-1.5 rounded-lg border border-blue-500/20 transition-all flex items-center gap-1 uppercase tracking-wide';
+            }
+            document.getElementById('close-btn').onclick = () => closeT(dbId);
+            document.getElementById('send-btn').onclick = () => adminSendMessage(tid);
+            document.getElementById('admin-reply-input').onkeypress = (e) => { if (e.key === 'Enter') adminSendMessage(tid); };
+            loadAdminChatMessages(tid);
+            syncTickets();
+        }
+        async function loadAdminChatMessages(tid) {
+            if (!tid || selectedTicketID !== tid) return;
+            const { data, error } = await _supabase.from('ticket_messages').select('*').eq('ticket_id', tid).order('created_at', { ascending: true });
+            if (error) return;
+            const chatBox = document.getElementById('admin-chat-box');
+            chatBox.innerHTML = data.map(m => `
+                <div class="flex ${m.sender === 'admin' ? 'justify-end' : 'justify-start'} mb-3 px-2">
+                    <div class="flex flex-col ${m.sender === 'admin' ? 'items-end' : 'items-start'} max-w-[85%]">
+                        <div class="px-4 py-2 rounded-2xl text-[12px] ${
+                            m.sender === 'admin'
+                            ? 'bg-white text-black font-semibold rounded-tr-none'
+                            : 'bg-zinc-800 text-zinc-200 rounded-tl-none border border-zinc-700/50'
+                        }">
+                            ${m.content}
+                        </div>
+                        <span class="text-[7px] text-zinc-600 mt-1 uppercase">
+                            ${new Date(m.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        async function adminSendMessage(tid) {
+            const input = document.getElementById('admin-reply-input');
+            const msg = input.value.trim();
+            if (!msg) return;
+            input.value = '';
+            const { error } = await _supabase.from('ticket_messages').insert([{ ticket_id: tid, sender: 'admin', content: msg }]);
+            if (error) {
+                alert("Mesaj göndərilmədi!");
+            } else {
+                loadAdminChatMessages(tid);
+            }
+        }
+        async function closeT(dbId) {
+            const modal = document.getElementById('modern-confirm');
+            const modalContent = modal.querySelector('div');
+            const yesBtn = document.getElementById('confirm-yes');
+            const cancelBtn = document.getElementById('confirm-cancel');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.add('opacity-100');
+                modalContent.classList.replace('scale-95', 'scale-100');
+            }, 10);
+            const hideModal = () => {
+                modal.classList.remove('opacity-100');
+                modalContent.classList.replace('scale-100', 'scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            };
+            cancelBtn.onclick = () => hideModal();
+            yesBtn.onclick = async () => {
+                try {
+                    const { error } = await _supabase
+                        .from('tickets')
+                        .update({ status: 'closed' })
+                        .eq('id', dbId);
+                    if (error) throw error;
+                    selectedTicketID = null;
+                    document.getElementById('chat-header').classList.add('hidden');
+                    document.getElementById('chat-input-area').classList.add('hidden');
+                    document.getElementById('admin-chat-box').innerHTML = emptyChatTemplate;
+                    syncTickets();
+                    hideModal();
+                    if (window.innerWidth < 768) backToList();
+                } catch (err) {
+                    console.error("Bağlanma xətası:", err);
+                    alert("Xəta baş verdi, yenidən yoxlayın.");
+                    hideModal();
+                }
+            };
+        }
+        function backToList() {
+            document.getElementById('chat-viewport').classList.remove('active');
+        }
+        // --- 3. REALTIME KANALLARI ---
+        _supabase.channel('global_chat').on('postgres_changes', {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'ticket_messages'
+        }, payload => {
+            if (payload.new.ticket_id === selectedTicketID) loadAdminChatMessages(selectedTicketID);
+        }).subscribe();
+        _supabase.channel('global_tickets').on('postgres_changes', {
+            event: '*',
+            schema: 'public',
+            table: 'tickets'
+        }, () => syncTickets()).subscribe();
+        // --- 4. ADMIN STATUS YENİLƏNMƏSİ ---
+        async function trackAdminStatus() {
+            try {
+                await _supabase.from('admin_presence').upsert({
+                    id: 'admin_main',
+                    last_seen: new Date().toISOString()
+                });
+            } catch (e) {
+                console.error("Status yenilənmədi:", e);
+            }
+        }
+        setInterval(trackAdminStatus, 60000);
+        // --- 5. YENİ TİCKET ÜÇÜN BRAUZER BİLDİRİŞİ ---
+        _supabase.channel('admin_new_ticket_notifications').on('postgres_changes', {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'tickets'
+        }, payload => {
+            if (Notification.permission === "granted") {
+                new Notification("Yeni Ticket", {
+                    body: `${payload.new.customer_name}: ${payload.new.message || 'Yeni müraciət'}`,
+                    icon: '/logo.png',
+                    tag: `ticket-${payload.new.ticket_id}`
+                });
+            }
+            syncTickets();
+        }).subscribe();
+        // --- 6. MÜŞTƏRİYƏ "ONLAYNAM" BİLDİRİŞİ (yalnız o ticket-ə) ---
+        async function notifyClientOnlineFromHeader() {
+            const btn = document.getElementById('notify-client-btn');
+            const ticketId = btn ? btn.dataset.ticketId : null;
+            if (!ticketId) return;
             const { error } = await _supabase
                 .from('tickets')
-                .update({ status: 'closed' })
-                .eq('id', dbId);
-
-            if (error) throw error;
-
-            selectedTicketID = null;
-            
-            // UI elementlərini sıfırla
-            document.getElementById('chat-header').classList.add('hidden');
-            document.getElementById('chat-input-area').classList.add('hidden');
-            document.getElementById('admin-chat-box').innerHTML = emptyChatTemplate;
-
-            syncTickets(); // Siyahını yenilə
-            hideModal();   // Bildirişi yox et
-            
-            if (window.innerWidth < 768) backToList();
-        } catch (err) {
-            console.error("Bağlanma xətası:", err);
-            alert("Xəta baş verdi, yenidən yoxlayın.");
-            hideModal();
+                .update({ admin_notified_client: true })
+                .eq('ticket_id', ticketId);
+            if (!error) {
+                if (btn) {
+                    btn.innerHTML = `✅ Bildiriş göndərildi`;
+                    btn.disabled = true;
+                    btn.className = 'text-[8px] text-emerald-400 font-bold px-2 py-1.5 rounded-lg border border-emerald-500/20 transition-all flex items-center gap-1 uppercase tracking-wide opacity-60 cursor-not-allowed';
+                }
+            } else {
+                alert("Bildiriş göndərilmədi, yenidən yoxlayın.");
+            }
         }
-    };
-}
-
-function backToList() {
-    document.getElementById('chat-viewport').classList.remove('active');
-}
-
-// --- 3. REALTIME KANALLARI ---
-_supabase.channel('global_chat').on('postgres_changes', { 
-    event: 'INSERT', 
-    schema: 'public', 
-    table: 'ticket_messages' 
-}, payload => {
-    if(payload.new.ticket_id === selectedTicketID) loadAdminChatMessages(selectedTicketID);
-}).subscribe();
-
-_supabase.channel('global_tickets').on('postgres_changes', { 
-    event: '*', 
-    schema: 'public', 
-    table: 'tickets' 
-}, () => syncTickets()).subscribe();
-
-
-// --- 4. BAŞLADIICI (INIT) ---
-window.addEventListener('DOMContentLoaded', () => {
-    updateClock();
-    setInterval(updateClock, 1000);
-    
-    updateAllStats();
-    setInterval(updateAllStats, 30000); // Hər 30 saniyədən bir statları yenilə
-    
-    trackAdminOnline();
-    syncTickets();
-});
+        // --- 7. BAŞLADICI (INIT) ---
+        window.addEventListener('DOMContentLoaded', () => {
+            updateClock();
+            setInterval(updateClock, 1000);
+            updateAllStats();
+            setInterval(updateAllStats, 30000);
+            trackAdminOnline();
+            trackAdminStatus();
+            syncTickets();
+            if (Notification.permission !== "granted") Notification.requestPermission();
+        });
     </script>
 </body>
 </html>
