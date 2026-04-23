@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
     
     <style>
+        /* --- CSS DƏYİŞƏNLƏRİ --- */
         :root {
             --gold: #d4af37;
             --promo-red: #ff4d4d;
@@ -16,161 +17,655 @@
             --border: rgba(212, 175, 55, 0.2);
             --transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--dark-bg); color: #fff; font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
-        .no-scroll { overflow: hidden; }
+
+        /* --- ÜMUMİ RESET VƏ BODY STİLLƏRİ --- */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        body { 
+            background: var(--dark-bg); 
+            color: #fff; 
+            font-family: 'Montserrat', sans-serif; 
+            overflow-x: hidden; 
+        }
+
+        /* Səbət açıq olduqda arxa fonun sürüşməsini dayandıran sinif */
+        .no-scroll { 
+            overflow: hidden; 
+        }
+
+        /* --- PRELOADER (YÜKLƏNMƏ EKRANI) --- */
         #preloader {
-            position: fixed; inset: 0; background: var(--dark-bg);
-            z-index: 10000; display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
+            position: fixed; 
+            inset: 0; 
+            background: var(--dark-bg);
+            z-index: 10000; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center;
             transition: opacity 1.2s var(--transition);
         }
+
         .loader-logo { 
-            font-family: 'Cinzel', serif; font-size: 32px; color: var(--gold); 
-            letter-spacing: 15px; margin-bottom: 5px;
+            font-family: 'Cinzel', serif; 
+            font-size: 32px; 
+            color: var(--gold); 
+            letter-spacing: 15px; 
+            margin-bottom: 5px;
             background: linear-gradient(to right, #d4af37 20%, #fff 40%, #fff 60%, #d4af37 80%);
-            background-size: 200% auto; background-clip: text;
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             animation: shineText 3s linear infinite;
         }
-        .loader-line { width: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin-top: 20px; animation: lineGrow 2.5s ease-in-out infinite; opacity: 0.6; }
-        @keyframes lineGrow { 0% { width: 0; opacity: 0; } 50% { width: 150px; opacity: 0.8; } 100% { width: 0; opacity: 0; } }
-        @keyframes shineText { to { background-position: 200% center; } }
+
+        .loader-line { 
+            width: 0; 
+            height: 1px; 
+            background: linear-gradient(90deg, transparent, var(--gold), transparent); 
+            margin-top: 20px; 
+            animation: lineGrow 2.5s ease-in-out infinite; 
+            opacity: 0.6; 
+        }
+
+        @keyframes lineGrow { 
+            0% { 
+                width: 0; 
+                opacity: 0; 
+            } 
+            50% { 
+                width: 150px; 
+                opacity: 0.8; 
+            } 
+            100% { 
+                width: 0; 
+                opacity: 0; 
+            } 
+        }
+
+        @keyframes shineText { 
+            to { 
+                background-position: 200% center; 
+            } 
+        }
+
+        /* --- XÜSUSİ BİLDİRİŞ PƏNCƏRƏSİ (POP-UP) --- */
         #custom-popup {
-            position: fixed; top: 50%; left: 50%; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
             transform: translate(-50%, -50%) scale(0.9);
-            background: #111; border: 1px solid var(--gold); padding: 30px;
-            z-index: 5000; display: none; flex-direction: column; align-items: center;
-            text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.8);
-            min-width: 300px; transition: var(--transition); opacity: 0;
+            background: #111; 
+            border: 1px solid var(--gold); 
+            padding: 30px;
+            z-index: 5000; 
+            display: none; 
+            flex-direction: column; 
+            align-items: center;
+            text-align: center; 
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            min-width: 300px; 
+            transition: var(--transition); 
+            opacity: 0;
         }
-        #custom-popup.active { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        .popup-msg { font-size: 14px; margin-bottom: 20px; color: #ccc; line-height: 1.6; }
-        .popup-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 8px 25px; cursor: pointer; font-family: 'Montserrat'; text-transform: uppercase; font-size: 11px; }
-        #offline-screen { position: fixed; inset: 0; background: var(--dark-bg); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+
+        #custom-popup.active { 
+            display: flex; 
+            opacity: 1; 
+            transform: translate(-50%, -50%) scale(1); 
+        }
+
+        .popup-msg { 
+            font-size: 14px; 
+            margin-bottom: 20px; 
+            color: #ccc; 
+            line-height: 1.6; 
+        }
+
+        .popup-btn { 
+            background: transparent; 
+            border: 1px solid var(--gold); 
+            color: var(--gold); 
+            padding: 8px 25px; 
+            cursor: pointer; 
+            font-family: 'Montserrat'; 
+            text-transform: uppercase; 
+            font-size: 11px; 
+        }
+
+        /* --- OFFLINE EKRANI --- */
+        #offline-screen { 
+            position: fixed; 
+            inset: 0; 
+            background: var(--dark-bg); 
+            z-index: 9999; 
+            display: none; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center; 
+            padding: 20px; 
+        }
         
-        header { padding: 25px 6%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; background: rgba(5,5,5,0.95); backdrop-filter: blur(10px); }
-        .logo { font-family: 'Cinzel', serif; font-size: 24px; color: var(--gold); letter-spacing: 5px; }
-        .slogan { font-size: 9px; letter-spacing: 3px; color: #666; text-transform: uppercase; margin-top: 5px; }
+        /* --- BAŞLIQ (HEADER) --- */
+        header { 
+            padding: 25px 6%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid var(--border); 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            background: rgba(5,5,5,0.95); 
+            backdrop-filter: blur(10px); 
+        }
+
+        .logo { 
+            font-family: 'Cinzel', serif; 
+            font-size: 24px; 
+            color: var(--gold); 
+            letter-spacing: 5px; 
+        }
+
+        .slogan { 
+            font-size: 9px; 
+            letter-spacing: 3px; 
+            color: #666; 
+            text-transform: uppercase; 
+            margin-top: 5px; 
+        }
         
-        #cart-sidebar { position: fixed; right: -100%; top: 0; width: 400px; height: 100%; background: #0a0a0a; border-left: 1px solid var(--border); z-index: 3000; padding: 40px; transition: var(--transition); display: flex; flex-direction: column; }
-        #cart-sidebar.active { right: 0; }
+        /* --- SƏBƏT PANELİ --- */
+        #cart-sidebar { 
+            position: fixed; 
+            right: -100%; 
+            top: 0; 
+            width: 400px; 
+            height: 100%; 
+            background: #0a0a0a; 
+            border-left: 1px solid var(--border); 
+            z-index: 3000; 
+            padding: 40px; 
+            transition: var(--transition); 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        #cart-sidebar.active { 
+            right: 0; 
+        }
         
-        .cart-item { display: flex; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #1a1a1a; }
-        .cart-item img { width: 60px; height: 60px; object-fit: cover; border: 1px solid var(--border); margin-right: 15px; }
-        .cart-item-info { flex: 1; }
-        .cart-item-info h4 { font-family: 'Montserrat'; font-weight: 600; font-size: 13px; margin-bottom: 5px; color: var(--gold); }
-        .cart-controls { display: flex; align-items: center; gap: 15px; margin-top: 8px; }
-        .qty-btn { background: #1a1a1a; border: none; color: #fff; width: 24px; height: 24px; cursor: pointer; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
-        .qty-btn:hover { background: var(--gold); color: #000; }
-        .remove-btn { background: none; border: none; color: #555; cursor: pointer; transition: 0.3s; margin-left: auto; }
-        .remove-btn:hover { color: var(--promo-red); }
-        .f-input { width: 100%; background: #111; border: 1px solid #222; color: #fff; padding: 12px; margin-bottom: 12px; outline: none; transition: 0.3s; font-family: 'Montserrat'; }
-        .f-input:focus { border-color: var(--gold); }
-        .checkout-btn { width: 100%; background: var(--gold); color: #000; border: none; padding: 18px; font-weight: bold; cursor: pointer; font-family: 'Montserrat'; text-transform: uppercase; letter-spacing: 2px; }
-        .container { padding: 40px 6%; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
-        .p-card { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; transition: var(--transition); }
-        .p-card:hover { border-color: var(--gold); transform: translateY(-5px); }
-        .img-box { height: 350px; overflow: hidden; margin-bottom: 15px; }
-        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.8s; }
-        .p-card:hover img { transform: scale(1.05); }
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-add { flex: 1; background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 12px; cursor: pointer; font-family: 'Montserrat'; font-size: 11px; transition: 0.3s; text-transform: uppercase; }
-        .btn-add:hover { background: var(--gold); color: #000; }
-        .demo-btn { flex: 1; text-decoration: none; text-align: center; background: #fff; color: #000; border: 1px solid #fff; padding: 12px; font-family: 'Montserrat'; font-size: 11px; transition: 0.3s; text-transform: uppercase; }
-        .demo-btn:hover { background: transparent; color: #fff; }
-        .p-id { font-size: 10px; color: #666; letter-spacing: 1px; margin-bottom: 5px; display: block; }
-        @media (max-width: 500px) { #cart-sidebar { width: 100%; } }
-        .footer{ background: #050505; padding: 40px 6%; text-align: center; border-top: 1px solid rgba(212, 175, 55, 0.1); }
-        #chat-box, #admin-chat-box, #admin-ticket-list, #ticket-content {
-            scrollbar-width: thin;
-            scrollbar-color: #d4af37 transparent;
+        /* --- SƏBƏTDƏKİ MƏHSULLAR --- */
+        .cart-item { 
+            display: flex; 
+            align-items: center; 
+            margin-bottom: 20px; 
+            padding-bottom: 15px; 
+            border-bottom: 1px solid #1a1a1a; 
         }
-        #chat-box::-webkit-scrollbar, #admin-chat-box::-webkit-scrollbar, #admin-ticket-list::-webkit-scrollbar, #ticket-content::-webkit-scrollbar { width: 5px; }
-        #chat-box::-webkit-scrollbar-track, #admin-chat-box::-webkit-scrollbar-track, #admin-ticket-list::-webkit-scrollbar-track, #ticket-content::-webkit-scrollbar-track { background: transparent; }
-        #chat-box::-webkit-scrollbar-thumb, #admin-chat-box::-webkit-scrollbar-thumb, #admin-ticket-list::-webkit-scrollbar-thumb, #ticket-content::-webkit-scrollbar-thumb { background-color: #d4af37; border-radius: 20px; border: 1px solid transparent; }
-        #chat-box::-webkit-scrollbar-thumb:hover, #admin-chat-box::-webkit-scrollbar-thumb:hover, #admin-ticket-list::-webkit-scrollbar-thumb:hover { background-color: #f1c40f; }
-        #chat-trigger {
-            position: fixed; bottom: 27px; right: 27px;
-            width: 54px; height: 54px;
-            background: var(--gold); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; z-index: 4000;
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.25);
-            transition: var(--transition);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+
+        .cart-item img { 
+            width: 60px; 
+            height: 60px; 
+            object-fit: cover; 
+            border: 1px solid var(--border); 
+            margin-right: 15px; 
         }
-        #chat-trigger:hover { transform: scale(1.08); }
-        #chat-trigger svg { width: 24px; height: 24px; fill: #000; }
-        #chat-trigger::before {
-            content: ""; position: absolute; inset: -4px;
-            border: 1px solid var(--gold); border-radius: 50%;
-            animation: pulse-gold 2s linear infinite; opacity: 0;
+
+        .cart-item-info { 
+            flex: 1; 
         }
-        @keyframes pulse-gold {
-            0% { transform: scale(1); opacity: 0.8; }
-            100% { transform: scale(1.4); opacity: 0; }
+
+        .cart-item-info h4 { 
+            font-family: 'Montserrat';
+            font-weight: 600;
+            font-size: 13px; 
+            margin-bottom: 5px; 
+            color: var(--gold); 
         }
-        @media (max-width: 500px) {
-            #chat-trigger { width: 45px; height: 45px; bottom: 20px; right: 20px; }
-            #chat-trigger svg { width: 19px; height: 19px; }
-            #ticket-modal { width: 290px; right: 15px; bottom: 75px; }
+
+        .cart-controls { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            margin-top: 8px; 
         }
-        #q-select {
-            width: 100%;
-            background: #111 !important; color: #fff !important;
-            border: 1px solid var(--border) !important;
-            padding: 12px 15px !important; border-radius: 8px !important;
-            font-size: 13px !important; font-family: 'Montserrat', sans-serif !important;
-            appearance: none; -webkit-appearance: none; -moz-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23d4af37' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E") !important;
-            background-repeat: no-repeat !important;
-            background-position: calc(100% - 15px) center !important;
-            cursor: pointer; transition: var(--transition); outline: none; margin-bottom: 15px;
+
+        .qty-btn { 
+            background: #1a1a1a; 
+            border: none; 
+            color: #fff; 
+            width: 24px; 
+            height: 24px; 
+            cursor: pointer; 
+            border-radius: 4px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: 0.3s; 
         }
-        #q-select:focus { border-color: var(--gold) !important; box-shadow: 0 0 10px rgba(212, 175, 55, 0.1); }
-        #q-select option { background: #111; color: #fff; padding: 10px; }
-        .ticket-submit-btn {
-            width: 100%; background: var(--gold); color: #000;
-            border: none; padding: 12px; font-weight: 600; cursor: pointer;
-            border-radius: 8px; font-size: 11px; letter-spacing: 1.5px;
-            text-transform: uppercase; transition: var(--transition);
+
+        .qty-btn:hover { 
+            background: var(--gold); 
+            color: #000; 
         }
-        .ticket-submit-btn:hover { background: #f1c40f; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3); }
+
+        .remove-btn { 
+            background: none; 
+            border: none; 
+            color: #555; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            margin-left: auto; 
+        }
+
+        .remove-btn:hover { 
+            color: var(--promo-red); 
+        }
+
+        /* --- SİFARİŞ FORMU --- */
+        .f-input { 
+            width: 100%; 
+            background: #111; 
+            border: 1px solid #222; 
+            color: #fff; 
+            padding: 12px; 
+            margin-bottom: 12px; 
+            outline: none; 
+            transition: 0.3s; 
+            font-family: 'Montserrat'; 
+        }
+
+        .f-input:focus { 
+            border-color: var(--gold); 
+        }
+
+        .checkout-btn { 
+            width: 100%; 
+            background: var(--gold); 
+            color: #000; 
+            border: none; 
+            padding: 18px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-family: 'Montserrat'; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+        }
+
+        /* --- MƏHSUL KARTLARI --- */
+        .container { 
+            padding: 40px 6%; 
+        }
+
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 30px; 
+        }
+
+        .p-card { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border); 
+            padding: 15px; 
+            transition: var(--transition); 
+        }
+
+        .p-card:hover { 
+            border-color: var(--gold); 
+            transform: translateY(-5px); 
+        }
+
+        .img-box { 
+            height: 350px; 
+            overflow: hidden; 
+            margin-bottom: 15px; 
+        }
+
+        .img-box img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transition: 0.8s; 
+        }
+
+        .p-card:hover img { 
+            transform: scale(1.05); 
+        }
+
+        .btn-group { 
+            display: flex; 
+            gap: 10px; 
+            margin-top: 15px; 
+        }
+        
+        .btn-add { 
+            flex: 1; 
+            background: transparent; 
+            border: 1px solid var(--gold); 
+            color: var(--gold); 
+            padding: 12px; 
+            cursor: pointer; 
+            font-family: 'Montserrat'; 
+            font-size: 11px; 
+            transition: 0.3s; 
+            text-transform: uppercase; 
+        }
+
+        .btn-add:hover { 
+            background: var(--gold); 
+            color: #000; 
+        }
+
+        .demo-btn { 
+            flex: 1; 
+            text-decoration: none; 
+            text-align: center; 
+            background: #fff; 
+            color: #000; 
+            border: 1px solid #fff; 
+            padding: 12px; 
+            font-family: 'Montserrat'; 
+            font-size: 11px; 
+            transition: 0.3s; 
+            text-transform: uppercase; 
+        }
+
+        .demo-btn:hover { 
+            background: transparent; 
+            color: #fff; 
+        }
+
+        .p-id { 
+            font-size: 10px; 
+            color: #666; 
+            letter-spacing: 1px; 
+            margin-bottom: 5px; 
+            display: block; 
+        }
+
+        /* --- MOBİL UYĞUNLUQ --- */
+        @media (max-width: 500px) { 
+            #cart-sidebar { 
+                width: 100%; 
+            } 
+        }
+
+        /*footer*/
+        .footer{
+            background: #050505; 
+            padding: 40px 6%; 
+            text-align: center; 
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        /*TİCKET HİSSƏSİ*/
+        /* Bütün çat qutuları üçün ümumi scroll tənzimləməsi */
+#chat-box, #admin-chat-box, #admin-ticket-list, #ticket-content {
+    scrollbar-width: thin; /* Firefox üçün incə scroll */
+    scrollbar-color: #d4af37 transparent; /* Firefox üçün rəng */
+}
+
+/* Chrome, Safari və Edge üçün */
+#chat-box::-webkit-scrollbar, 
+#admin-chat-box::-webkit-scrollbar, 
+#admin-ticket-list::-webkit-scrollbar, 
+#ticket-content::-webkit-scrollbar {
+    width: 5px; /* Scroll-un eni (çox incə) */
+}
+
+#chat-box::-webkit-scrollbar-track, 
+#admin-chat-box::-webkit-scrollbar-track, 
+#admin-ticket-list::-webkit-scrollbar-track, 
+#ticket-content::-webkit-scrollbar-track {
+    background: transparent; /* Arxa fon şəffaf */
+}
+
+#chat-box::-webkit-scrollbar-thumb, 
+#admin-chat-box::-webkit-scrollbar-thumb, 
+#admin-ticket-list::-webkit-scrollbar-thumb, 
+#ticket-content::-webkit-scrollbar-thumb {
+    background-color: #d4af37; /* Qızılı rəng */
+    border-radius: 20px; /* Tam yuvarlaq kənarlar */
+    border: 1px solid transparent; /* İncəlik hissi üçün */
+}
+
+#chat-box::-webkit-scrollbar-thumb:hover, 
+#admin-chat-box::-webkit-scrollbar-thumb:hover, 
+#admin-ticket-list::-webkit-scrollbar-thumb:hover {
+    background-color: #f1c40f; /* Üstünə gələndə daha parlaq qızılı */
+}
+
+
+/* YENİ MODERN TİCKET DÜYMƏSİ */
+#chat-trigger {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 4000;
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+    transition: var(--transition);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+#chat-trigger:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 12px 30px rgba(212, 175, 55, 0.5);
+}
+
+/* Düymənin ətrafındakı dalğalanma effekti */
+#chat-trigger::before {
+    content: "";
+    position: absolute;
+    inset: -5px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    animation: pulse-gold 2s linear infinite;
+    opacity: 0;
+}
+
+@keyframes pulse-gold {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.4); opacity: 0; }
+}
+
+/* İkonun tənzimlənməsi */
+#chat-trigger svg {
+    width: 28px;
+    height: 28px;
+    fill: #000;
+}
+
+/* KOMPAKT MODERN TİCKET DÜYMƏSİ (PC + MOBİL) */
+#chat-trigger {
+    position: fixed;
+    bottom: 27px;
+    right: 27px;
+    width: 54px; /* Laptop/PC üçün 60px-dən 50px-ə endirildi */
+    height: 54px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 4000;
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.25);
+    transition: var(--transition);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#chat-trigger:hover {
+    transform: scale(1.08); /* Hover effekti daha zərif edildi */
+}
+
+#chat-trigger svg {
+    width: 24px; /* İkon ölçüsü bir tık kiçildi */
+    height: 24px;
+    fill: #000;
+}
+
+#chat-trigger::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    animation: pulse-gold 2s linear infinite;
+    opacity: 0;
+}
+
+/* MOBİL CİHAZLAR ÜÇÜN (Ekran 500px-dən kiçik olduqda) */
+@media (max-width: 500px) {
+    #chat-trigger {
+        width: 45px;  /* Mobil üçün ultra-kompakt ölçü */
+        height: 45px;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    #chat-trigger svg {
+        width: 19px;
+        height: 19px;
+    }
+
+    #ticket-modal {
+        width: 290px;
+        right: 15px;
+        bottom: 75px;
+    }
+}
+
+
+/* MODERN SELECT STYLE */
+#q-select {
+    width: 100%;
+    background: #111 !important; /* Daha tünd fon */
+    color: #fff !important;
+    border: 1px solid var(--border) !important;
+    padding: 12px 15px !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    appearance: none; /* Standart oxu silir */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23d4af37' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: calc(100% - 15px) center !important;
+    cursor: pointer;
+    transition: var(--transition);
+    outline: none;
+    margin-bottom: 15px;
+}
+
+#q-select:focus {
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
+}
+
+#q-select option {
+    background: #111;
+    color: #fff;
+    padding: 10px;
+}
+
+.ticket-submit-btn {
+    width: 100%;
+    background: var(--gold);
+    color: #000;
+    border: none;
+    padding: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: var(--transition);
+}
+
+.ticket-submit-btn:hover {
+    background: #f1c40f;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+}
     </style>
 </head>
 <body>
+    
 <div id="preloader">
-    <div class="loader-logo">LUMIERE</div>
-    <div class="loader-slogan">Sizin özəl gününüzün işığı</div>
+    <div class="loader-logo">
+        LUMIERE
+    </div>
+    <div class="loader-slogan">
+        Sizin özəl gününüzün işığı
+    </div>
     <div class="loader-line"></div>
 </div>
+
 <div id="custom-popup">
     <div id="popup-content" class="popup-msg"></div>
-    <button class="popup-btn" onclick="closePopup()">Bağla</button>
+    <button class="popup-btn" onclick="closePopup()">
+        Bağla
+    </button>
 </div>
+
 <div id="offline-screen">
-    <div class="logo">LUMIERE</div>
-    <div style="margin-top:20px; color:#666;">İnternet bağlantısı yoxdur.</div>
+    <div class="logo">
+        LUMIERE
+    </div>
+    <div style="margin-top:20px; color:#666;">
+        İnternet bağlantısı yoxdur.
+    </div>
 </div>
+
 <header>
     <div>
-        <div class="logo">LUMIERE</div>
-        <div class="slogan">Sizin özəl gününüzün işığı</div>
+        <div class="logo">
+            LUMIERE
+        </div>
+        <div class="slogan">
+            Sizin özəl gününüzün işığı
+        </div>
     </div>
+
+    
     <div onclick="toggleCart()" style="cursor:pointer; position:relative;">
-        🛒
-        <span id="cart-count" style="position:absolute; top:-10px; right:-10px; background:var(--gold); color:#000; font-size:10px; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold;">0</span>
+        🛒 
+        <span id="cart-count" style="position:absolute; top:-10px; right:-10px; background:var(--gold); color:#000; font-size:10px; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold;">
+            0
+        </span>
     </div>
 </header>
+
 <div class="container">
     <div class="grid" id="product-grid"></div>
 </div>
+
 <div id="cart-sidebar">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-        <h2 style="font-family:'Montserrat'; color:var(--gold); font-size:18px; font-weight:600;">Səbətiniz</h2>
-        <span onclick="toggleCart()" style="cursor:pointer; font-size:24px;">&times;</span>
+        <h2 style="font-family:'Montserrat'; color:var(--gold); font-size:18px; font-weight:600;">
+            Səbətiniz
+        </h2>
+        <span onclick="toggleCart()" style="cursor:pointer; font-size:24px;">
+            &times;
+        </span>
     </div>
     
     <div id="cart-list" style="flex:1; overflow-y:auto;">
@@ -180,17 +675,40 @@
                 <line x1="3" y1="6" x2="21" y2="6"></line>
                 <path d="M16 10a4 4 0 0 1-8 0"></path>
             </svg>
-            <span style="font-size:12px; font-family:'Montserrat'; letter-spacing:1px;">Səbətiniz boşdur</span>
+            <span style="font-size:12px; font-family:'Montserrat'; letter-spacing:1px;">
+                Səbətiniz boşdur
+            </span>
         </div>
     </div>
+
     <div style="padding-top:20px; border-top:1px solid #1a1a1a;">
-        <h3 id="total-price" style="font-family:'Montserrat'; margin-bottom:20px; font-weight:600;">Cəmi: 0 AZN</h3>
-        <input type="text" id="cust-name" class="f-input" placeholder="Adınız Soyadınız *" autocomplete="off">
-        <textarea id="cust-msg" class="f-input" style="height:80px;" placeholder="Qeydləriniz..." autocomplete="off"></textarea>
-        <button class="checkout-btn" onclick="validateAndSend()">Sifarişi Tamamla</button>
+        <h3 id="total-price" style="font-family:'Montserrat'; margin-bottom:20px; font-weight:600;">
+            Cəmi: 0 AZN
+        </h3>
+        
+        <input 
+            type="text" 
+            id="cust-name" 
+            class="f-input" 
+            placeholder="Adınız Soyadınız *" 
+            autocomplete="off"
+        >
+        
+        <textarea 
+            id="cust-msg" 
+            class="f-input" 
+            style="height:80px;" 
+            placeholder="Qeydləriniz..." 
+            autocomplete="off"
+        ></textarea>
+        
+        <button class="checkout-btn" onclick="validateAndSend()">
+            Sifarişi Tamamla
+        </button>
     </div>
 </div>
-<!-- TİCKET HİSSƏSİ -->
+
+    <!-- TİCKET HİSSƏSİ -->
 <div id="chat-trigger" onclick="toggleTicketModal()">
     <svg viewBox="0 0 24 24">
         <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2m0 14H5.17L4 17.17V4h16v12Z"/>
@@ -203,29 +721,40 @@
         <span onclick="toggleTicketModal()" style="cursor:pointer; color:#777; font-size:22px;">&times;</span>
     </div>
     <div id="ticket-content" style="padding:20px; max-height:300px; overflow-y:auto; color:#eee; font-size:13px; line-height:1.5;"></div>
-    <div id="ticket-footer" style="padding:15px; background:#0f0f0f; border-top:1px solid #1a1a1a;"></div>
+    <div id="ticket-footer" style="padding:15px; background:#0f0f0f; border-top:1px solid #1a1a1a;">
+        </div>
 </div>
+
+
 <footer class="footer">
-    <div style="font-family: 'Montserrat', sans-serif; font-size: 11px; color: #555; letter-spacing: 1px; text-transform: uppercase;">
-        ©️ 2026 * Bütün hüquqlar <span style="color: #d4af37;">Lumiere</span> tərəfindən qorunur.
-    </div>
-</footer>
+        <div style="font-family: 'Montserrat', sans-serif; font-size: 11px; color: #555; letter-spacing: 1px; text-transform: uppercase;">
+            ©️ 2026 * Bütün hüquqlar <span style="color: #d4af37;">Lumiere</span> tərəfindən qorunur.
+        </div>
+    </footer>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-const _supabase = supabase.createClient(
-    'https://pgnshyibgprjqvyzuisu.supabase.co',
-    'sb_publishable_YNpATpBsxVkT4HKUDWCdng_pwhBpb4U'
-);
+
+    const _supabase = supabase.createClient(
+        'https://pgnshyibgprjqvyzuisu.supabase.co', 
+        'sb_publishable_YNpATpBsxVkT4HKUDWCdng_pwhBpb4U'
+    );
+
+    /* --- TƏKMİLLƏŞDİRİLMİŞ MƏKAN İZNLƏMƏ SİSTEMİ --- */
 async function getLocation() {
+    // Alternativ olaraq 2 fərqli servisdən istifadə edirik ki, biri uğursuz olsa o biri tutsun
     const services = [
         'https://ipapi.co/json/',
-        'https://extreme-ip-lookup.com/json/?key=demo'
+        'https://extreme-ip-lookup.com/json/?key=demo' // Ehtiyat variant
     ];
+
     for (let service of services) {
         try {
             const res = await fetch(service, { timeout: 5000 });
             if (res.ok) {
                 const data = await res.json();
+                // Servislər fərqli açarlar istifadə edir, ona görə ortaq formata salırıq
                 return {
                     country_code: data.country_code || data.countryCode || data.country || null,
                     city: data.city || null
@@ -233,14 +762,23 @@ async function getLocation() {
             }
         } catch (e) {
             console.warn(`${service} xətası:`, e.message);
-            continue;
+            continue; // Növbəti servisə keç
         }
     }
     return { country_code: "Naməlum", city: "Naməlum" };
 }
+
 async function logPageView() {
+    // İstifadəçi səhifəni açdıqda 1 saniyə gözləyirik ki, brauzer tam yüklənsin
     setTimeout(async () => {
         const loc = await getLocation();
+
+        // Boş datanın qarşısını almaq üçün yoxlama
+        if (!loc.city || loc.city === "Naməlum") {
+            // Əgər hələ də tapılmayıbsa, bir dəfə də cəhd et
+            console.log("Məkan dəqiqləşdirilir...");
+        }
+
         const { error } = await _supabase
             .from('page_views')
             .insert([{
@@ -248,157 +786,252 @@ async function logPageView() {
                 country_code: loc.country_code,
                 city: loc.city
             }]);
-        if (error) console.error("❌ Supabase Xətası:", error.message);
-        else console.log(`✅ Uğurla qeydə alındı: ${loc.city}, ${loc.country_code}`);
-    }, 1000);
-}
-function trackOnline() {
-    const uniqueKey = 'user_' + Math.random().toString(36).substring(2, 12);
-    const channel = _supabase.channel('lumiere_realtime_count', {
-        config: { presence: { key: uniqueKey } }
-    });
-    channel.subscribe(async (status) => {
-        if (status === 'SUBSCRIBED') {
-            await channel.track({ online_at: new Date().toISOString() });
+
+        if (error) {
+            console.error("❌ Supabase Xətası:", error.message);
+        } else {
+            console.log(`✅ Uğurla qeydə alındı: ${loc.city}, ${loc.country_code}`);
         }
+    }, 1000); 
+}
+
+    function trackOnline() {
+        const uniqueKey = 'user_' + Math.random().toString(36).substring(2, 12);
+        const channel = _supabase.channel('lumiere_realtime_count', {
+            config: { presence: { key: uniqueKey } }
+        });
+        channel.subscribe(async (status) => {
+            if (status === 'SUBSCRIBED') {
+                await channel.track({ online_at: new Date().toISOString() });
+            }
+        });
+    }
+
+    window.addEventListener('load', () => {
+        logPageView();
+        trackOnline();
     });
-}
-window.addEventListener('load', () => {
-    logPageView();
-    trackOnline();
-    if ('Notification' in window && Notification.permission === 'default') {
-        // İcazəni səssizcə soruşmuruq; yalnız müştəri bildiriş düyməsinə kliklədikdə soruşulur.
+
+
+    /* --- SİSTEMİN BAŞLADILMASI --- */
+    function initSite() {
+        if (!navigator.onLine) {
+            document.getElementById('preloader').style.display = 'none';
+            document.getElementById('offline-screen').style.display = 'flex';
+        } else {
+            setTimeout(() => {
+                document.getElementById('preloader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('preloader').style.display = 'none';
+                }, 1200);
+                render();
+            }, 2500);
+        }
     }
-});
-function initSite() {
-    if (!navigator.onLine) {
-        document.getElementById('preloader').style.display = 'none';
-        document.getElementById('offline-screen').style.display = 'flex';
-    } else {
+
+    /* --- MƏHSUL DATA SİYAHISI --- */
+    const products = [
+        { 
+            id: 1, 
+            id_code: "LUM-001",
+            name: "Royal Gold Set", 
+            price: 70, 
+            img: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800",
+            demo: "https://byanarstore.github.io/Digital_devetname/"
+        },
+        { 
+            id: 2, 
+            id_code: "LUM-002",
+            name: "Minimalist Ivory", 
+            price: 45, 
+            img: "https://images.unsplash.com/photo-1607344645866-009c320b63e0?q=80&w=800",
+            demo: "https://byanarstore.github.io/Devet/"
+        },
+        {
+            id: 3,
+            id_code: "LUM-003",
+            name: "Premium dəvətnamə",
+            price: 35,
+            img: "https://images.unsplash.com/photo-1607344645866-009c320b63e0?q=80&w=800",
+            demo: "https://byanarstore.github.io/Devet/"
+        }
+    ];
+
+    let cart = [];
+
+    /* --- POP-UP İDARƏETMƏSİ --- */
+    function showPopup(msg) {
+        const popup = document.getElementById('custom-popup');
+        document.getElementById('popup-content').innerText = msg;
+        popup.style.display = 'flex';
         setTimeout(() => {
-            document.getElementById('preloader').style.opacity = '0';
-            setTimeout(() => { document.getElementById('preloader').style.display = 'none'; }, 1200);
-            render();
-        }, 2500);
+            popup.classList.add('active');
+        }, 10);
     }
-}
-const products = [
-    { id: 1, id_code: "LUM-001", name: "Royal Gold Set", price: 70, img: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800", demo: "https://byanarstore.github.io/Digital_devetname/" },
-    { id: 2, id_code: "LUM-002", name: "Minimalist Ivory", price: 45, img: "https://images.unsplash.com/photo-1607344645866-009c320b63e0?q=80&w=800", demo: "https://byanarstore.github.io/Devet/" },
-    { id: 3, id_code: "LUM-003", name: "Premium dəvətnamə", price: 35, img: "https://images.unsplash.com/photo-1607344645866-009c320b63e0?q=80&w=800", demo: "https://byanarstore.github.io/Devet/" }
-];
-let cart = [];
-function showPopup(msg) {
-    const popup = document.getElementById('custom-popup');
-    document.getElementById('popup-content').innerText = msg;
-    popup.style.display = 'flex';
-    setTimeout(() => { popup.classList.add('active'); }, 10);
-}
-function closePopup() {
-    const popup = document.getElementById('custom-popup');
-    popup.classList.remove('active');
-    setTimeout(() => { popup.style.display = 'none'; }, 400);
-}
-function render() {
-    const grid = document.getElementById('product-grid');
-    grid.innerHTML = products.map(p => `
-        <div class="p-card">
-            <div class="img-box"><img src="${p.img}"></div>
-            <span class="p-id">KOD: ${p.id_code}</span>
-            <h3 style="font-family:'Montserrat'; font-weight:600; font-size:15px; margin-bottom:10px;">${p.name}</h3>
-            <p style="color:var(--gold); font-weight:600;">${p.price} AZN</p>
-            <div class="btn-group">
-                <a href="${p.demo}" target="_blank" class="demo-btn">Demo İzlə</a>
-                <button class="btn-add" onclick="addToCart(${p.id})">Səbətə At</button>
-            </div>
-        </div>
-    `).join('');
-}
-function addToCart(id) {
-    const product = products.find(p => p.id === id);
-    const exists = cart.find(item => item.id === id);
-    if (exists) exists.qty++;
-    else cart.push({ ...product, qty: 1 });
-    updateUI();
-}
-function updateQty(id, delta) {
-    const item = cart.find(i => i.id === id);
-    if (item) {
-        item.qty += delta;
-        if (item.qty < 1) removeFromCart(id);
-        else updateUI();
+
+    function closePopup() {
+        const popup = document.getElementById('custom-popup');
+        popup.classList.remove('active');
+        setTimeout(() => {
+            popup.style.display = 'none';
+        }, 400);
     }
-}
-function removeFromCart(id) {
-    cart = cart.filter(i => i.id !== id);
-    updateUI();
-}
-function updateUI() {
-    const list = document.getElementById('cart-list');
-    document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
-    if (cart.length === 0) {
-        list.innerHTML = `
-            <div style="text-align:center; color:#444; margin-top:80px; display:flex; flex-direction:column; align-items:center; gap:15px;">
-                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <path d="M16 10a4 4 0 0 1-8 0"></path>
-                </svg>
-                <span style="font-size:12px; font-family:'Montserrat'; letter-spacing:1px;">Səbətiniz boşdur</span>
-            </div>`;
-    } else {
-        list.innerHTML = cart.map(item => `
-            <div class="cart-item">
-                <img src="${item.img}">
-                <div class="cart-item-info">
-                    <span style="font-size:9px; color:#666;">KOD: ${item.id_code}</span>
-                    <h4 style="font-family:'Montserrat'; font-weight:600;">${item.name}</h4>
-                    <p style="font-size:11px; color:#666;">${item.price} AZN</p>
-                    <div class="cart-controls">
-                        <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
-                        <span style="font-size:13px;">${item.qty}</span>
-                        <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
-                    </div>
+
+    /* --- MƏHSULLARIN EKRANA ÇIXARILMASI --- */
+    function render() {
+        const grid = document.getElementById('product-grid');
+        grid.innerHTML = products.map(p => `
+            <div class="p-card">
+                <div class="img-box">
+                    <img src="${p.img}">
                 </div>
-                <button class="remove-btn" onclick="removeFromCart(${item.id})">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="3 6 5 6 21 6"></polyline>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                    </svg>
-                </button>
+                <span class="p-id">KOD: ${p.id_code}</span>
+                <h3 style="font-family:'Montserrat'; font-weight:600; font-size:15px; margin-bottom:10px;">
+                    ${p.name}
+                </h3>
+                <p style="color:var(--gold); font-weight:600;">
+                    ${p.price} AZN
+                </p>
+                <div class="btn-group">
+                    <a href="${p.demo}" target="_blank" class="demo-btn">Demo İzlə</a>
+                    <button class="btn-add" onclick="addToCart(${p.id})">Səbətə At</button>
+                </div>
             </div>
         `).join('');
     }
-    const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-    document.getElementById('total-price').innerText = `Cəmi: ${total} AZN`;
-}
-function validateAndSend() {
-    const name = document.getElementById('cust-name').value.trim();
-    const msg_body = document.getElementById('cust-msg').value.trim();
-    const date = new Date().toLocaleString('az-AZ');
-    const totalAmount = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-    if (cart.length === 0) { showPopup("Səbətinizdə məhsul mövcud deyil."); return; }
-    if (name === "") { showPopup("Zəhmət olmasa sifarişi təsdiqləmək üçün Adınızı qeyd edin."); return; }
-    const items = cart.map(i => `${i.name}\n[${i.id_code}] ${i.qty} ədəd x ${i.price} AZN`).join('\n\n');
-    let msg = `*LUMIERE*\n_Sizin özəl gününüzün işığı_\n\n👤 *Müştəri:* ${name}\n🕓 *Tarix:* ${date}\n\n\n🛍️ *Səbət:*${items}\n\n`;
-    if (msg_body !== "") {
-        msg += `📝 *Qeyd:* ${msg_body}\n------------------------------------------\n`;
+
+    /* --- SƏBƏT MƏNTİQİ --- */
+    function addToCart(id) {
+        const product = products.find(p => p.id === id);
+        const exists = cart.find(item => item.id === id);
+        if(exists) {
+            exists.qty++;
+        } else {
+            cart.push({...product, qty: 1});
+        }
+        updateUI();
     }
-    msg += `💰 *TOPLAM: ${totalAmount} AZN*`;
-    window.open(`https://wa.me/994552929502?text=${encodeURIComponent(msg)}`);
-}
-function toggleCart() {
-    const sidebar = document.getElementById('cart-sidebar');
-    sidebar.classList.toggle('active');
-    if (sidebar.classList.contains('active')) document.body.classList.add('no-scroll');
-    else document.body.classList.remove('no-scroll');
-}
-initSite();
-// === TİCKET HİSSƏSİ ===
-let activeTid = localStorage.getItem('active_lumiere_ticket');
+
+    function updateQty(id, delta) {
+        const item = cart.find(i => i.id === id);
+        if(item) {
+            item.qty += delta;
+            if(item.qty < 1) {
+                removeFromCart(id);
+            } else {
+                updateUI();
+            }
+        }
+    }
+
+    function removeFromCart(id) {
+        cart = cart.filter(i => i.id !== id);
+        updateUI();
+    }
+
+    /* --- İNTERFEYSİN VİSİUAL YENİLƏNMƏSİ --- */
+    function updateUI() {
+        const list = document.getElementById('cart-list');
+        document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
+        
+        if(cart.length === 0) {
+            list.innerHTML = `
+                <div style="text-align:center; color:#444; margin-top:80px; display:flex; flex-direction:column; align-items:center; gap:15px;">
+                    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#222" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span style="font-size:12px; font-family:'Montserrat'; letter-spacing:1px;">Səbətiniz boşdur</span>
+                </div>`;
+        } else {
+            list.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <img src="${item.img}">
+                    <div class="cart-item-info">
+                        <span style="font-size:9px; color:#666;">KOD: ${item.id_code}</span>
+                        <h4 style="font-family:'Montserrat'; font-weight:600;">${item.name}</h4>
+                        <p style="font-size:11px; color:#666;">${item.price} AZN</p>
+                        <div class="cart-controls">
+                            <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
+                            <span style="font-size:13px;">${item.qty}</span>
+                            <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+                        </div>
+                    </div>
+                    <button class="remove-btn" onclick="removeFromCart(${item.id})">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                    </button>
+                </div>
+            `).join('');
+        }
+        
+        const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+        document.getElementById('total-price').innerText = `Cəmi: ${total} AZN`;
+    }
+
+    /* --- WHATSAPP-A SİFARİŞİN GÖNDƏRİLMƏSİ (CƏMİ SÖZÜ ÇIXARILDI) --- */
+    function validateAndSend() {
+        const name = document.getElementById('cust-name').value.trim();
+        const msg_body = document.getElementById('cust-msg').value.trim();
+        
+        const date = new Date().toLocaleString('az-AZ'); // Tarixi burada təyin edirik
+        const totalAmount = cart.reduce((a, b) => a + (b.price * b.qty), 0); // Toplam məbləğ
+        if (cart.length === 0) { 
+            showPopup("Səbətinizdə məhsul mövcud deyil."); 
+            return; 
+        }
+        if (name === "") { 
+            showPopup("Zəhmət olmasa sifarişi təsdiqləmək üçün Adınızı qeyd edin."); 
+            return; 
+        }
+
+        /* Çek formatında məhsul siyahısı */
+        const items = cart.map(i => `${i.name}\n[${i.id_code}] ${i.qty} ədəd x ${i.price} AZN`).join('\n\n');
+        
+        /* WhatsApp üçün Çek Dizaynı */
+        let msg = `*LUMIERE*\n`;
+        msg += `_Sizin özəl gününüzün işığı_\n`;
+        msg += `\n`;
+        msg += `👤 *Müştəri:* ${name}\n`;
+        msg += `🕓 *Tarix:* ${date}\n`;
+        msg += `\n\n`;
+        msg += `🛍️ *Səbət:*${items}\n\n`;
+        
+        if(msg_body !== "") {
+            msg += `📝 *Qeyd:* ${msg_body}\n`;
+            msg += `------------------------------------------\n`;
+        }
+        
+        msg += `💰 *TOPLAM: ${totalAmount} AZN*`;
+        
+        window.open(`https://wa.me/994552929502?text=${encodeURIComponent(msg)}`);
+    }
+    /* --- SƏBƏTİ AÇIB-BAĞLAMAQ --- */
+    function toggleCart() { 
+        const sidebar = document.getElementById('cart-sidebar');
+        sidebar.classList.toggle('active');
+        if (sidebar.classList.contains('active')) {
+            document.body.classList.add('no-scroll');
+        } else {
+            document.body.classList.remove('no-scroll');
+        }
+    }
+
+    /* Saytın işə salınması */
+    initSite();
+
+
+    //TİCKET HİSSƏSİ 
+    let activeTid = localStorage.getItem('active_lumiere_ticket');
+
 async function checkTicket() {
     if (!activeTid) return showCreateForm();
+
     const { data, error } = await _supabase.from('tickets').select('*').eq('ticket_id', activeTid).single();
+
     if (data && data.status === 'open') {
         renderTicketUI(data);
         subscribeToLiveUpdates(activeTid);
@@ -407,77 +1040,144 @@ async function checkTicket() {
         showCreateForm();
     }
 }
+
+function showCreateForm() {
+    document.getElementById('ticket-content').innerHTML = `<p style="text-align:center; color:#666;">Sualınız var? Aşağıdan mövzu seçərək ticket yaradın.</p>`;
+    document.getElementById('ticket-footer').innerHTML = `
+        <select id="q-select" style="width:100%; background:#1a1a1a; color:#fff; border:1px solid #333; padding:10px; border-radius:5px; margin-bottom:10px; font-size:12px;">
+            <option value="Sifariş necə edim?">Sifariş necə edim?</option>
+            <option value="Sifariş durumu">Sifariş durumu</option>
+            <option value="Məhsul haqqında sual">Məhsul haqqında sual</option>
+        </select>
+        <button onclick="startTicket()" style="width:100%; background:var(--gold); color:#000; border:none; padding:10px; font-weight:bold; cursor:pointer; border-radius:5px; font-size:11px;">TİCKET YARAT</button>`;
+}
+
 async function startTicket() {
+    console.log("Ticket yaradılmağa başlandı..."); // Yoxlama üçün
+    
     const qSelect = document.getElementById('q-select');
-    if (!qSelect || !qSelect.value) { alert("Zəhmət olmasa mövzu seçin!"); return; }
+    if (!qSelect) {
+        alert("Sual seçimi tapılmadı!");
+        return;
+    }
+    
     const msg = qSelect.value;
     const tid = "LUM-" + Math.floor(1000 + Math.random() * 9000);
+    
+    // Ad sahəsini yoxlayaq (sənin input id-in fərqli ola bilər)
     const nameInput = document.querySelector('input[placeholder="Adınız"]') || { value: "Müştəri" };
-    const cName = nameInput.value || "Müştəri";
+    const cName = nameInput.value;
+
     try {
-        const { data, error } = await _supabase.from('tickets').insert([{
-            ticket_id: tid, customer_name: cName, message: msg, status: 'open'
+        const { data, error } = await _supabase.from('tickets').insert([{ 
+            ticket_id: tid, 
+            customer_name: cName, 
+            message: msg, 
+            status: 'open' 
         }]).select();
-        if (error) { console.error("Supabase Xətası:", error); alert("Xəta: " + error.message); return; }
+
+        if (error) {
+            console.error("Supabase Xətası:", error);
+            alert("Xəta baş verdi: " + error.message);
+            return;
+        }
+
+        console.log("Ticket uğurla yarandı:", data);
         localStorage.setItem('active_lumiere_ticket', tid);
         activeTid = tid;
-        checkTicket();
+        checkTicket(); // UI-nı yenilə
     } catch (err) {
         console.error("Gözlənilməz xəta:", err);
         alert("Sistem xətası: " + err.message);
     }
 }
+
+function renderTicketUI(ticket) {
+    document.getElementById('ticket-content').innerHTML = `
+        <div style="margin-bottom:15px; opacity:0.8;"><b>Sualınız:</b><br>${ticket.message}</div>
+        <div style="border-left:2px solid var(--gold); padding-left:10px; margin-top:20px;">
+            <b style="color:var(--gold);">LUMIERE Cavabı:</b><br>
+            <span id="admin-reply-text">${ticket.admin_reply || "<i>Admin cavabı gözlənilir...</i>"}</span>
+        </div>
+        <div style="margin-top:25px; font-size:10px; color:#444;">ID: ${ticket.ticket_id}</div>`;
+    document.getElementById('ticket-footer').innerHTML = `<p style="text-align:center; font-size:11px; color:#555;">Sorğunuz aktivdir. Cavab bura anında düşəcək.</p>`;
+}
+
 function subscribeToLiveUpdates(tid) {
-    _supabase.channel('any').on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'tickets', filter: `ticket_id=eq.${tid}` }, payload => {
-        if (payload.new.status === 'closed') {
+    _supabase.channel('any').on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'tickets', filter: `ticket_id=eq.${tid}` }, 
+    payload => {
+        if(payload.new.status === 'closed') {
             localStorage.removeItem('active_lumiere_ticket');
             showCreateForm();
+        } else {
+            document.getElementById('admin-reply-text').innerHTML = payload.new.admin_reply || "<i>Gözlənilir...</i>";
         }
     }).subscribe();
 }
+
 function toggleTicketModal() {
     const m = document.getElementById('ticket-modal');
     m.style.display = (m.style.display === 'none' || m.style.display === '') ? 'flex' : 'none';
-    if (m.style.display === 'flex') checkTicket();
+    if(m.style.display === 'flex') checkTicket();
 }
+
+
+// Ticket daxilində mesaj göndərmək funksiyası
 async function sendChatMessage(tid, role) {
     const input = document.getElementById('chat-input');
     const msg = input.value.trim();
-    if (!msg) return;
-    const { error } = await _supabase.from('ticket_messages').insert([{ ticket_id: tid, sender: role, content: msg }]);
-    if (!error) input.value = '';
+    if(!msg) return;
+
+    const { error } = await _supabase.from('ticket_messages').insert([
+        { ticket_id: tid, sender: role, content: msg }
+    ]);
+
+    if(!error) input.value = '';
 }
+
+// Mesajları ekrana çıxarmaq
 async function loadMessages(tid) {
     const { data } = await _supabase.from('ticket_messages').select('*').eq('ticket_id', tid).order('created_at', { ascending: true });
     const box = document.getElementById('chat-box');
-    if (data && box) {
+    if(data) {
         box.innerHTML = data.map(m => `
-            <div style="display: flex; flex-direction: column; align-items: ${m.sender === 'customer' ? 'flex-end' : 'flex-start'}; margin-bottom: 12px;">
-                <div style="max-width: 80%; padding: 10px 14px; border-radius: ${m.sender === 'customer' ? '18px 18px 2px 18px' : '18px 18px 18px 2px'}; background: ${m.sender === 'customer' ? 'linear-gradient(45deg, #d4af37, #b8860b)' : '#1a1a1a'}; color: ${m.sender === 'customer' ? '#000' : '#d1d1d1'}; font-size: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); line-height: 1.4; word-wrap: break-word;">
-                    ${m.content}
-                </div>
-                <span style="font-size: 8px; color: #444; margin-top: 4px;">
-                    ${new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </span>
-            </div>
-        `).join('');
-        box.scrollTop = box.scrollHeight;
+    <div style="display: flex; flex-direction: column; align-items: ${m.sender === 'customer' ? 'flex-end' : 'flex-start'}; margin-bottom: 12px;">
+        <div style="
+            max-width: 80%; 
+            padding: 10px 14px; 
+            border-radius: ${m.sender === 'customer' ? '18px 18px 2px 18px' : '18px 18px 18px 2px'}; 
+            background: ${m.sender === 'customer' ? 'linear-gradient(45deg, #d4af37, #b8860b)' : '#1a1a1a'}; 
+            color: ${m.sender === 'customer' ? '#000' : '#d1d1d1'}; 
+            font-size: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            line-height: 1.4;
+            word-wrap: break-word;
+        ">
+            ${m.content}
+        </div>
+        <span style="font-size: 8px; color: #444; margin-top: 4px;">
+            ${new Date(m.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+        </span>
+    </div>
+`).join('');
+        box.scrollTop = box.scrollHeight; // Avtomatik aşağı sürüşdür
     }
 }
-// VAHİD renderTicketUI — Admin onlayn statusu + bot mesajı + bildiriş düyməsi
+
+// UI Yenilənməsi
+// UI Yenilənməsi (Göndər düyməsi ikonunun dəyişdirilməsi)
 function renderTicketUI(ticket) {
     document.getElementById('ticket-content').innerHTML = `
-        <div id="admin-presence-bar" style="display:flex; align-items:center; gap:6px; margin-bottom:12px; padding:5px 10px; background:rgba(255,255,255,0.05); border-radius:20px; width:fit-content;">
-            <div id="status-dot" style="width:8px; height:8px; border-radius:50%; background:#555;"></div>
-            <span id="status-text" style="font-size:10px; color:#888; text-transform:uppercase; letter-spacing:1px;">Yoxlanılır...</span>
-        </div>
-        <div id="bot-area"></div>
         <div id="chat-box" style="height:200px; overflow-y:auto; margin-bottom:15px; padding-right:5px;"></div>
     `;
     document.getElementById('ticket-footer').innerHTML = `
         <div style="display:flex; gap:8px; align-items:center; background:#111; padding:5px; border-radius:10px; border:1px solid var(--border);">
-            <input id="chat-input" type="text" placeholder="Mesaj yazın..." style="flex:1; background:transparent; border:none; color:#fff; padding:10px; font-size:12px; outline:none;">
-            <button onclick="sendChatMessage('${ticket.ticket_id}', 'customer')" style="background:var(--gold); border:none; width:35px; height:35px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:var(--transition);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <input id="chat-input" type="text" placeholder="Mesaj yazın..." 
+                style="flex:1; background:transparent; border:none; color:#fff; padding:10px; font-size:12px; outline:none;">
+            <button onclick="sendChatMessage('${ticket.ticket_id}', 'customer')" 
+                style="background:var(--gold); border:none; width:35px; height:35px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:var(--transition);"
+                onmouseover="this.style.transform='scale(1.05)'" 
+                onmouseout="this.style.transform='scale(1)'">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line>
                     <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -486,57 +1186,16 @@ function renderTicketUI(ticket) {
         </div>
     `;
     loadMessages(ticket.ticket_id);
-    refreshPresenceAndBot(ticket);
-    listenForAdminArrival(ticket.ticket_id);
-    if (window._presenceTimer) clearInterval(window._presenceTimer);
-    window._presenceTimer = setInterval(() => refreshPresenceAndBot(ticket), 30000);
-    _supabase.channel('messages_' + ticket.ticket_id).on('postgres_changes', {
-        event: 'INSERT', schema: 'public', table: 'ticket_messages',
-        filter: `ticket_id=eq.${ticket.ticket_id}`
-    }, () => loadMessages(ticket.ticket_id)).subscribe();
-}
-async function refreshPresenceAndBot(ticket) {
-    const { data } = await _supabase.from('admin_presence').select('last_seen').eq('id', 'admin_main').single();
-    const isOnline = data && (new Date() - new Date(data.last_seen)) / 1000 < 90;
-    const dot = document.getElementById('status-dot');
-    const txt = document.getElementById('status-text');
-    if (dot && txt) {
-        if (isOnline) {
-            dot.style.background = "#22c55e";
-            txt.innerText = "Admin Onlayndır";
-            txt.style.color = "#22c55e";
-        } else {
-            dot.style.background = "#ef4444";
-            txt.innerText = "Admin Offlayndır";
-            txt.style.color = "#ef4444";
-        }
-    }
-    const botArea = document.getElementById('bot-area');
-    if (!botArea) return;
-    if (!isOnline) {
-        const alreadyRequested = ticket.notification_requested === true;
-        botArea.innerHTML = `
-            <div style="background:#1a1a1a; border:1px solid var(--border); padding:12px 14px; border-radius:14px 14px 14px 4px; margin-bottom:10px; color:#d1d1d1; font-size:12px; line-height:1.5;">
-                Salam 👋 Hazırda admin online deyil. Tezliklə sualınız cavablandırılacaq.
-            </div>
-            <button id="notif-btn-${ticket.ticket_id}" 
-                onclick="requestNotification('${ticket.ticket_id}')"
-                ${alreadyRequested ? 'disabled' : ''}
-                style="width:100%; background:${alreadyRequested ? '#222' : 'transparent'}; border:1px solid var(--gold); color:${alreadyRequested ? '#888' : 'var(--gold)'}; padding:10px; font-family:'Montserrat'; font-size:11px; letter-spacing:1px; text-transform:uppercase; border-radius:8px; cursor:${alreadyRequested ? 'not-allowed' : 'pointer'}; margin-bottom:12px; transition:var(--transition);">
-                ${alreadyRequested ? '✅ Bildiriş istəyi göndərildi' : '🔔 Admin gəldikdə bildiriş göndər'}
-            </button>
-        `;
-    } else {
-        botArea.innerHTML = '';
-    }
-}
-function showNotification(title, body) {
-    try {
-        if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification(title + ': ' + body, { icon: '/logo.png' });
-        }
-    } catch (e) { console.warn('Bildiriş xətası:', e); }
-    showPopup(body);
+    
+    // Mesajları anlıq izləmək
+    _supabase.channel('messages').on('postgres_changes', { 
+        event: 'INSERT', 
+        schema: 'public', 
+        table: 'ticket_messages', 
+        filter: `ticket_id=eq.${ticket.ticket_id}` 
+    }, payload => {
+        loadMessages(ticket.ticket_id);
+    }).subscribe();
 }
 function showCreateForm() {
     document.getElementById('ticket-content').innerHTML = `
@@ -551,56 +1210,11 @@ function showCreateForm() {
             <option value="Məhsul haqqında sual">Məhsul xüsusiyyətləri</option>
             <option value="Digər">Digər müraciət</option>
         </select>
-        <button onclick="startTicket()" class="ticket-submit-btn">TİCKETİ BAŞLAT</button>`;
-}
-// Yalnız bu ticket-in (ID) öz cihazına bildiriş göndərilir
-function listenForAdminArrival(ticketId) {
-    if (window._adminArrivalChannels && window._adminArrivalChannels[ticketId]) return;
-    window._adminArrivalChannels = window._adminArrivalChannels || {};
-    const channel = _supabase.channel(`ticket_${ticketId}`)
-        .on('postgres_changes', {
-            event: 'UPDATE', schema: 'public', table: 'tickets',
-            filter: `ticket_id=eq.${ticketId}`
-        }, payload => {
-            if (payload.new.admin_notified_client === true) {
-                showNotification("LUMIERE", "Sizin sorğunuza cavab verildi.");
-                const ticketContent = document.getElementById('ticket-content');
-                if (ticketContent && !document.getElementById('admin-arrived-banner')) {
-                    const banner = document.createElement('div');
-                    banner.id = 'admin-arrived-banner';
-                    banner.style.cssText = 'background:rgba(212,175,55,0.1); border:1px solid var(--gold); padding:10px; border-radius:8px; margin-top:10px; color:var(--gold); text-align:center; font-weight:bold;';
-                    banner.innerHTML = '✨ Admin gəldi! Söhbətə başlaya bilərsiniz.';
-                    ticketContent.appendChild(banner);
-                }
-                const botArea = document.getElementById('bot-area');
-                if (botArea) botArea.innerHTML = '';
-            }
-        })
-        .subscribe();
-    window._adminArrivalChannels[ticketId] = channel;
-}
-async function requestNotification(ticketId) {
-    const btn = document.getElementById(`notif-btn-${ticketId}`);
-    if (btn) { btn.disabled = true; btn.innerText = '⏳ Göndərilir...'; }
-    if ('Notification' in window && Notification.permission === 'default') {
-        try { await Notification.requestPermission(); } catch (e) {}
-    }
-    const { error } = await _supabase
-        .from('tickets')
-        .update({ notification_requested: true })
-        .eq('ticket_id', ticketId);
-    if (!error) {
-        if (btn) {
-            btn.innerText = '✅ Bildiriş istəyi göndərildi';
-            btn.style.background = '#222';
-            btn.style.color = '#888';
-            btn.style.cursor = 'not-allowed';
-        }
-    } else {
-        if (btn) { btn.disabled = false; btn.innerText = '🔔 Admin gəldikdə bildiriş göndər'; }
-        alert('Xəta: ' + error.message);
-    }
+        <button onclick="startTicket()" class="ticket-submit-btn">
+            TİCKETİ BAŞLAT
+        </button>`;
 }
 </script>
+
 </body>
 </html>
