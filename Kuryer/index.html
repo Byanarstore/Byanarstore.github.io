@@ -1,203 +1,1105 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUMIERE Logistics - Final Fix</title>
-    <style>
-        :root { --gold: #d4af37; --dark: #0a0a0a; --card: #161616; --green: #2ecc71; }
-        body { font-family: sans-serif; background: var(--dark); color: white; margin: 0; padding-bottom: 80px; overflow-x: hidden; }
-        
-        .container { padding: 15px; max-width: 480px; margin: auto; }
-        .box { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #333; }
-        
-        input { 
-            width: 100%; padding: 15px; margin: 10px 0; background: #222; 
-            border: 1px solid #444; color: white; border-radius: 10px; box-sizing: border-box; font-size: 16px;
-        }
-
-        /* AXTARIŞ EKRANI */
-        #searchOverlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98); z-index: 100000;
-            display: none; flex-direction: column; padding: 20px; box-sizing: border-box;
-        }
-        #searchOverlay input { border: 2px solid var(--gold); margin-bottom: 15px; background: #111; }
-        #results { flex: 1; overflow-y: auto; background: #111; border-radius: 10px; border: 1px solid #222; }
-        
-        .search-item { 
-            padding: 18px; border-bottom: 1px solid #333; 
-            color: #fff; font-size: 15px; cursor: pointer;
-        }
-        .search-item:active { background: var(--gold); color: #000; }
-        
-        .status-msg { padding: 20px; text-align: center; color: var(--gold); font-size: 14px; }
-        .close-btn { color: var(--gold); text-align: right; padding: 10px; font-weight: bold; cursor: pointer; font-size: 18px; }
-
-        .selected-box { border: 2px solid var(--green) !important; color: var(--green) !important; }
-
-        button { 
-            width: 100%; padding: 18px; background: var(--gold); border: none; 
-            border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 16px;
-        }
-
-        .navbar {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: #111;
-            display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222;
-        }
-        .nav-item { color: #888; font-size: 12px; text-align: center; flex: 1; cursor: pointer; }
-        .nav-item.active { color: var(--gold); font-weight: bold; }
-        .card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #222; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>Çatdırılma Sistemi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin="" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(180deg, #f6f7fb 0%, #eef1f7 100%);
+      color: #0f172a;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .app {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 960px) {
+      .app { grid-template-columns: 1fr; padding: 16px; }
+    }
+    .full-row { grid-column: 1 / -1; }
+    .header {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 8px 4px 4px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-logo {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #2563eb, #16a34a);
+      display: grid; place-items: center;
+      color: white; font-weight: 800; font-size: 20px;
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+    }
+    .brand h1 { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+    .brand .sub { font-size: 12px; color: #64748b; margin-top: 2px; }
+    .header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .badge-loc {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #ecfdf5; color: #065f46;
+      padding: 6px 10px; border-radius: 999px;
+      font-size: 12px; font-weight: 600;
+      border: 1px solid #a7f3d0;
+    }
+    .badge-loc.error { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
+    .badge-loc .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #10b981; animation: pulse 1.6s infinite;
+    }
+    .badge-loc.error .dot { background: #ef4444; animation: none; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.4); }
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.04);
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    }
+    .card-title {
+      font-size: 15px; font-weight: 700; letter-spacing: -0.01em;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title .icon { color: #2563eb; }
+    .card-body { padding: 20px; }
+    .form-grid { display: grid; gap: 12px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label {
+      font-size: 12px; font-weight: 600; color: #475569;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .field-row { display: grid; gap: 12px; grid-template-columns: 1fr 1fr 1fr; }
+    @media (max-width: 520px) { .field-row { grid-template-columns: 1fr 1fr; } }
+    .input {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      background: #f8fafc;
+      font-size: 14px;
+      font-family: inherit;
+      color: #0f172a;
+      transition: all 0.15s;
+    }
+    .input:focus {
+      outline: none;
+      border-color: #2563eb;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+    .input::placeholder { color: #94a3b8; }
+    .input-with-action { position: relative; }
+    .input-with-action .input { padding-right: 44px; }
+    .input-action {
+      position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+      width: 32px; height: 32px;
+      display: grid; place-items: center;
+      border: none; border-radius: 8px;
+      background: #2563eb; color: white;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .input-action:hover { background: #1d4ed8; }
+    .input-action:disabled { background: #94a3b8; cursor: not-allowed; }
+    .suggestions {
+      position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+      background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
+      max-height: 240px; overflow-y: auto;
+      z-index: 1000; display: none;
+    }
+    .suggestions.show { display: block; }
+    .suggestion {
+      padding: 10px 12px; font-size: 13px; cursor: pointer;
+      border-bottom: 1px solid #f1f5f9;
+      transition: background 0.1s;
+    }
+    .suggestion:hover { background: #f1f5f9; }
+    .suggestion:last-child { border-bottom: none; }
+    .suggestion .s-title { font-weight: 600; color: #0f172a; }
+    .suggestion .s-sub { font-size: 12px; color: #64748b; margin-top: 2px; }
+    .button-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+    .btn {
+      padding: 11px 16px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      font-size: 14px; font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      transition: all 0.15s;
+      flex: 1; min-width: 140px;
+    }
+    .btn-primary { background: #0f172a; color: white; }
+    .btn-primary:hover { background: #1e293b; }
+    .btn-secondary { background: #2563eb; color: white; }
+    .btn-secondary:hover { background: #1d4ed8; }
+    .btn-accent {
+      background: linear-gradient(135deg, #16a34a, #15803d); color: white;
+      box-shadow: 0 4px 14px rgba(22, 163, 74, 0.3);
+    }
+    .btn-accent:hover { filter: brightness(1.05); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-ghost {
+      background: transparent; color: #64748b; border-color: #e2e8f0;
+      flex: 0; min-width: 0; padding: 8px 12px; font-size: 13px;
+    }
+    .btn-ghost:hover { background: #f1f5f9; color: #0f172a; }
+    .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid currentColor; border-top-color: transparent;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #map {
+      height: 320px; width: 100%;
+      border-radius: 12px; margin-top: 16px;
+      background: #e2e8f0;
+    }
+    .list-header {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; margin-bottom: 4px;
+    }
+    .count-pill {
+      background: #f1f5f9; color: #475569;
+      padding: 3px 10px; border-radius: 999px;
+      font-size: 12px; font-weight: 600;
+    }
+    .empty-state { text-align: center; padding: 40px 20px; color: #64748b; }
+    .empty-state svg { color: #cbd5e1; margin-bottom: 12px; }
+    .empty-state h3 { margin: 0 0 4px; color: #334155; font-size: 15px; }
+    .empty-state p { margin: 0; font-size: 13px; }
+    .customer-list {
+      display: flex; flex-direction: column; gap: 10px;
+      max-height: 600px; overflow-y: auto;
+      padding-right: 4px;
+    }
+    .customer {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .customer:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08); }
+    .customer.nearest {
+      background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%);
+      border-color: #16a34a;
+      box-shadow: 0 4px 14px rgba(22, 163, 74, 0.2);
+    }
+    .customer.nearest::before {
+      content: 'ƏN YAXIN';
+      position: absolute;
+      top: -8px; left: 16px;
+      background: #16a34a; color: white;
+      font-size: 10px; font-weight: 800;
+      padding: 3px 10px; border-radius: 999px;
+      letter-spacing: 0.06em;
+      box-shadow: 0 2px 6px rgba(22, 163, 74, 0.3);
+    }
+    .c-rank {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: #f1f5f9; color: #475569;
+      display: grid; place-items: center;
+      font-weight: 700; font-size: 14px;
+    }
+    .customer.nearest .c-rank { background: #16a34a; color: white; }
+    .c-info { min-width: 0; }
+    .c-info .c-code {
+      font-size: 11px; font-weight: 700; color: #2563eb;
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .customer.nearest .c-info .c-code { color: #15803d; }
+    .c-info .c-street {
+      font-size: 14px; font-weight: 600; color: #0f172a;
+      margin-top: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .c-info .c-detail {
+      font-size: 12px; color: #64748b; margin-top: 2px;
+      display: flex; gap: 10px; flex-wrap: wrap;
+    }
+    .c-info .c-detail span { display: inline-flex; align-items: center; gap: 4px; }
+    .c-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+    .c-distance { font-weight: 800; font-size: 14px; color: #0f172a; white-space: nowrap; }
+    .customer.nearest .c-distance { color: #15803d; }
+    .c-distance .unit { font-size: 11px; color: #64748b; font-weight: 600; margin-left: 2px; }
+    .customer.nearest .c-distance .unit { color: #16a34a; }
+    .c-buttons { display: flex; gap: 4px; }
+    .c-btn {
+      width: 28px; height: 28px; border-radius: 7px;
+      border: 1px solid #e2e8f0; background: white; color: #64748b;
+      cursor: pointer; display: grid; place-items: center;
+      transition: all 0.15s;
+    }
+    .c-btn:hover { background: #f1f5f9; color: #0f172a; }
+    .c-btn.danger:hover { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
+    .picker-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 860px) { .picker-grid { grid-template-columns: 1fr; } }
+    .picker-col h4 {
+      margin: 0 0 10px;
+      font-size: 12px; font-weight: 700; color: #475569;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .picker-col h4 .pill {
+      background: #eef2ff; color: #3730a3;
+      font-size: 11px; font-weight: 700;
+      padding: 2px 8px; border-radius: 999px;
+      letter-spacing: 0.04em;
+    }
+    .picker-col h4 .pill.green { background: #dcfce7; color: #166534; }
+    .search-box { position: relative; margin-bottom: 10px; }
+    .search-box .input { padding-left: 36px; }
+    .search-box .icon {
+      position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+      color: #94a3b8; pointer-events: none;
+    }
+    .pick-list {
+      display: flex; flex-direction: column; gap: 8px;
+      max-height: 360px; overflow-y: auto;
+      padding: 4px;
+      background: #f8fafc;
+      border: 1px dashed #e2e8f0;
+      border-radius: 12px;
+      min-height: 80px;
+    }
+    .pick-item {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      transition: all 0.15s;
+    }
+    .pick-item:hover { border-color: #cbd5e1; transform: translateY(-1px); }
+    .pick-item .pi-code {
+      font-size: 11px; font-weight: 700; color: #2563eb;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .pick-item .pi-street {
+      font-size: 13px; font-weight: 600; color: #0f172a;
+      margin-top: 1px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      max-width: 100%;
+    }
+    .pick-item .pi-detail { font-size: 11px; color: #64748b; margin-top: 2px; }
+    .pick-item .pi-action {
+      width: 30px; height: 30px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: white; cursor: pointer;
+      display: grid; place-items: center;
+      color: #64748b; transition: all 0.15s;
+    }
+    .pick-item .pi-action.add { color: #16a34a; border-color: #bbf7d0; background: #f0fdf4; }
+    .pick-item .pi-action.add:hover { background: #16a34a; color: white; border-color: #16a34a; }
+    .pick-item .pi-action.remove { color: #dc2626; border-color: #fecaca; background: #fef2f2; }
+    .pick-item .pi-action.remove:hover { background: #dc2626; color: white; border-color: #dc2626; }
+    .selected-item {
+      background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
+      border-color: #a7f3d0;
+    }
+    .selected-item .pi-rank {
+      width: 26px; height: 26px;
+      border-radius: 7px;
+      background: white;
+      color: #166534;
+      display: grid; place-items: center;
+      font-size: 12px; font-weight: 800;
+      border: 1px solid #bbf7d0;
+    }
+    .selected-item.first .pi-rank {
+      background: #16a34a; color: white; border-color: #16a34a;
+    }
+    .selected-item .pi-distance {
+      font-size: 12px; font-weight: 700; color: #166534;
+      white-space: nowrap;
+    }
+    .pick-empty { text-align: center; color: #94a3b8; padding: 24px 12px; font-size: 13px; }
+    .picker-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px; gap: 10px; flex-wrap: wrap;
+    }
+    .summary-stats { display: flex; gap: 16px; flex-wrap: wrap; }
+    .stat { display: flex; flex-direction: column; gap: 2px; }
+    .stat .label {
+      font-size: 11px; color: #64748b; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .stat .value { font-size: 18px; font-weight: 800; color: #0f172a; letter-spacing: -0.02em; }
+    .stat .value.green { color: #16a34a; }
+    .toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0f172a; color: white;
+      padding: 12px 20px; border-radius: 12px;
+      font-size: 14px; font-weight: 500;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      opacity: 0; transition: all 0.3s ease;
+      z-index: 9999; max-width: 90vw;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.success { background: #16a34a; }
+    .toast.error { background: #dc2626; }
+    .leaflet-container { font-family: inherit; border-radius: 12px; }
+    .me-marker {
+      background: #2563eb; border: 3px solid white;
+      width: 18px; height: 18px; border-radius: 50%;
+      box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.25);
+    }
+  </style>
 </head>
 <body>
-
-<div class="container">
-    <h2 style="color: var(--gold); text-align: center; letter-spacing: 3px; margin: 20px 0;">LUMIERE</h2>
-
-    <div id="homePage" class="page" style="display:none;">
-        <div id="listAll"></div>
-    </div>
-
-    <div id="addPage" class="page" style="display:block;">
-        <div class="box">
-            <input type="text" id="mId" placeholder="Müştəri ID">
-            <input type="text" id="mName" placeholder="Müştəri Ad Soyad">
-            
-            <div id="triggerSearch" onclick="openSearch()" style="background:#222; padding:18px; border-radius:10px; border:1px solid #444; color:#aaa; margin:10px 0; cursor:pointer; text-align:center; font-weight:bold;">
-                📍 ÜNVANI SEÇMƏK ÜÇÜN TOXUN
-            </div>
-
-            <div style="display: flex; gap: 10px;">
-                <input type="text" id="mBlock" placeholder="Blok">
-                <input type="text" id="mFloor" placeholder="Mərtəbə">
-            </div>
-            
-            <input type="hidden" id="lat">
-            <input type="hidden" id="lng">
-            <input type="hidden" id="fullAddr">
-            <button onclick="save()">SİSTEMƏ ƏLAVƏ ET</button>
+  <div class="app">
+    <header class="header">
+      <div class="brand">
+        <div class="brand-logo">Ç</div>
+        <div>
+          <h1>Çatdırılma Sistemi</h1>
+          <div class="sub">Məkanlar və müştəri marşrut idarəetməsi</div>
         </div>
-    </div>
-</div>
+      </div>
+      <div class="header-actions">
+        <span id="locStatus" class="badge-loc">
+          <span class="dot"></span>
+          <span id="locStatusText">Konum müəyyən edilir...</span>
+        </span>
+      </div>
+    </header>
 
-<div id="searchOverlay">
-    <div class="close-btn" onclick="closeSearch()">BAĞLA ✖</div>
-    <input type="text" id="modalInput" placeholder="Küçə adı yazın (məs: Nizami)..." autocomplete="off">
-    <div id="results">
-        <div class="status-msg">Küçə adını yazmağa başlayın...</div>
-    </div>
-</div>
+    <section class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8a8 8 0 1 1 16 0c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+          Yeni məkan əlavə et
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="field">
+            <label for="streetInput">Küçə adı / Ünvan</label>
+            <div class="input-with-action">
+              <input id="streetInput" class="input" type="text"
+                     placeholder="Məs: Nizami küçəsi 32, Bakı"
+                     autocomplete="off" />
+              <button id="searchBtn" class="input-action" title="Axtarışı yenilə">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              </button>
+              <div id="suggestions" class="suggestions"></div>
+            </div>
+          </div>
 
-<div class="navbar">
-    <div class="nav-item" onclick="show('homePage', this)">🏠<br>Ana Səhifə</div>
-    <div class="nav-item active" onclick="show('addPage', this)">➕<br>Əlavə Et</div>
-</div>
+          <div class="field-row">
+            <div class="field">
+              <label for="buildingInput">Bina</label>
+              <input id="buildingInput" class="input" type="text" placeholder="32A" />
+            </div>
+            <div class="field">
+              <label for="blockInput">Blok</label>
+              <input id="blockInput" class="input" type="text" placeholder="B" />
+            </div>
+            <div class="field">
+              <label for="floorInput">Mərtəbə</label>
+              <input id="floorInput" class="input" type="text" placeholder="3" />
+            </div>
+          </div>
 
-<script>
-    let db = [];
+          <div class="field">
+            <label for="codeInput">Müştəri kodu</label>
+            <input id="codeInput" class="input" type="text" placeholder="MŞK-1234" />
+          </div>
 
-    function show(id, el) {
-        document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(id).style.display = 'block';
-        el.classList.add('active');
-        if(id === 'homePage') render();
+          <div class="button-row">
+            <button id="saveBtn" class="btn btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              Məkanı yaddaşa əlavə et
+            </button>
+            <button id="autoBtn" class="btn btn-accent" title="Yazılan ünvanı avtomatik tapıb yaradır">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Tap və yarat
+            </button>
+          </div>
+        </div>
+        <div id="map"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+          Müştərilər (yaxınlığa görə)
+        </div>
+        <button id="refreshLocBtn" class="btn btn-ghost" title="Konumu yenilə">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+          Yenilə
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="list-header">
+          <div style="font-size: 13px; color: #64748b;">
+            Cari konuma görə avtomatik sıralanır
+          </div>
+          <span id="countPill" class="count-pill">0 məkan</span>
+        </div>
+        <div id="customerList" class="customer-list" style="margin-top: 12px;">
+          <div class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8a8 8 0 1 1 16 0c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+            <h3>Hələ məkan yoxdur</h3>
+            <p>Sol tərəfdən ilk müştəri ünvanını əlavə edin</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card full-row">
+      <div class="card-header">
+        <div class="card-title">
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Çatdırılma siyahısı
+        </div>
+        <button id="clearSelectedBtn" class="btn btn-ghost" title="Bütün seçimi sil">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+          Təmizlə
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="picker-toolbar">
+          <div class="summary-stats">
+            <div class="stat">
+              <span class="label">Seçilən</span>
+              <span id="statCount" class="value green">0</span>
+            </div>
+            <div class="stat">
+              <span class="label">Ümumi məsafə</span>
+              <span id="statDistance" class="value">— km</span>
+            </div>
+            <div class="stat">
+              <span class="label">Növbəti dayanacaq</span>
+              <span id="statNext" class="value" style="font-size:14px;">—</span>
+            </div>
+          </div>
+          <button id="optimizeBtn" class="btn btn-secondary" style="flex:0 0 auto;min-width:auto;white-space:nowrap;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            İdeal sıralama
+          </button>
+        </div>
+        <div class="picker-grid">
+          <div class="picker-col">
+            <h4>Yaddaşdan axtar <span id="availPill" class="pill">0</span></h4>
+            <div class="search-box">
+              <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <input id="pickerSearch" class="input" type="text" placeholder="Müştəri kodu və ya küçə üzrə axtar..." />
+            </div>
+            <div id="availableList" class="pick-list"></div>
+          </div>
+          <div class="picker-col">
+            <h4>Çatdırılma sırası <span id="selPill" class="pill green">0</span></h4>
+            <div style="font-size:12px;color:#64748b;margin-bottom:10px;">
+              Konuma görə avtomatik ideal sıralanır
+            </div>
+            <div id="selectedList" class="pick-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+          crossorigin=""></script>
+  <script>
+const STORAGE_KEY = 'delivery_locations_v1';
+const SELECTED_KEY = 'delivery_selected_v1';
+const NOMINATIM = 'https://nominatim.openstreetmap.org';
+const TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+const TILE_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+
+const state = {
+  customers: loadCustomers(),
+  selectedIds: loadSelected(),
+  myLocation: null,
+  myError: null,
+  selectedSuggestion: null,
+  searchTimer: null,
+  pickerQuery: '',
+};
+
+const $ = (id) => document.getElementById(id);
+const els = {
+  street: $('streetInput'), building: $('buildingInput'), block: $('blockInput'),
+  floor: $('floorInput'), code: $('codeInput'), searchBtn: $('searchBtn'),
+  saveBtn: $('saveBtn'), autoBtn: $('autoBtn'), refreshLocBtn: $('refreshLocBtn'),
+  suggestions: $('suggestions'), list: $('customerList'), countPill: $('countPill'),
+  locStatus: $('locStatus'), locStatusText: $('locStatusText'), toast: $('toast'),
+  pickerSearch: $('pickerSearch'), availableList: $('availableList'),
+  selectedList: $('selectedList'), availPill: $('availPill'), selPill: $('selPill'),
+  statCount: $('statCount'), statDistance: $('statDistance'), statNext: $('statNext'),
+  optimizeBtn: $('optimizeBtn'), clearSelectedBtn: $('clearSelectedBtn'),
+};
+
+let map, markersLayer, routeLayer, meMarker, previewMarker;
+function initMap() {
+  map = L.map('map', { zoomControl: true }).setView([40.4093, 49.8671], 12);
+  L.tileLayer(TILE_URL, { attribution: TILE_ATTR, maxZoom: 19 }).addTo(map);
+  markersLayer = L.layerGroup().addTo(map);
+  routeLayer = L.layerGroup().addTo(map);
+}
+
+function refreshMapMarkers() {
+  if (!markersLayer) return;
+  markersLayer.clearLayers();
+  routeLayer.clearLayers();
+  const sortedSel = optimalSelectedOrder();
+  const selOrder = new Map(sortedSel.map((c, i) => [c.id, i + 1]));
+  state.customers.forEach((c, idx) => {
+    const isSelected = state.selectedIds.includes(c.id);
+    const isNextStop = sortedSel[0] && sortedSel[0].id === c.id;
+    const isNearest = !isSelected && idx === 0 && state.myLocation;
+    const color = isNextStop ? '#16a34a' : isSelected ? '#15803d' : isNearest ? '#16a34a' : '#2563eb';
+    const radius = isNextStop ? 11 : isSelected ? 9 : isNearest ? 10 : 7;
+    const marker = L.circleMarker([c.lat, c.lon], {
+      radius, color: 'white', weight: 2, fillColor: color, fillOpacity: 0.95,
+    }).addTo(markersLayer);
+    const detail = [c.building && `Bina ${c.building}`, c.block && `Blok ${c.block}`, c.floor && `Mər. ${c.floor}`]
+      .filter(Boolean).join(' · ');
+    const orderTag = selOrder.has(c.id)
+      ? `<div style="display:inline-block;background:#16a34a;color:white;font-size:11px;font-weight:700;padding:2px 7px;border-radius:99px;margin-bottom:4px">Çatdırılma sırası: ${selOrder.get(c.id)}</div>`
+      : '';
+    marker.bindPopup(
+      `<div style="font-family:Inter,sans-serif;min-width:160px">
+        ${orderTag}
+        <div style="font-weight:700;font-size:13px;margin-bottom:2px">${escapeHtml(c.code || 'Müştəri')}</div>
+        <div style="font-size:12px;color:#475569">${escapeHtml(c.street)}</div>
+        ${detail ? `<div style="font-size:11px;color:#64748b;margin-top:4px">${escapeHtml(detail)}</div>` : ''}
+      </div>`
+    );
+  });
+  if (sortedSel.length > 0) {
+    const points = [];
+    if (state.myLocation) points.push([state.myLocation.lat, state.myLocation.lon]);
+    sortedSel.forEach((c) => points.push([c.lat, c.lon]));
+    if (points.length >= 2) {
+      L.polyline(points, { color: '#16a34a', weight: 4, opacity: 0.7, dashArray: '8, 8' }).addTo(routeLayer);
     }
+  }
+  if (state.myLocation) {
+    if (meMarker) meMarker.remove();
+    const icon = L.divIcon({ className: '', html: '<div class="me-marker"></div>', iconSize: [18, 18] });
+    meMarker = L.marker([state.myLocation.lat, state.myLocation.lon], { icon }).addTo(map);
+    meMarker.bindPopup('<b>Sizin konumunuz</b>');
+  }
+}
 
-    function openSearch() {
-        document.getElementById('searchOverlay').style.display = 'flex';
-        document.getElementById('modalInput').focus();
+function fitMapToContent() {
+  const points = [];
+  state.customers.forEach(c => points.push([c.lat, c.lon]));
+  if (state.myLocation) points.push([state.myLocation.lat, state.myLocation.lon]);
+  if (points.length === 0) return;
+  if (points.length === 1) map.setView(points[0], 14);
+  else map.fitBounds(L.latLngBounds(points), { padding: [40, 40], maxZoom: 15 });
+}
+
+function loadCustomers() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return seedExamples();
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  } catch { return []; }
+}
+function saveCustomers() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.customers)); } catch {}
+}
+function loadSelected() {
+  try {
+    const raw = localStorage.getItem(SELECTED_KEY);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  } catch { return []; }
+}
+function saveSelected() {
+  try { localStorage.setItem(SELECTED_KEY, JSON.stringify(state.selectedIds)); } catch {}
+}
+function seedExamples() {
+  const seed = [
+    { id: rid(), code: 'MŞK-001', street: 'Nizami küçəsi 32, Bakı', building: '32', block: 'A', floor: '3', lat: 40.3772, lon: 49.8568, createdAt: Date.now() - 1000 },
+    { id: rid(), code: 'MŞK-002', street: 'Səməd Vurğun küçəsi 84, Bakı', building: '84', block: '', floor: '5', lat: 40.3784, lon: 49.8473, createdAt: Date.now() - 800 },
+    { id: rid(), code: 'MŞK-003', street: 'Tbilisi prospekti 45, Bakı', building: '45', block: 'C', floor: '7', lat: 40.4108, lon: 49.8447, createdAt: Date.now() - 600 },
+  ];
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(seed)); } catch {}
+  return seed;
+}
+function rid() { return 'c_' + Math.random().toString(36).slice(2, 10); }
+
+function distanceKm(a, b) {
+  if (!a || !b) return Infinity;
+  const R = 6371;
+  const toRad = (d) => (d * Math.PI) / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLon = toRad(b.lon - a.lon);
+  const lat1 = toRad(a.lat);
+  const lat2 = toRad(b.lat);
+  const x = Math.sin(dLat / 2) ** 2 + Math.sin(dLon / 2) ** 2 * Math.cos(lat1) * Math.cos(lat2);
+  return 2 * R * Math.asin(Math.sqrt(x));
+}
+function fmtDistance(km) {
+  if (!isFinite(km)) return { value: '—', unit: '' };
+  if (km < 1) return { value: Math.round(km * 1000).toString(), unit: 'm' };
+  return { value: km.toFixed(km < 10 ? 2 : 1), unit: 'km' };
+}
+
+function requestMyLocation() {
+  setLocStatus('Konum müəyyən edilir...', 'loading');
+  if (!navigator.geolocation) {
+    state.myError = 'Brauzer geolokasiyanı dəstəkləmir';
+    setLocStatus(state.myError, 'error');
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      state.myLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+      state.myError = null;
+      setLocStatus(`Konum müəyyən edildi · ${state.myLocation.lat.toFixed(4)}, ${state.myLocation.lon.toFixed(4)}`, 'ok');
+      renderList(); renderPicker(); refreshMapMarkers(); fitMapToContent();
+    },
+    (err) => {
+      state.myError = err.message || 'Konum əldə edilmədi';
+      setLocStatus('Konum əlçatan deyil — sıralama yaradılma vaxtına görə', 'error');
+      renderList(); renderPicker(); refreshMapMarkers(); fitMapToContent();
+    },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
+  );
+}
+function setLocStatus(text, kind) {
+  els.locStatusText.textContent = text;
+  els.locStatus.classList.toggle('error', kind === 'error');
+}
+
+async function geocode(query) {
+  const url = `${NOMINATIM}/search?format=json&addressdetails=1&limit=6&q=${encodeURIComponent(query)}`;
+  const res = await fetch(url, { headers: { 'Accept': 'application/json', 'Accept-Language': 'az,en;q=0.8' } });
+  if (!res.ok) throw new Error('Axtarış uğursuz');
+  return res.json();
+}
+function debounceSearch() {
+  clearTimeout(state.searchTimer);
+  const q = els.street.value.trim();
+  if (q.length < 3) { hideSuggestions(); return; }
+  state.searchTimer = setTimeout(async () => {
+    try { showSuggestions(await geocode(q)); } catch (e) { hideSuggestions(); }
+  }, 350);
+}
+function showSuggestions(results) {
+  if (!results || results.length === 0) { hideSuggestions(); return; }
+  els.suggestions.innerHTML = results.map((r, i) => {
+    const title = r.display_name.split(',').slice(0, 2).join(', ');
+    return `<div class="suggestion" data-idx="${i}">
+      <div class="s-title">${escapeHtml(title)}</div>
+      <div class="s-sub">${escapeHtml(r.display_name)}</div>
+    </div>`;
+  }).join('');
+  els.suggestions.classList.add('show');
+  els.suggestions.querySelectorAll('.suggestion').forEach((el) => {
+    el.addEventListener('click', () => pickSuggestion(results[Number(el.dataset.idx)]));
+  });
+}
+function hideSuggestions() {
+  els.suggestions.classList.remove('show');
+  els.suggestions.innerHTML = '';
+}
+function pickSuggestion(r) {
+  state.selectedSuggestion = {
+    lat: parseFloat(r.lat), lon: parseFloat(r.lon),
+    display: r.display_name, address: r.address || {},
+  };
+  els.street.value = r.display_name.split(',').slice(0, 3).join(', ');
+  if (r.address && r.address.house_number && !els.building.value) {
+    els.building.value = r.address.house_number;
+  }
+  hideSuggestions();
+  showPreviewOnMap(state.selectedSuggestion.lat, state.selectedSuggestion.lon);
+  toast('Məkan xəritədə işarələndi', 'success');
+}
+function showPreviewOnMap(lat, lon) {
+  if (previewMarker) previewMarker.remove();
+  previewMarker = L.marker([lat, lon]).addTo(map);
+  previewMarker.bindPopup('<b>Seçilən məkan</b>').openPopup();
+  map.setView([lat, lon], 16);
+}
+
+async function manualSave() {
+  const street = els.street.value.trim();
+  if (!street) { toast('Küçə adını daxil edin', 'error'); return; }
+  let chosen = state.selectedSuggestion;
+  if (!chosen || !chosen.display.toLowerCase().startsWith(street.toLowerCase().split(',')[0])) {
+    setBusy(els.saveBtn, true, 'Tapılır...');
+    try {
+      const results = await geocode(street);
+      if (!results || results.length === 0) {
+        toast('Bu ünvan tapılmadı, "Tap və yarat" düyməsini sınayın', 'error');
+        setBusy(els.saveBtn, false, 'Məkanı yaddaşa əlavə et');
+        return;
+      }
+      chosen = {
+        lat: parseFloat(results[0].lat), lon: parseFloat(results[0].lon),
+        display: results[0].display_name, address: results[0].address || {},
+      };
+    } catch (e) {
+      setBusy(els.saveBtn, false, 'Məkanı yaddaşa əlavə et');
+      toast('Axtarış xətası', 'error');
+      return;
     }
+    setBusy(els.saveBtn, false, 'Məkanı yaddaşa əlavə et');
+  }
+  saveLocation(chosen, street);
+}
 
-    function closeSearch() {
-        document.getElementById('searchOverlay').style.display = 'none';
+async function autoCreate() {
+  const street = els.street.value.trim();
+  if (!street) { toast('Əvvəlcə küçə/ünvan yazın', 'error'); return; }
+  setBusy(els.autoBtn, true, 'Tapılır və yaradılır...');
+  try {
+    const results = await geocode(street);
+    if (!results || results.length === 0) { toast('Bu ünvan tapılmadı', 'error'); return; }
+    const r = results[0];
+    const chosen = {
+      lat: parseFloat(r.lat), lon: parseFloat(r.lon),
+      display: r.display_name, address: r.address || {},
+    };
+    if (chosen.address.house_number && !els.building.value) {
+      els.building.value = chosen.address.house_number;
     }
+    showPreviewOnMap(chosen.lat, chosen.lon);
+    saveLocation(chosen, street);
+  } catch (e) {
+    toast('Axtarış uğursuz oldu', 'error');
+  } finally {
+    setBusy(els.autoBtn, false, 'Tap və yarat');
+  }
+}
 
-    let searchTimeout;
-    document.getElementById('modalInput').addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        const val = this.value.trim();
-        const resDiv = document.getElementById('results');
+function saveLocation(chosen, streetText) {
+  const code = els.code.value.trim() || autoCode();
+  const customer = {
+    id: rid(), code,
+    street: streetText || chosen.display.split(',').slice(0, 3).join(', '),
+    building: els.building.value.trim(),
+    block: els.block.value.trim(),
+    floor: els.floor.value.trim(),
+    lat: chosen.lat, lon: chosen.lon, createdAt: Date.now(),
+  };
+  state.customers.push(customer);
+  saveCustomers();
+  resetForm();
+  renderList(); renderPicker(); refreshMapMarkers(); fitMapToContent();
+  toast(`Məkan əlavə olundu · ${customer.code}`, 'success');
+}
 
-        if(val.length < 3) {
-            resDiv.innerHTML = '<div class="status-msg">Ən az 3 hərf yazın...</div>';
-            return;
-        }
+function autoCode() {
+  const n = (state.customers.length + 1).toString().padStart(3, '0');
+  return `MŞK-${n}`;
+}
 
-        resDiv.innerHTML = '<div class="status-msg">Axtarılır...</div>';
+function resetForm() {
+  els.street.value = ''; els.building.value = ''; els.block.value = '';
+  els.floor.value = ''; els.code.value = '';
+  state.selectedSuggestion = null;
+  if (previewMarker) { previewMarker.remove(); previewMarker = null; }
+  hideSuggestions();
+}
 
-        searchTimeout = setTimeout(() => {
-            // "Azerbaijan, Baku" sözünü qabaqcadan əlavə edirik ki, daha dəqiq tapsın
-            const query = `Baku, ${val}`;
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=8&addressdetails=1`)
-            .then(r => r.json())
-            .then(data => {
-                resDiv.innerHTML = '';
-                if(data.length === 0) {
-                    resDiv.innerHTML = '<div class="status-msg">Məlumat tapılmadı. Bir az fərqli yazın.</div>';
-                    return;
-                }
-                data.forEach(item => {
-                    const d = document.createElement('div');
-                    d.className = 'search-item';
-                    d.innerHTML = `📍 ${item.display_name}`;
-                    d.onclick = function() {
-                        document.getElementById('fullAddr').value = item.display_name;
-                        document.getElementById('lat').value = item.lat;
-                        document.getElementById('lng').value = item.lon;
-                        
-                        const trigger = document.getElementById('triggerSearch');
-                        trigger.innerText = "✅ Ünvan Seçildi";
-                        trigger.classList.add('selected-box');
-                        
-                        closeSearch();
-                    };
-                    resDiv.appendChild(d);
-                });
-            })
-            .catch(err => {
-                resDiv.innerHTML = '<div class="status-msg">Xəta baş verdi. İnterneti yoxlayın.</div>';
-            });
-        }, 600); // İstifadəçi yazmağı bitirəndən 0.6 saniyə sonra axtar
+function setBusy(btn, busy, html) {
+  btn.disabled = busy;
+  if (busy) btn.innerHTML = `<span class="spinner"></span> ${html}`;
+  else if (html) btn.textContent = html;
+}
+
+function sortedCustomers() {
+  const list = state.customers.map((c) => ({
+    ...c,
+    distance: state.myLocation ? distanceKm(state.myLocation, { lat: c.lat, lon: c.lon }) : Infinity,
+  }));
+  if (state.myLocation) list.sort((a, b) => a.distance - b.distance);
+  else list.sort((a, b) => b.createdAt - a.createdAt);
+  return list;
+}
+
+function renderList() {
+  const list = sortedCustomers();
+  els.countPill.textContent = `${list.length} məkan`;
+  if (list.length === 0) {
+    els.list.innerHTML = `
+      <div class="empty-state">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8a8 8 0 1 1 16 0c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+        <h3>Hələ məkan yoxdur</h3>
+        <p>Sol tərəfdən ilk müştəri ünvanını əlavə edin</p>
+      </div>`;
+    return;
+  }
+  els.list.innerHTML = list.map((c, i) => {
+    const isNearest = i === 0 && state.myLocation;
+    const detail = [
+      c.building && `<span>Bina ${escapeHtml(c.building)}</span>`,
+      c.block && `<span>Blok ${escapeHtml(c.block)}</span>`,
+      c.floor && `<span>Mər. ${escapeHtml(c.floor)}</span>`,
+    ].filter(Boolean).join('');
+    const d = fmtDistance(c.distance);
+    return `
+      <div class="customer ${isNearest ? 'nearest' : ''}" data-id="${c.id}">
+        <div class="c-rank">${i + 1}</div>
+        <div class="c-info">
+          <div class="c-code">${escapeHtml(c.code || 'Müştəri')}</div>
+          <div class="c-street">${escapeHtml(c.street)}</div>
+          <div class="c-detail">${detail || '<span style="color:#94a3b8">— ətraflı yoxdur —</span>'}</div>
+        </div>
+        <div class="c-actions">
+          <div class="c-distance">${d.value}<span class="unit">${d.unit}</span></div>
+          <div class="c-buttons">
+            <button class="c-btn" title="Xəritədə göstər" data-action="show" data-id="${c.id}">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            </button>
+            <button class="c-btn danger" title="Sil" data-action="delete" data-id="${c.id}">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+  els.list.querySelectorAll('[data-action]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.id;
+      const action = btn.dataset.action;
+      const cust = state.customers.find((c) => c.id === id);
+      if (!cust) return;
+      if (action === 'show') {
+        map.setView([cust.lat, cust.lon], 16);
+        toast(`${cust.code} xəritədə`, 'success');
+      } else if (action === 'delete') {
+        state.customers = state.customers.filter((c) => c.id !== id);
+        state.selectedIds = state.selectedIds.filter((x) => x !== id);
+        saveCustomers(); saveSelected();
+        renderList(); renderPicker(); refreshMapMarkers();
+        toast('Silindi', 'success');
+      }
     });
+  });
+}
 
-    function save() {
-        const lat = document.getElementById('lat').value;
-        if(!lat) { alert("Siyahıdan ünvanı seçin!"); return; }
-
-        db.push({
-            id: document.getElementById('mId').value || "---",
-            name: document.getElementById('mName').value || "Adsız",
-            address: document.getElementById('fullAddr').value,
-            block: document.getElementById('mBlock').value || "-",
-            floor: document.getElementById('mFloor').value || "-",
-            lat: lat, lng: document.getElementById('lng').value
-        });
-
-        // Reset
-        document.getElementById('lat').value = "";
-        document.getElementById('triggerSearch').innerText = "📍 ÜNVANI SEÇMƏK ÜÇÜN TOXUN";
-        document.getElementById('triggerSearch').classList.remove('selected-box');
-        
-        alert("Sistemə uğurla əlavə edildi!");
-        show('homePage', document.querySelectorAll('.nav-item')[0]);
+function optimalSelectedOrder() {
+  const selected = state.selectedIds
+    .map((id) => state.customers.find((c) => c.id === id))
+    .filter(Boolean);
+  if (selected.length === 0) return [];
+  const remaining = [...selected];
+  const ordered = [];
+  let cur = state.myLocation
+    ? { lat: state.myLocation.lat, lon: state.myLocation.lon }
+    : { lat: remaining[0].lat, lon: remaining[0].lon };
+  while (remaining.length > 0) {
+    let bestIdx = 0;
+    let bestDist = Infinity;
+    for (let i = 0; i < remaining.length; i++) {
+      const d = distanceKm(cur, { lat: remaining[i].lat, lon: remaining[i].lon });
+      if (d < bestDist) { bestDist = d; bestIdx = i; }
     }
+    const next = remaining.splice(bestIdx, 1)[0];
+    ordered.push({ ...next, _legKm: bestDist });
+    cur = { lat: next.lat, lon: next.lon };
+  }
+  return ordered;
+}
 
-    function render() {
-        const list = document.getElementById('listAll');
-        list.innerHTML = '';
-        if(db.length === 0) list.innerHTML = '<div style="text-align:center; color:#888; margin-top:50px;">Hələ ki siyahı boşdur.</div>';
-        db.forEach(d => {
-            list.innerHTML += `
-                <div class="card">
-                    <b style="color:var(--gold)">ID: ${d.id}</b><br>
-                    <span style="font-size:18px;">${d.name}</span><br>
-                    <small style="color:#aaa;">${d.address}</small><br>
-                    <div style="margin-top:10px; font-size:12px;">Blok: ${d.block} | Mərtəbə: ${d.floor}</div>
-                </div>`;
-        });
-    }
-</script>
+function renderPicker() {
+  const q = state.pickerQuery.trim().toLowerCase();
+  const available = state.customers.filter((c) => !state.selectedIds.includes(c.id));
+  const filtered = q
+    ? available.filter((c) =>
+        (c.code || '').toLowerCase().includes(q) ||
+        (c.street || '').toLowerCase().includes(q) ||
+        (c.building || '').toLowerCase().includes(q)
+      )
+    : available;
+  els.availPill.textContent = `${available.length}`;
+  if (filtered.length === 0) {
+    els.availableList.innerHTML = `<div class="pick-empty">${
+      q ? 'Axtarışa uyğun müştəri tapılmadı' : 'Bütün müştərilər seçilib'
+    }</div>`;
+  } else {
+    els.availableList.innerHTML = filtered.map((c) => {
+      const detail = [c.building && `Bina ${c.building}`, c.block && `Blok ${c.block}`, c.floor && `Mər. ${c.floor}`]
+        .filter(Boolean).join(' · ');
+      const dist = state.myLocation ? distanceKm(state.myLocation, { lat: c.lat, lon: c.lon }) : Infinity;
+      const d = fmtDistance(dist);
+      const distHtml = isFinite(dist)
+        ? `<span style="font-size:11px;color:#64748b;margin-left:6px">· ${d.value}${d.unit}</span>`
+        : '';
+      return `
+        <div class="pick-item">
+          <div style="min-width:0">
+            <div class="pi-code">${escapeHtml(c.code || 'Müştəri')}${distHtml}</div>
+            <div class="pi-street">${escapeHtml(c.street)}</div>
+            ${detail ? `<div class="pi-detail">${escapeHtml(detail)}</div>` : ''}
+          </div>
+          <button class="pi-action add" data-add="${c.id}" title="Çatdırılma siyahısına əlavə et">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>`;
+    }).join('');
+  }
+  const ordered = optimalSelectedOrder();
+  els.selPill.textContent = `${ordered.length}`;
+  els.statCount.textContent = `${ordered.length}`;
+  if (ordered.length === 0) {
+    els.selectedList.innerHTML = `<div class="pick-empty">Hələ çatdırılma müştərisi seçilməyib</div>`;
+    els.statDistance.textContent = '— km';
+    els.statNext.textContent = '—';
+  } else {
+    let totalKm = 0;
+    els.selectedList.innerHTML = ordered.map((c, i) => {
+      const isFirst = i === 0;
+      totalKm += c._legKm || 0;
+      const detail = [c.building && `Bina ${c.building}`, c.block && `Blok ${c.block}`, c.floor && `Mər. ${c.floor}`]
+        .filter(Boolean).join(' · ');
+      const legText = isFinite(c._legKm)
+        ? (() => { const d = fmtDistance(c._legKm); return `${d.value}${d.unit}`; })()
+        : '—';
+      return `
+        <div class="pick-item selected-item ${isFirst ? 'first' : ''}">
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;min-width:0">
+            <div class="pi-rank">${i + 1}</div>
+            <div style="min-width:0">
+              <div class="pi-code">${escapeHtml(c.code || 'Müştəri')}</div>
+              <div class="pi-street">${escapeHtml(c.street)}</div>
+              ${detail ? `<div class="pi-detail">${escapeHtml(detail)}</div>` : ''}
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+            <div class="pi-distance">${isFirst ? 'sizdən' : '+'} ${legText}</div>
+            <button class="pi-action remove" data-remove="${c.id}" title="Siyahıdan çıxar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
+            </button>
+          </div>
+        </div>`;
+    }).join('');
+    const dTotal = fmtDistance(totalKm);
+    els.statDistance.textContent = `${dTotal.value} ${dTotal.unit}`;
+    els.statNext.textContent = ordered[0].code || '—';
+  }
+  els.availableList.querySelectorAll('[data-add]').forEach((btn) => {
+    btn.addEventListener('click', () => addToSelected(btn.dataset.add));
+  });
+  els.selectedList.querySelectorAll('[data-remove]').forEach((btn) => {
+    btn.addEventListener('click', () => removeFromSelected(btn.dataset.remove));
+  });
+}
+
+function addToSelected(id) {
+  if (!state.customers.find((c) => c.id === id)) return;
+  if (state.selectedIds.includes(id)) return;
+  state.selectedIds.push(id);
+  saveSelected(); renderPicker(); refreshMapMarkers();
+  toast('Çatdırılma siyahısına əlavə olundu', 'success');
+}
+function removeFromSelected(id) {
+  state.selectedIds = state.selectedIds.filter((x) => x !== id);
+  saveSelected(); renderPicker(); refreshMapMarkers();
+}
+function clearSelected() {
+  if (state.selectedIds.length === 0) return;
+  state.selectedIds = [];
+  saveSelected(); renderPicker(); refreshMapMarkers();
+  toast('Çatdırılma siyahısı təmizləndi', 'success');
+}
+function highlightOptimal() {
+  if (state.selectedIds.length === 0) { toast('Əvvəlcə müştəri seçin', 'error'); return; }
+  const ordered = optimalSelectedOrder();
+  state.selectedIds = ordered.map((c) => c.id);
+  saveSelected(); renderPicker(); refreshMapMarkers();
+  const points = ordered.map((c) => [c.lat, c.lon]);
+  if (state.myLocation) points.unshift([state.myLocation.lat, state.myLocation.lon]);
+  if (points.length >= 2) map.fitBounds(L.latLngBounds(points), { padding: [50, 50], maxZoom: 15 });
+  toast('İdeal sıralama tətbiq olundu', 'success');
+}
+
+let toastTimer;
+function toast(msg, kind) {
+  els.toast.textContent = msg;
+  els.toast.className = `toast show ${kind || ''}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => els.toast.classList.remove('show'), 2400);
+}
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
+  );
+}
+
+function bind() {
+  els.street.addEventListener('input', debounceSearch);
+  els.street.addEventListener('blur', () => setTimeout(hideSuggestions, 200));
+  els.searchBtn.addEventListener('click', async () => {
+    const q = els.street.value.trim();
+    if (!q) return;
+    try { showSuggestions(await geocode(q)); } catch {}
+  });
+  els.saveBtn.addEventListener('click', manualSave);
+  els.autoBtn.addEventListener('click', autoCreate);
+  els.refreshLocBtn.addEventListener('click', requestMyLocation);
+  els.code.addEventListener('keydown', (e) => { if (e.key === 'Enter') manualSave(); });
+  els.pickerSearch.addEventListener('input', (e) => {
+    state.pickerQuery = e.target.value;
+    renderPicker();
+  });
+  els.optimizeBtn.addEventListener('click', highlightOptimal);
+  els.clearSelectedBtn.addEventListener('click', clearSelected);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  initMap(); bind();
+  renderList(); renderPicker();
+  refreshMapMarkers(); fitMapToContent();
+  requestMyLocation();
+});
+  </script>
 </body>
 </html>
