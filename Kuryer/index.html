@@ -3,227 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUMIERE Logistics - Pro V4</title>
+    <title>LUMIERE Logistics - Final Fix</title>
     <style>
-        :root { --gold: #d4af37; --dark: #0a0a0a; --card: #161616; --green: #2ecc71; --gray: #888; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--dark); color: white; margin: 0; padding-bottom: 80px; }
+        :root { --gold: #d4af37; --dark: #0a0a0a; --card: #161616; --green: #2ecc71; }
+        body { font-family: sans-serif; background: var(--dark); color: white; margin: 0; padding-bottom: 80px; overflow-x: hidden; }
         
-        .navbar {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: #111;
-            display: flex; justify-content: space-around; padding: 15px 0;
-            border-top: 1px solid #222; z-index: 1000;
-        }
-        .nav-item { color: var(--gray); font-size: 11px; text-align: center; cursor: pointer; flex: 1; text-decoration: none; transition: 0.3s; }
-        .nav-item.active { color: var(--gold); transform: translateY(-3px); }
-
         .container { padding: 15px; max-width: 480px; margin: auto; }
-        .page { display: none; animation: fadeIn 0.4s ease; }
-        .page.active { display: block; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Form Elementləri */
-        .box { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #222; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .box { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #333; }
+        
         input { 
-            width: 100%; padding: 14px; margin: 8px 0; background: #222; 
-            border: 1px solid #333; color: white; border-radius: 10px; box-sizing: border-box; font-size: 14px; outline: none;
+            width: 100%; padding: 15px; margin: 10px 0; background: #222; 
+            border: 1px solid #444; color: white; border-radius: 10px; box-sizing: border-box; font-size: 16px;
         }
-        input:focus { border-color: var(--gold); }
 
-        /* Axtarış Siyahısı */
-        .search-container { position: relative; }
-        #results { 
-            position: absolute; top: 100%; left: 0; right: 0; background: #1f1f1f; 
-            border: 1px solid #444; border-radius: 8px; max-height: 220px; 
-            overflow-y: auto; display: none; z-index: 2000; box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+        /* AXTARIŞ EKRANI */
+        #searchOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98); z-index: 100000;
+            display: none; flex-direction: column; padding: 20px; box-sizing: border-box;
         }
-        .search-item { padding: 12px 15px; border-bottom: 1px solid #333; font-size: 13px; cursor: pointer; color: #ddd; }
-        .search-item:hover { background: #2a2a2a; color: var(--gold); }
+        #searchOverlay input { border: 2px solid var(--gold); margin-bottom: 15px; background: #111; }
+        #results { flex: 1; overflow-y: auto; background: #111; border-radius: 10px; border: 1px solid #222; }
+        
+        .search-item { 
+            padding: 18px; border-bottom: 1px solid #333; 
+            color: #fff; font-size: 15px; cursor: pointer;
+        }
+        .search-item:active { background: var(--gold); color: #000; }
+        
+        .status-msg { padding: 20px; text-align: center; color: var(--gold); font-size: 14px; }
+        .close-btn { color: var(--gold); text-align: right; padding: 10px; font-weight: bold; cursor: pointer; font-size: 18px; }
+
+        .selected-box { border: 2px solid var(--green) !important; color: var(--green) !important; }
 
         button { 
-            width: 100%; padding: 16px; background: linear-gradient(135deg, #d4af37, #b8860b); 
-            border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; color: #000; letter-spacing: 1px;
+            width: 100%; padding: 18px; background: var(--gold); border: none; 
+            border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 16px;
         }
 
-        /* Kartlar */
-        .card { background: var(--card); padding: 18px; border-radius: 14px; margin-bottom: 15px; border: 1px solid #222; position: relative; }
-        .card.nearest { border: 1px solid var(--green); background: rgba(46, 204, 113, 0.03); }
-        .card h3 { margin: 10px 0 5px 0; font-size: 16px; color: #fff; }
-        .dist-badge { color: var(--green); font-size: 13px; font-weight: bold; }
-        .id-badge { background: var(--gold); color: #000; padding: 2px 8px; border-radius: 5px; font-size: 11px; font-weight: 800; }
-        
-        .maps-link { 
-            display: inline-block; margin-top: 12px; color: var(--gold); 
-            text-decoration: none; border: 1px solid var(--gold); padding: 7px 15px; border-radius: 6px; font-size: 12px; font-weight: 600;
+        .navbar {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: #111;
+            display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222;
         }
+        .nav-item { color: #888; font-size: 12px; text-align: center; flex: 1; cursor: pointer; }
+        .nav-item.active { color: var(--gold); font-weight: bold; }
+        .card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #222; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header style="text-align: center; padding: 20px 0;">
-        <h2 style="color: var(--gold); letter-spacing: 4px; margin: 0;">LUMIERE</h2>
-        <div id="locIndicator" style="font-size: 10px; color: var(--gray); margin-top: 5px;">📍 Konum gözlənilir...</div>
-    </header>
+    <h2 style="color: var(--gold); text-align: center; letter-spacing: 3px; margin: 20px 0;">LUMIERE</h2>
 
-    <div id="homePage" class="page active">
-        <div id="allList"></div>
+    <div id="homePage" class="page" style="display:none;">
+        <div id="listAll"></div>
     </div>
 
-    <div id="courierPage" class="page">
-        <h4 style="color: var(--gray); margin-bottom: 15px;">🚚 Cari Marşrut</h4>
-        <div id="courierList"></div>
-    </div>
-
-    <div id="addPage" class="page">
+    <div id="addPage" class="page" style="display:block;">
         <div class="box">
-            <input type="text" id="custId" placeholder="Müştəri ID (Məs: #77)">
-            <input type="text" id="custName" placeholder="Ad Soyad">
+            <input type="text" id="mId" placeholder="Müştəri ID">
+            <input type="text" id="mName" placeholder="Müştəri Ad Soyad">
             
-            <div class="search-container">
-                <input type="text" id="addrInput" placeholder="Küçə adı ilə axtar (Məs: Nizami...)" autocomplete="off">
-                <div id="results"></div>
+            <div id="triggerSearch" onclick="openSearch()" style="background:#222; padding:18px; border-radius:10px; border:1px solid #444; color:#aaa; margin:10px 0; cursor:pointer; text-align:center; font-weight:bold;">
+                📍 ÜNVANI SEÇMƏK ÜÇÜN TOXUN
             </div>
 
             <div style="display: flex; gap: 10px;">
-                <input type="text" id="block" placeholder="Blok">
-                <input type="text" id="floor" placeholder="Mərtəbə">
+                <input type="text" id="mBlock" placeholder="Blok">
+                <input type="text" id="mFloor" placeholder="Mərtəbə">
             </div>
             
             <input type="hidden" id="lat">
             <input type="hidden" id="lng">
-            <button onclick="saveToSystem()">SİSTEMƏ ƏLAVƏ ET</button>
+            <input type="hidden" id="fullAddr">
+            <button onclick="save()">SİSTEMƏ ƏLAVƏ ET</button>
         </div>
     </div>
 </div>
 
+<div id="searchOverlay">
+    <div class="close-btn" onclick="closeSearch()">BAĞLA ✖</div>
+    <input type="text" id="modalInput" placeholder="Küçə adı yazın (məs: Nizami)..." autocomplete="off">
+    <div id="results">
+        <div class="status-msg">Küçə adını yazmağa başlayın...</div>
+    </div>
+</div>
+
 <div class="navbar">
-    <div class="nav-item active" onclick="changePage('homePage', this)">🏠<br>Ana Səhifə</div>
-    <div class="nav-item" onclick="changePage('courierPage', this)">🚚<br>Kuryer</div>
-    <div class="nav-item" onclick="changePage('addPage', this)">➕<br>Əlavə Et</div>
+    <div class="nav-item" onclick="show('homePage', this)">🏠<br>Ana Səhifə</div>
+    <div class="nav-item active" onclick="show('addPage', this)">➕<br>Əlavə Et</div>
 </div>
 
 <script>
-    let database = [];
-    let currentPosition = null;
+    let db = [];
 
-    function changePage(pageId, element) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    function show(id, el) {
+        document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-        element.classList.add('active');
-        updateUI();
+        document.getElementById(id).style.display = 'block';
+        el.classList.add('active');
+        if(id === 'homePage') render();
     }
 
-    // Axtarış funksiyası - Genişləndirilmiş filtr ilə
-    const addrInput = document.getElementById('addrInput');
-    const resultsBox = document.getElementById('results');
+    function openSearch() {
+        document.getElementById('searchOverlay').style.display = 'flex';
+        document.getElementById('modalInput').focus();
+    }
 
-    addrInput.addEventListener('input', function() {
+    function closeSearch() {
+        document.getElementById('searchOverlay').style.display = 'none';
+    }
+
+    let searchTimeout;
+    document.getElementById('modalInput').addEventListener('input', function() {
+        clearTimeout(searchTimeout);
         const val = this.value.trim();
-        if(val.length < 3) { resultsBox.style.display = 'none'; return; }
+        const resDiv = document.getElementById('results');
 
-        // Azerbaijan üzrə daha dəqiq axtarış (Nominatim API + Düzgün format)
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(val)}&countrycodes=az&addressdetails=1&limit=6`)
-        .then(res => res.json())
-        .then(data => {
-            resultsBox.innerHTML = '';
-            if(data.length > 0) {
-                resultsBox.style.display = 'block';
-                data.forEach(item => {
-                    const div = document.createElement('div');
-                    div.className = 'search-item';
-                    div.innerText = item.display_name;
-                    div.onclick = function() {
-                        addrInput.value = item.display_name;
-                        document.getElementById('lat').value = item.lat;
-                        document.getElementById('lng').value = item.lon;
-                        resultsBox.style.display = 'none';
-                    };
-                    resultsBox.appendChild(div);
-                });
-            }
-        }).catch(err => console.log("Xəta:", err));
-    });
-
-    function saveToSystem() {
-        const id = document.getElementById('custId').value;
-        const name = document.getElementById('custName').value;
-        const lat = document.getElementById('lat').value;
-        const lng = document.getElementById('lng').value;
-
-        if(!id || !lat) { alert("Zəhmət olmasa ünvanı siyahıdan seçin!"); return; }
-
-        database.push({
-            id, name,
-            address: addrInput.value,
-            block: document.getElementById('block').value,
-            floor: document.getElementById('floor').value,
-            lat: parseFloat(lat),
-            lng: parseFloat(lng)
-        });
-
-        // Form təmizliyi
-        document.getElementById('custId').value = '';
-        document.getElementById('custName').value = '';
-        addrInput.value = '';
-        document.getElementById('lat').value = '';
-        
-        alert("Məkan uğurla qeydə alındı!");
-        changePage('homePage', document.querySelectorAll('.nav-item')[0]);
-    }
-
-    function calculateDistance(lat1, lon1, lat2, lon2) {
-        const R = 6371; // km
-        const dLat = (lat2 - lat1) * Math.PI / 180;
-        const dLon = (lon2 - lon1) * Math.PI / 180;
-        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    }
-
-    function updateUI() {
-        const homeList = document.getElementById('allList');
-        const courierList = document.getElementById('courierList');
-        homeList.innerHTML = ''; courierList.innerHTML = '';
-
-        if(currentPosition) {
-            database.sort((a, b) => calculateDistance(currentPosition.lat, currentPosition.lng, a.lat, a.lng) - 
-                                  calculateDistance(currentPosition.lat, currentPosition.lng, b.lat, b.lng));
+        if(val.length < 3) {
+            resDiv.innerHTML = '<div class="status-msg">Ən az 3 hərf yazın...</div>';
+            return;
         }
 
-        database.forEach((item, index) => {
-            const dist = currentPosition ? calculateDistance(currentPosition.lat, currentPosition.lng, item.lat, item.lng).toFixed(2) : "?";
-            const isFirst = index === 0 && currentPosition;
+        resDiv.innerHTML = '<div class="status-msg">Axtarılır...</div>';
 
-            const cardTemplate = `
-                <div class="card ${isFirst ? 'nearest' : ''}">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span class="id-badge">ID: ${item.id}</span>
-                        <span class="dist-badge">${dist} km</span>
-                    </div>
-                    <h3>${item.name}</h3>
-                    <p style="font-size:12px; color:var(--gray); margin:0;">📍 ${item.address}</p>
-                    <p style="font-size:12px; margin:8px 0;">Bina: ${item.block} | Mərtəbə: ${item.floor}</p>
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}" target="_blank" class="maps-link">Naviqasiyanı Başlat</a>
-                </div>
-            `;
-            homeList.innerHTML += cardTemplate;
-            courierList.innerHTML += cardTemplate;
+        searchTimeout = setTimeout(() => {
+            // "Azerbaijan, Baku" sözünü qabaqcadan əlavə edirik ki, daha dəqiq tapsın
+            const query = `Baku, ${val}`;
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=8&addressdetails=1`)
+            .then(r => r.json())
+            .then(data => {
+                resDiv.innerHTML = '';
+                if(data.length === 0) {
+                    resDiv.innerHTML = '<div class="status-msg">Məlumat tapılmadı. Bir az fərqli yazın.</div>';
+                    return;
+                }
+                data.forEach(item => {
+                    const d = document.createElement('div');
+                    d.className = 'search-item';
+                    d.innerHTML = `📍 ${item.display_name}`;
+                    d.onclick = function() {
+                        document.getElementById('fullAddr').value = item.display_name;
+                        document.getElementById('lat').value = item.lat;
+                        document.getElementById('lng').value = item.lon;
+                        
+                        const trigger = document.getElementById('triggerSearch');
+                        trigger.innerText = "✅ Ünvan Seçildi";
+                        trigger.classList.add('selected-box');
+                        
+                        closeSearch();
+                    };
+                    resDiv.appendChild(d);
+                });
+            })
+            .catch(err => {
+                resDiv.innerHTML = '<div class="status-msg">Xəta baş verdi. İnterneti yoxlayın.</div>';
+            });
+        }, 600); // İstifadəçi yazmağı bitirəndən 0.6 saniyə sonra axtar
+    });
+
+    function save() {
+        const lat = document.getElementById('lat').value;
+        if(!lat) { alert("Siyahıdan ünvanı seçin!"); return; }
+
+        db.push({
+            id: document.getElementById('mId').value || "---",
+            name: document.getElementById('mName').value || "Adsız",
+            address: document.getElementById('fullAddr').value,
+            block: document.getElementById('mBlock').value || "-",
+            floor: document.getElementById('mFloor').value || "-",
+            lat: lat, lng: document.getElementById('lng').value
+        });
+
+        // Reset
+        document.getElementById('lat').value = "";
+        document.getElementById('triggerSearch').innerText = "📍 ÜNVANI SEÇMƏK ÜÇÜN TOXUN";
+        document.getElementById('triggerSearch').classList.remove('selected-box');
+        
+        alert("Sistemə uğurla əlavə edildi!");
+        show('homePage', document.querySelectorAll('.nav-item')[0]);
+    }
+
+    function render() {
+        const list = document.getElementById('listAll');
+        list.innerHTML = '';
+        if(db.length === 0) list.innerHTML = '<div style="text-align:center; color:#888; margin-top:50px;">Hələ ki siyahı boşdur.</div>';
+        db.forEach(d => {
+            list.innerHTML += `
+                <div class="card">
+                    <b style="color:var(--gold)">ID: ${d.id}</b><br>
+                    <span style="font-size:18px;">${d.name}</span><br>
+                    <small style="color:#aaa;">${d.address}</small><br>
+                    <div style="margin-top:10px; font-size:12px;">Blok: ${d.block} | Mərtəbə: ${d.floor}</div>
+                </div>`;
         });
     }
-
-    // Real-time GPS izləmə
-    if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(pos => {
-            currentPosition = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-            document.getElementById('locIndicator').innerText = "🟢 GPS Aktiv: Məsafələr yenilənir";
-            updateUI();
-        }, err => {
-            document.getElementById('locIndicator').innerText = "🔴 GPS deaktivdir";
-        }, { enableHighAccuracy: true });
-    }
 </script>
-
 </body>
 </html>
